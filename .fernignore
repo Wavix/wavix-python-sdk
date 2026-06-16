@@ -1,0 +1,4 @@
+# Files Fern must NOT overwrite on regeneration (treated like .gitignore).
+LICENSE
+README.md
+.fernignore
