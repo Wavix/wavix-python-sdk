@@ -1,0 +1,13 @@
+{
+  "cliVersion": "5.45.3",
+  "generatorName": "fernapi/fern-python-sdk",
+  "generatorVersion": "5.14.18",
+  "generatorConfig": {
+    "client_class_name": "Wavix"
+  },
+  "originGitCommit": "1498ee51f17678c87170c7d44e0568dbebd562b6",
+  "originGitCommitIsDirty": false,
+  "invokedBy": "manual",
+  "requestedVersion": "1.0.0",
+  "sdkVersion": "1.0.0"
+}
