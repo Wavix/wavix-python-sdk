@@ -15,9 +15,9 @@ if typing.TYPE_CHECKING:
     from .api_key_calls_scope_permission_allow import ApiKeyCallsScopePermissionAllow
     from .api_key_scope_permission import ApiKeyScopePermission
     from .api_key_scope_permission_allow import ApiKeyScopePermissionAllow
+    from .api_key_with_secret import ApiKeyWithSecret
     from .available_number import AvailableNumber
     from .available_number_list_response import AvailableNumberListResponse
-    from .bad_request_error_body import BadRequestErrorBody
     from .billing_transaction_list_response import BillingTransactionListResponse
     from .brand_status_updated_webhook import BrandStatusUpdatedWebhook
     from .brand_status_updated_webhook_status import BrandStatusUpdatedWebhookStatus
@@ -58,13 +58,11 @@ if typing.TYPE_CHECKING:
     from .country_has_no_regions_error_response import CountryHasNoRegionsErrorResponse
     from .country_list_response import CountryListResponse
     from .document_type import DocumentType
-    from .document_type_id import DocumentTypeId
+    from .document_type_info import DocumentTypeInfo
     from .file_transcript_response import FileTranscriptResponse
     from .file_transcript_turn import FileTranscriptTurn
     from .file_transcription_completed_webhook import FileTranscriptionCompletedWebhook
     from .file_transcription_response import FileTranscriptionResponse
-    from .file_transcription_response_language import FileTranscriptionResponseLanguage
-    from .file_transcription_response_status import FileTranscriptionResponseStatus
     from .financial_transaction import FinancialTransaction
     from .forbidden_error_response import ForbiddenErrorResponse
     from .inbound_call_destination import InboundCallDestination
@@ -82,7 +80,6 @@ if typing.TYPE_CHECKING:
     from .message_list_response import MessageListResponse
     from .message_response import MessageResponse
     from .messages_delivery_report import MessagesDeliveryReport
-    from .not_found_error_body import NotFoundErrorBody
     from .not_found_error_response import NotFoundErrorResponse
     from .number import Number
     from .number_destination import NumberDestination
@@ -148,9 +145,11 @@ if typing.TYPE_CHECKING:
     from .ten_dlc_brand import TenDlcBrand
     from .ten_dlc_brand_appeal import TenDlcBrandAppeal
     from .ten_dlc_brand_appeal_create_request import TenDlcBrandAppealCreateRequest
+    from .ten_dlc_brand_appeal_create_request_appeal_categories_item import (
+        TenDlcBrandAppealCreateRequestAppealCategoriesItem,
+    )
     from .ten_dlc_brand_appeal_outcome import TenDlcBrandAppealOutcome
     from .ten_dlc_brand_appeal_outcome_feedback import TenDlcBrandAppealOutcomeFeedback
-    from .ten_dlc_brand_appeal_outcome_vetting_status import TenDlcBrandAppealOutcomeVettingStatus
     from .ten_dlc_brand_create_request import TenDlcBrandCreateRequest
     from .ten_dlc_brand_create_request_entity_type import TenDlcBrandCreateRequestEntityType
     from .ten_dlc_brand_create_request_stock_exchange import TenDlcBrandCreateRequestStockExchange
@@ -164,7 +163,6 @@ if typing.TYPE_CHECKING:
     from .ten_dlc_brand_list_response import TenDlcBrandListResponse
     from .ten_dlc_brand_list_response_pagination import TenDlcBrandListResponsePagination
     from .ten_dlc_brand_qualification_result import TenDlcBrandQualificationResult
-    from .ten_dlc_brand_status import TenDlcBrandStatus
     from .ten_dlc_brand_vetting import TenDlcBrandVetting
     from .ten_dlc_brand_vetting_appeal import TenDlcBrandVettingAppeal
     from .ten_dlc_brand_vetting_appeal_appeal_outcome import TenDlcBrandVettingAppealAppealOutcome
@@ -180,6 +178,7 @@ if typing.TYPE_CHECKING:
     from .ten_dlc_campaign_number_list_response import TenDlcCampaignNumberListResponse
     from .ten_dlc_event_subscription import TenDlcEventSubscription
     from .ten_dlcmno_metadata import TenDlcmnoMetadata
+    from .too_many_requests_error_response import TooManyRequestsErrorResponse
     from .transaction_status import TransactionStatus
     from .transaction_type import TransactionType
     from .transcript_turn import TranscriptTurn
@@ -208,6 +207,40 @@ if typing.TYPE_CHECKING:
     from .web_rtc_token import WebRtcToken
     from .web_rtc_token_response import WebRtcTokenResponse
     from .web_rtc_tokens_list_response import WebRtcTokensListResponse
+    from .whats_app_message import WhatsAppMessage
+    from .whats_app_message_get_response import WhatsAppMessageGetResponse
+    from .whats_app_message_list_item import WhatsAppMessageListItem
+    from .whats_app_message_list_item_direction import WhatsAppMessageListItemDirection
+    from .whats_app_message_list_item_status import WhatsAppMessageListItemStatus
+    from .whats_app_message_list_response import WhatsAppMessageListResponse
+    from .whats_app_message_send_request import WhatsAppMessageSendRequest
+    from .whats_app_message_send_request_template import WhatsAppMessageSendRequestTemplate
+    from .whats_app_message_send_request_template_buttons_item import WhatsAppMessageSendRequestTemplateButtonsItem
+    from .whats_app_message_send_request_template_buttons_item_type import (
+        WhatsAppMessageSendRequestTemplateButtonsItemType,
+    )
+    from .whats_app_message_send_request_template_header import WhatsAppMessageSendRequestTemplateHeader
+    from .whats_app_message_send_request_template_header_type import WhatsAppMessageSendRequestTemplateHeaderType
+    from .whats_app_message_send_response import WhatsAppMessageSendResponse
+    from .whats_app_message_status import WhatsAppMessageStatus
+    from .whats_app_message_template import WhatsAppMessageTemplate
+    from .whats_app_problem import WhatsAppProblem
+    from .whats_app_problem_error_class import WhatsAppProblemErrorClass
+    from .whats_app_sender import WhatsAppSender
+    from .whats_app_sender_message_tier import WhatsAppSenderMessageTier
+    from .whats_app_sender_quality_rating import WhatsAppSenderQualityRating
+    from .whats_app_sender_status import WhatsAppSenderStatus
+    from .whats_app_template import WhatsAppTemplate
+    from .whats_app_template_category import WhatsAppTemplateCategory
+    from .whats_app_template_component import WhatsAppTemplateComponent
+    from .whats_app_template_component_format import WhatsAppTemplateComponentFormat
+    from .whats_app_template_component_type import WhatsAppTemplateComponentType
+    from .whats_app_template_create_request import WhatsAppTemplateCreateRequest
+    from .whats_app_template_create_request_category import WhatsAppTemplateCreateRequestCategory
+    from .whats_app_template_list_response import WhatsAppTemplateListResponse
+    from .whats_app_template_quality_rating import WhatsAppTemplateQualityRating
+    from .whats_app_template_response import WhatsAppTemplateResponse
+    from .whats_app_template_status import WhatsAppTemplateStatus
 _dynamic_imports: typing.Dict[str, str] = {
     "AccountErrorResponse": ".account_error_response",
     "AccountLimits": ".account_limits",
@@ -218,9 +251,9 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ApiKeyCallsScopePermissionAllow": ".api_key_calls_scope_permission_allow",
     "ApiKeyScopePermission": ".api_key_scope_permission",
     "ApiKeyScopePermissionAllow": ".api_key_scope_permission_allow",
+    "ApiKeyWithSecret": ".api_key_with_secret",
     "AvailableNumber": ".available_number",
     "AvailableNumberListResponse": ".available_number_list_response",
-    "BadRequestErrorBody": ".bad_request_error_body",
     "BillingTransactionListResponse": ".billing_transaction_list_response",
     "BrandStatusUpdatedWebhook": ".brand_status_updated_webhook",
     "BrandStatusUpdatedWebhookStatus": ".brand_status_updated_webhook_status",
@@ -261,13 +294,11 @@ _dynamic_imports: typing.Dict[str, str] = {
     "CountryHasNoRegionsErrorResponse": ".country_has_no_regions_error_response",
     "CountryListResponse": ".country_list_response",
     "DocumentType": ".document_type",
-    "DocumentTypeId": ".document_type_id",
+    "DocumentTypeInfo": ".document_type_info",
     "FileTranscriptResponse": ".file_transcript_response",
     "FileTranscriptTurn": ".file_transcript_turn",
     "FileTranscriptionCompletedWebhook": ".file_transcription_completed_webhook",
     "FileTranscriptionResponse": ".file_transcription_response",
-    "FileTranscriptionResponseLanguage": ".file_transcription_response_language",
-    "FileTranscriptionResponseStatus": ".file_transcription_response_status",
     "FinancialTransaction": ".financial_transaction",
     "ForbiddenErrorResponse": ".forbidden_error_response",
     "InboundCallDestination": ".inbound_call_destination",
@@ -285,7 +316,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "MessageListResponse": ".message_list_response",
     "MessageResponse": ".message_response",
     "MessagesDeliveryReport": ".messages_delivery_report",
-    "NotFoundErrorBody": ".not_found_error_body",
     "NotFoundErrorResponse": ".not_found_error_response",
     "Number": ".number",
     "NumberDestination": ".number_destination",
@@ -349,9 +379,9 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TenDlcBrand": ".ten_dlc_brand",
     "TenDlcBrandAppeal": ".ten_dlc_brand_appeal",
     "TenDlcBrandAppealCreateRequest": ".ten_dlc_brand_appeal_create_request",
+    "TenDlcBrandAppealCreateRequestAppealCategoriesItem": ".ten_dlc_brand_appeal_create_request_appeal_categories_item",
     "TenDlcBrandAppealOutcome": ".ten_dlc_brand_appeal_outcome",
     "TenDlcBrandAppealOutcomeFeedback": ".ten_dlc_brand_appeal_outcome_feedback",
-    "TenDlcBrandAppealOutcomeVettingStatus": ".ten_dlc_brand_appeal_outcome_vetting_status",
     "TenDlcBrandCreateRequest": ".ten_dlc_brand_create_request",
     "TenDlcBrandCreateRequestEntityType": ".ten_dlc_brand_create_request_entity_type",
     "TenDlcBrandCreateRequestStockExchange": ".ten_dlc_brand_create_request_stock_exchange",
@@ -365,7 +395,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TenDlcBrandListResponse": ".ten_dlc_brand_list_response",
     "TenDlcBrandListResponsePagination": ".ten_dlc_brand_list_response_pagination",
     "TenDlcBrandQualificationResult": ".ten_dlc_brand_qualification_result",
-    "TenDlcBrandStatus": ".ten_dlc_brand_status",
     "TenDlcBrandVetting": ".ten_dlc_brand_vetting",
     "TenDlcBrandVettingAppeal": ".ten_dlc_brand_vetting_appeal",
     "TenDlcBrandVettingAppealAppealOutcome": ".ten_dlc_brand_vetting_appeal_appeal_outcome",
@@ -381,6 +410,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TenDlcCampaignNumberListResponse": ".ten_dlc_campaign_number_list_response",
     "TenDlcEventSubscription": ".ten_dlc_event_subscription",
     "TenDlcmnoMetadata": ".ten_dlcmno_metadata",
+    "TooManyRequestsErrorResponse": ".too_many_requests_error_response",
     "TransactionStatus": ".transaction_status",
     "TransactionType": ".transaction_type",
     "TranscriptTurn": ".transcript_turn",
@@ -409,6 +439,38 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WebRtcToken": ".web_rtc_token",
     "WebRtcTokenResponse": ".web_rtc_token_response",
     "WebRtcTokensListResponse": ".web_rtc_tokens_list_response",
+    "WhatsAppMessage": ".whats_app_message",
+    "WhatsAppMessageGetResponse": ".whats_app_message_get_response",
+    "WhatsAppMessageListItem": ".whats_app_message_list_item",
+    "WhatsAppMessageListItemDirection": ".whats_app_message_list_item_direction",
+    "WhatsAppMessageListItemStatus": ".whats_app_message_list_item_status",
+    "WhatsAppMessageListResponse": ".whats_app_message_list_response",
+    "WhatsAppMessageSendRequest": ".whats_app_message_send_request",
+    "WhatsAppMessageSendRequestTemplate": ".whats_app_message_send_request_template",
+    "WhatsAppMessageSendRequestTemplateButtonsItem": ".whats_app_message_send_request_template_buttons_item",
+    "WhatsAppMessageSendRequestTemplateButtonsItemType": ".whats_app_message_send_request_template_buttons_item_type",
+    "WhatsAppMessageSendRequestTemplateHeader": ".whats_app_message_send_request_template_header",
+    "WhatsAppMessageSendRequestTemplateHeaderType": ".whats_app_message_send_request_template_header_type",
+    "WhatsAppMessageSendResponse": ".whats_app_message_send_response",
+    "WhatsAppMessageStatus": ".whats_app_message_status",
+    "WhatsAppMessageTemplate": ".whats_app_message_template",
+    "WhatsAppProblem": ".whats_app_problem",
+    "WhatsAppProblemErrorClass": ".whats_app_problem_error_class",
+    "WhatsAppSender": ".whats_app_sender",
+    "WhatsAppSenderMessageTier": ".whats_app_sender_message_tier",
+    "WhatsAppSenderQualityRating": ".whats_app_sender_quality_rating",
+    "WhatsAppSenderStatus": ".whats_app_sender_status",
+    "WhatsAppTemplate": ".whats_app_template",
+    "WhatsAppTemplateCategory": ".whats_app_template_category",
+    "WhatsAppTemplateComponent": ".whats_app_template_component",
+    "WhatsAppTemplateComponentFormat": ".whats_app_template_component_format",
+    "WhatsAppTemplateComponentType": ".whats_app_template_component_type",
+    "WhatsAppTemplateCreateRequest": ".whats_app_template_create_request",
+    "WhatsAppTemplateCreateRequestCategory": ".whats_app_template_create_request_category",
+    "WhatsAppTemplateListResponse": ".whats_app_template_list_response",
+    "WhatsAppTemplateQualityRating": ".whats_app_template_quality_rating",
+    "WhatsAppTemplateResponse": ".whats_app_template_response",
+    "WhatsAppTemplateStatus": ".whats_app_template_status",
 }
 
 
@@ -443,9 +505,9 @@ __all__ = [
     "ApiKeyCallsScopePermissionAllow",
     "ApiKeyScopePermission",
     "ApiKeyScopePermissionAllow",
+    "ApiKeyWithSecret",
     "AvailableNumber",
     "AvailableNumberListResponse",
-    "BadRequestErrorBody",
     "BillingTransactionListResponse",
     "BrandStatusUpdatedWebhook",
     "BrandStatusUpdatedWebhookStatus",
@@ -486,13 +548,11 @@ __all__ = [
     "CountryHasNoRegionsErrorResponse",
     "CountryListResponse",
     "DocumentType",
-    "DocumentTypeId",
+    "DocumentTypeInfo",
     "FileTranscriptResponse",
     "FileTranscriptTurn",
     "FileTranscriptionCompletedWebhook",
     "FileTranscriptionResponse",
-    "FileTranscriptionResponseLanguage",
-    "FileTranscriptionResponseStatus",
     "FinancialTransaction",
     "ForbiddenErrorResponse",
     "InboundCallDestination",
@@ -510,7 +570,6 @@ __all__ = [
     "MessageListResponse",
     "MessageResponse",
     "MessagesDeliveryReport",
-    "NotFoundErrorBody",
     "NotFoundErrorResponse",
     "Number",
     "NumberDestination",
@@ -574,9 +633,9 @@ __all__ = [
     "TenDlcBrand",
     "TenDlcBrandAppeal",
     "TenDlcBrandAppealCreateRequest",
+    "TenDlcBrandAppealCreateRequestAppealCategoriesItem",
     "TenDlcBrandAppealOutcome",
     "TenDlcBrandAppealOutcomeFeedback",
-    "TenDlcBrandAppealOutcomeVettingStatus",
     "TenDlcBrandCreateRequest",
     "TenDlcBrandCreateRequestEntityType",
     "TenDlcBrandCreateRequestStockExchange",
@@ -590,7 +649,6 @@ __all__ = [
     "TenDlcBrandListResponse",
     "TenDlcBrandListResponsePagination",
     "TenDlcBrandQualificationResult",
-    "TenDlcBrandStatus",
     "TenDlcBrandVetting",
     "TenDlcBrandVettingAppeal",
     "TenDlcBrandVettingAppealAppealOutcome",
@@ -606,6 +664,7 @@ __all__ = [
     "TenDlcCampaignNumberListResponse",
     "TenDlcEventSubscription",
     "TenDlcmnoMetadata",
+    "TooManyRequestsErrorResponse",
     "TransactionStatus",
     "TransactionType",
     "TranscriptTurn",
@@ -634,4 +693,36 @@ __all__ = [
     "WebRtcToken",
     "WebRtcTokenResponse",
     "WebRtcTokensListResponse",
+    "WhatsAppMessage",
+    "WhatsAppMessageGetResponse",
+    "WhatsAppMessageListItem",
+    "WhatsAppMessageListItemDirection",
+    "WhatsAppMessageListItemStatus",
+    "WhatsAppMessageListResponse",
+    "WhatsAppMessageSendRequest",
+    "WhatsAppMessageSendRequestTemplate",
+    "WhatsAppMessageSendRequestTemplateButtonsItem",
+    "WhatsAppMessageSendRequestTemplateButtonsItemType",
+    "WhatsAppMessageSendRequestTemplateHeader",
+    "WhatsAppMessageSendRequestTemplateHeaderType",
+    "WhatsAppMessageSendResponse",
+    "WhatsAppMessageStatus",
+    "WhatsAppMessageTemplate",
+    "WhatsAppProblem",
+    "WhatsAppProblemErrorClass",
+    "WhatsAppSender",
+    "WhatsAppSenderMessageTier",
+    "WhatsAppSenderQualityRating",
+    "WhatsAppSenderStatus",
+    "WhatsAppTemplate",
+    "WhatsAppTemplateCategory",
+    "WhatsAppTemplateComponent",
+    "WhatsAppTemplateComponentFormat",
+    "WhatsAppTemplateComponentType",
+    "WhatsAppTemplateCreateRequest",
+    "WhatsAppTemplateCreateRequestCategory",
+    "WhatsAppTemplateListResponse",
+    "WhatsAppTemplateQualityRating",
+    "WhatsAppTemplateResponse",
+    "WhatsAppTemplateStatus",
 ]

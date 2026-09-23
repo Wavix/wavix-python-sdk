@@ -4,8 +4,8 @@ import typing
 
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
+from ...types.profile_config_response import ProfileConfigResponse
 from .raw_client import AsyncRawConfigClient, RawConfigClient
-from .types.get_config_response import GetConfigResponse
 
 
 class ConfigClient:
@@ -23,7 +23,7 @@ class ConfigClient:
         """
         return self._raw_client
 
-    def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> GetConfigResponse:
+    def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> ProfileConfigResponse:
         """
         Returns the balance and global limits configured for the authenticated account.
 
@@ -34,7 +34,7 @@ class ConfigClient:
 
         Returns
         -------
-        GetConfigResponse
+        ProfileConfigResponse
             Returns the account settings.
 
         Examples
@@ -65,7 +65,7 @@ class AsyncConfigClient:
         """
         return self._raw_client
 
-    async def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> GetConfigResponse:
+    async def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> ProfileConfigResponse:
         """
         Returns the balance and global limits configured for the authenticated account.
 
@@ -76,7 +76,7 @@ class AsyncConfigClient:
 
         Returns
         -------
-        GetConfigResponse
+        ProfileConfigResponse
             Returns the account settings.
 
         Examples

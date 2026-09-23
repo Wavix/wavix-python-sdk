@@ -5,7 +5,7 @@ import typing
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from .ten_dlc_brand_entity_type import TenDlcBrandEntityType
-from .ten_dlc_brand_status import TenDlcBrandStatus
+from .ten_dlc_brand_identity_verification_status import TenDlcBrandIdentityVerificationStatus
 
 
 class TenDlcBrand(UniversalBaseModel):
@@ -48,7 +48,7 @@ class TenDlcBrand(UniversalBaseModel):
     ISO 3166-1 alpha-2 country code where the Tax ID was issued.
     """
 
-    status: TenDlcBrandStatus = pydantic.Field()
+    status: TenDlcBrandIdentityVerificationStatus = pydantic.Field()
     """
     Brand identity verification status.
     """

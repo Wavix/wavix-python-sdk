@@ -12,9 +12,12 @@ from ..core.request_options import RequestOptions
 from ..errors.bad_request_error import BadRequestError
 from ..errors.forbidden_error import ForbiddenError
 from ..errors.not_found_error import NotFoundError
+from ..errors.unauthorized_error import UnauthorizedError
+from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.number_validator_create_bulk_response import NumberValidatorCreateBulkResponse
 from ..types.phone_number_validation_type import PhoneNumberValidationType
-from .types.get_number_validator_response import GetNumberValidatorResponse
+from ..types.phone_validation_response import PhoneValidationResponse
+from ..types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -31,9 +34,9 @@ class RawNumberValidatorClient:
         phone_number: str,
         type: PhoneNumberValidationType,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[GetNumberValidatorResponse]:
+    ) -> HttpResponse[PhoneValidationResponse]:
         """
-        Validates a single phone number and returns line type, carrier, portability, and reachability details.
+        Validates a single phone number and returns line type, carrier, portability, and reachability details. The response's `error_code` is a per-number result code (`000` success; `013` internal error; `021` invalid format; `041` remote timeout; `042` remote query failed; `091` insufficient funds) — distinct from the HTTP status codes below.
 
         Parameters
         ----------
@@ -48,7 +51,7 @@ class RawNumberValidatorClient:
 
         Returns
         -------
-        HttpResponse[GetNumberValidatorResponse]
+        HttpResponse[PhoneValidationResponse]
             Returns the phone number validation details.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -63,9 +66,9 @@ class RawNumberValidatorClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetNumberValidatorResponse,
+                    PhoneValidationResponse,
                     parse_obj_as(
-                        type_=GetNumberValidatorResponse,  # type: ignore
+                        type_=PhoneValidationResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -81,8 +84,30 @@ class RawNumberValidatorClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -106,8 +131,8 @@ class RawNumberValidatorClient:
         *,
         phone_numbers: typing.Sequence[str],
         type: PhoneNumberValidationType,
-        async_: bool,
-        force: bool,
+        async_: typing.Optional[bool] = OMIT,
+        force: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[NumberValidatorCreateBulkResponse]:
         """
@@ -116,15 +141,15 @@ class RawNumberValidatorClient:
         Parameters
         ----------
         phone_numbers : typing.Sequence[str]
-            List of phone numbers to get detailed information about.
+            List of phone numbers to get detailed information about. Maximum 1000 numbers per request.
 
         type : PhoneNumberValidationType
 
-        async_ : bool
-            Indicates whether the request should be executed asynchronously. If `true`, the response will include a `request_uuid` that can be used to poll for results. If `false`, the response will include validation results directly.
+        async_ : typing.Optional[bool]
+            Indicates whether the request should be executed asynchronously. If `true`, the response will include a `request_uuid` that can be used to poll for results. If `false` (default), the response will include validation results directly.
 
-        force : bool
-            Indicates whether to force a fresh validation instead of returning a previously cached result.
+        force : typing.Optional[bool]
+            Indicates whether to force a fresh validation instead of returning a previously cached result. Defaults to `false`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -170,6 +195,131 @@ class RawNumberValidatorClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+
+class AsyncRawNumberValidatorClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._client_wrapper = client_wrapper
+
+    async def get(
+        self,
+        *,
+        phone_number: str,
+        type: PhoneNumberValidationType,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[PhoneValidationResponse]:
+        """
+        Validates a single phone number and returns line type, carrier, portability, and reachability details. The response's `error_code` is a per-number result code (`000` success; `013` internal error; `021` invalid format; `041` remote timeout; `042` remote query failed; `091` insufficient funds) — distinct from the HTTP status codes below.
+
+        Parameters
+        ----------
+        phone_number : str
+            The phone number to validate, in E.164 format with or without the leading `+`.
+
+        type : PhoneNumberValidationType
+            Depth of validation to perform. Accepts a `PhoneNumberValidationType` value.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[PhoneValidationResponse]
+            Returns the phone number validation details.
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "v1/validation",
+            method="GET",
+            params={
+                "phone_number": phone_number,
+                "type": type,
+            },
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    PhoneValidationResponse,
+                    parse_obj_as(
+                        type_=PhoneValidationResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -201,94 +351,13 @@ class RawNumberValidatorClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-
-class AsyncRawNumberValidatorClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._client_wrapper = client_wrapper
-
-    async def get(
-        self,
-        *,
-        phone_number: str,
-        type: PhoneNumberValidationType,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[GetNumberValidatorResponse]:
-        """
-        Validates a single phone number and returns line type, carrier, portability, and reachability details.
-
-        Parameters
-        ----------
-        phone_number : str
-            The phone number to validate, in E.164 format with or without the leading `+`.
-
-        type : PhoneNumberValidationType
-            Depth of validation to perform. Accepts a `PhoneNumberValidationType` value.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        AsyncHttpResponse[GetNumberValidatorResponse]
-            Returns the phone number validation details.
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            "v1/validation",
-            method="GET",
-            params={
-                "phone_number": phone_number,
-                "type": type,
-            },
-            request_options=request_options,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    GetNumberValidatorResponse,
-                    parse_obj_as(
-                        type_=GetNumberValidatorResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(
-                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
-            )
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
     async def create_bulk(
         self,
         *,
         phone_numbers: typing.Sequence[str],
         type: PhoneNumberValidationType,
-        async_: bool,
-        force: bool,
+        async_: typing.Optional[bool] = OMIT,
+        force: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[NumberValidatorCreateBulkResponse]:
         """
@@ -297,15 +366,15 @@ class AsyncRawNumberValidatorClient:
         Parameters
         ----------
         phone_numbers : typing.Sequence[str]
-            List of phone numbers to get detailed information about.
+            List of phone numbers to get detailed information about. Maximum 1000 numbers per request.
 
         type : PhoneNumberValidationType
 
-        async_ : bool
-            Indicates whether the request should be executed asynchronously. If `true`, the response will include a `request_uuid` that can be used to poll for results. If `false`, the response will include validation results directly.
+        async_ : typing.Optional[bool]
+            Indicates whether the request should be executed asynchronously. If `true`, the response will include a `request_uuid` that can be used to poll for results. If `false` (default), the response will include validation results directly.
 
-        force : bool
-            Indicates whether to force a fresh validation instead of returning a previously cached result.
+        force : typing.Optional[bool]
+            Indicates whether to force a fresh validation instead of returning a previously cached result. Defaults to `false`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -351,6 +420,17 @@ class AsyncRawNumberValidatorClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -364,6 +444,17 @@ class AsyncRawNumberValidatorClient:
                 )
             if _response.status_code == 404:
                 raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,

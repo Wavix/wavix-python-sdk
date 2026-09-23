@@ -16,7 +16,6 @@ from ..types.success_response import SuccessResponse
 from ..types.transcription_filter import TranscriptionFilter
 from ..types.transcription_language import TranscriptionLanguage
 from .raw_client import AsyncRawCdrsClient, RawCdrsClient
-from .types.cdr_search_request_disposition import CdrSearchRequestDisposition
 from .types.cdr_search_request_type import CdrSearchRequestType
 
 if typing.TYPE_CHECKING:
@@ -72,7 +71,7 @@ class CdrsClient:
             Filters CDRs by call direction. One of `placed` (outbound calls dialed by the account) or `received` (inbound calls answered by the account).
 
         disposition : typing.Optional[CallDisposition]
-            Filters CDRs by call disposition. One of `answered` (the called party answered), `busy` (the called party was busy), `rejected` (the call was declined), `failed` (the call could not be routed), or `all` (no disposition filter).
+            Filters CDRs by call disposition. One of `answered` (the called party answered), `noanswer` (no answer within the ring timeout), `busy` (the called party was busy), `failed` (the call could not be routed), or `all` (no disposition filter).
 
         from_search : typing.Optional[str]
             Filters CDRs by originating phone number. Accepts a full or partial number.
@@ -146,15 +145,15 @@ class CdrsClient:
         type: CdrSearchRequestType,
         from_: dt.date,
         to: dt.date,
-        page: int,
-        per_page: int,
         from_search: typing.Optional[str] = OMIT,
         to_search: typing.Optional[str] = OMIT,
         sip_trunk: typing.Optional[str] = OMIT,
         min_duration: typing.Optional[int] = OMIT,
         transcription: typing.Optional[TranscriptionFilter] = OMIT,
         uuid_: typing.Optional[str] = OMIT,
-        disposition: typing.Optional[CdrSearchRequestDisposition] = OMIT,
+        disposition: typing.Optional[CallDisposition] = OMIT,
+        page: typing.Optional[int] = OMIT,
+        per_page: typing.Optional[int] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> CdrTranscriptionSearchResponse:
         """
@@ -170,12 +169,6 @@ class CdrsClient:
 
         to : dt.date
             End date for call search in `YYYY-MM-DD` format.
-
-        page : int
-            Page number to retrieve.
-
-        per_page : int
-            Number of records per page.
 
         from_search : typing.Optional[str]
             Originating phone number to filter results. Accepts full or partial number.
@@ -194,11 +187,17 @@ class CdrsClient:
         uuid_ : typing.Optional[str]
             Call ID.
 
-        disposition : typing.Optional[CdrSearchRequestDisposition]
+        disposition : typing.Optional[CallDisposition]
             Call disposition to filter results.  If omitted, returns only answered
-             calls. Allowed values: `answered`, `busy`, `rejected`,
+             calls. Allowed values: `answered`, `noanswer`, `busy`,
               `failed`, `all`. Use `all` to return calls
                regardless of their disposition.
+
+        page : typing.Optional[int]
+            Page number to retrieve.
+
+        per_page : typing.Optional[int]
+            Number of records per page.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -225,16 +224,12 @@ class CdrsClient:
             to=datetime.date.fromisoformat(
                 "2023-08-31",
             ),
-            page=1,
-            per_page=50,
         )
         """
         _response = self._raw_client.search(
             type=type,
             from_=from_,
             to=to,
-            page=page,
-            per_page=per_page,
             from_search=from_search,
             to_search=to_search,
             sip_trunk=sip_trunk,
@@ -242,6 +237,8 @@ class CdrsClient:
             transcription=transcription,
             uuid_=uuid_,
             disposition=disposition,
+            page=page,
+            per_page=per_page,
             request_options=request_options,
         )
         return _response.data
@@ -255,7 +252,7 @@ class CdrsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SuccessResponse:
         """
-        Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result.
+        Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result. Billed per minute at the account's call-transcription rate; fails with an insufficient-funds error when the balance cannot cover it.
 
         Parameters
         ----------
@@ -283,7 +280,7 @@ class CdrsClient:
             token="YOUR_TOKEN",
         )
         client.cdrs.retranscribe(
-            call_id="bbaa37bf-430a-46da-ade3-c248e407016",
+            call_id="bbaa37bf-430a-46da-ade3-c248e4070160",
         )
         """
         _response = self._raw_client.retranscribe(
@@ -318,7 +315,7 @@ class CdrsClient:
             token="YOUR_TOKEN",
         )
         client.cdrs.transcriptions(
-            call_id="bbaa37bf-430a-46da-ade3-c248e407016",
+            call_id="bbaa37bf-430a-46da-ade3-c248e4070160",
         )
         """
         _response = self._raw_client.transcriptions(call_id, request_options=request_options)
@@ -397,7 +394,7 @@ class CdrsClient:
             Filters CDRs by call direction. One of `placed` (outbound calls dialed by the account) or `received` (inbound calls answered by the account).
 
         disposition : typing.Optional[CallDisposition]
-            Filters CDRs by call disposition. One of `answered` (the called party answered), `busy` (the called party was busy), `rejected` (the call was declined), `failed` (the call could not be routed), or `all` (no disposition filter).
+            Filters CDRs by call disposition. One of `answered` (the called party answered), `noanswer` (no answer within the ring timeout), `busy` (the called party was busy), `failed` (the call could not be routed), or `all` (no disposition filter).
 
         from_search : typing.Optional[str]
             Filters CDRs by originating phone number. Accepts a full or partial number.
@@ -521,7 +518,7 @@ class AsyncCdrsClient:
             Filters CDRs by call direction. One of `placed` (outbound calls dialed by the account) or `received` (inbound calls answered by the account).
 
         disposition : typing.Optional[CallDisposition]
-            Filters CDRs by call disposition. One of `answered` (the called party answered), `busy` (the called party was busy), `rejected` (the call was declined), `failed` (the call could not be routed), or `all` (no disposition filter).
+            Filters CDRs by call disposition. One of `answered` (the called party answered), `noanswer` (no answer within the ring timeout), `busy` (the called party was busy), `failed` (the call could not be routed), or `all` (no disposition filter).
 
         from_search : typing.Optional[str]
             Filters CDRs by originating phone number. Accepts a full or partial number.
@@ -602,15 +599,15 @@ class AsyncCdrsClient:
         type: CdrSearchRequestType,
         from_: dt.date,
         to: dt.date,
-        page: int,
-        per_page: int,
         from_search: typing.Optional[str] = OMIT,
         to_search: typing.Optional[str] = OMIT,
         sip_trunk: typing.Optional[str] = OMIT,
         min_duration: typing.Optional[int] = OMIT,
         transcription: typing.Optional[TranscriptionFilter] = OMIT,
         uuid_: typing.Optional[str] = OMIT,
-        disposition: typing.Optional[CdrSearchRequestDisposition] = OMIT,
+        disposition: typing.Optional[CallDisposition] = OMIT,
+        page: typing.Optional[int] = OMIT,
+        per_page: typing.Optional[int] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> CdrTranscriptionSearchResponse:
         """
@@ -626,12 +623,6 @@ class AsyncCdrsClient:
 
         to : dt.date
             End date for call search in `YYYY-MM-DD` format.
-
-        page : int
-            Page number to retrieve.
-
-        per_page : int
-            Number of records per page.
 
         from_search : typing.Optional[str]
             Originating phone number to filter results. Accepts full or partial number.
@@ -650,11 +641,17 @@ class AsyncCdrsClient:
         uuid_ : typing.Optional[str]
             Call ID.
 
-        disposition : typing.Optional[CdrSearchRequestDisposition]
+        disposition : typing.Optional[CallDisposition]
             Call disposition to filter results.  If omitted, returns only answered
-             calls. Allowed values: `answered`, `busy`, `rejected`,
+             calls. Allowed values: `answered`, `noanswer`, `busy`,
               `failed`, `all`. Use `all` to return calls
                regardless of their disposition.
+
+        page : typing.Optional[int]
+            Page number to retrieve.
+
+        per_page : typing.Optional[int]
+            Number of records per page.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -685,8 +682,6 @@ class AsyncCdrsClient:
                 to=datetime.date.fromisoformat(
                     "2023-08-31",
                 ),
-                page=1,
-                per_page=50,
             )
 
 
@@ -696,8 +691,6 @@ class AsyncCdrsClient:
             type=type,
             from_=from_,
             to=to,
-            page=page,
-            per_page=per_page,
             from_search=from_search,
             to_search=to_search,
             sip_trunk=sip_trunk,
@@ -705,6 +698,8 @@ class AsyncCdrsClient:
             transcription=transcription,
             uuid_=uuid_,
             disposition=disposition,
+            page=page,
+            per_page=per_page,
             request_options=request_options,
         )
         return _response.data
@@ -718,7 +713,7 @@ class AsyncCdrsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SuccessResponse:
         """
-        Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result.
+        Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result. Billed per minute at the account's call-transcription rate; fails with an insufficient-funds error when the balance cannot cover it.
 
         Parameters
         ----------
@@ -751,7 +746,7 @@ class AsyncCdrsClient:
 
         async def main() -> None:
             await client.cdrs.retranscribe(
-                call_id="bbaa37bf-430a-46da-ade3-c248e407016",
+                call_id="bbaa37bf-430a-46da-ade3-c248e4070160",
             )
 
 
@@ -794,7 +789,7 @@ class AsyncCdrsClient:
 
         async def main() -> None:
             await client.cdrs.transcriptions(
-                call_id="bbaa37bf-430a-46da-ade3-c248e407016",
+                call_id="bbaa37bf-430a-46da-ade3-c248e4070160",
             )
 
 
@@ -884,7 +879,7 @@ class AsyncCdrsClient:
             Filters CDRs by call direction. One of `placed` (outbound calls dialed by the account) or `received` (inbound calls answered by the account).
 
         disposition : typing.Optional[CallDisposition]
-            Filters CDRs by call disposition. One of `answered` (the called party answered), `busy` (the called party was busy), `rejected` (the call was declined), `failed` (the call could not be routed), or `all` (no disposition filter).
+            Filters CDRs by call disposition. One of `answered` (the called party answered), `noanswer` (no answer within the ring timeout), `busy` (the called party was busy), `failed` (the call could not be routed), or `all` (no disposition filter).
 
         from_search : typing.Optional[str]
             Filters CDRs by originating phone number. Accepts a full or partial number.

@@ -5,7 +5,7 @@ import typing
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from .available_number import AvailableNumber
-from .document_type import DocumentType
+from .document_type_info import DocumentTypeInfo
 
 
 class CartResponse(UniversalBaseModel):
@@ -14,7 +14,7 @@ class CartResponse(UniversalBaseModel):
     List of phone numbers in the cart.
     """
 
-    doc_types: typing.List[DocumentType] = pydantic.Field()
+    doc_types: typing.List[DocumentTypeInfo] = pydantic.Field()
     """
     Document types required to activate phone numbers.
     """

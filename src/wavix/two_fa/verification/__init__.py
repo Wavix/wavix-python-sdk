@@ -6,18 +6,8 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .types import (
-        CheckVerificationResponse,
-        CreateVerificationResponse,
-        ResendVerificationResponse,
-        TwoFactorVerificationResendRequestChannel,
-    )
-_dynamic_imports: typing.Dict[str, str] = {
-    "CheckVerificationResponse": ".types",
-    "CreateVerificationResponse": ".types",
-    "ResendVerificationResponse": ".types",
-    "TwoFactorVerificationResendRequestChannel": ".types",
-}
+    from .types import TwoFactorVerificationResendRequestChannel
+_dynamic_imports: typing.Dict[str, str] = {"TwoFactorVerificationResendRequestChannel": ".types"}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -41,9 +31,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = [
-    "CheckVerificationResponse",
-    "CreateVerificationResponse",
-    "ResendVerificationResponse",
-    "TwoFactorVerificationResendRequestChannel",
-]
+__all__ = ["TwoFactorVerificationResendRequestChannel"]

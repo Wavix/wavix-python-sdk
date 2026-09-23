@@ -5,9 +5,9 @@ import typing
 
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
+from ...types.billing_transaction_list_response import BillingTransactionListResponse
 from ...types.transaction_type import TransactionType
 from .raw_client import AsyncRawTransactionsClient, RawTransactionsClient
-from .types.list_transactions_response import ListTransactionsResponse
 
 
 class TransactionsClient:
@@ -36,7 +36,7 @@ class TransactionsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListTransactionsResponse:
+    ) -> BillingTransactionListResponse:
         """
         Returns a paginated list of billing transactions for the authenticated account within the requested date range.
 
@@ -68,7 +68,7 @@ class TransactionsClient:
 
         Returns
         -------
-        ListTransactionsResponse
+        BillingTransactionListResponse
             Returns a paginated list of billing transactions.
 
         Examples
@@ -132,7 +132,7 @@ class AsyncTransactionsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListTransactionsResponse:
+    ) -> BillingTransactionListResponse:
         """
         Returns a paginated list of billing transactions for the authenticated account within the requested date range.
 
@@ -164,7 +164,7 @@ class AsyncTransactionsClient:
 
         Returns
         -------
-        ListTransactionsResponse
+        BillingTransactionListResponse
             Returns a paginated list of billing transactions.
 
         Examples

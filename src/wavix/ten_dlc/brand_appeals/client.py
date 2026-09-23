@@ -4,9 +4,10 @@ import typing
 
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
+from ...types.success_response import SuccessResponse
 from ...types.ten_dlc_brand_appeal import TenDlcBrandAppeal
 from .raw_client import AsyncRawBrandAppealsClient, RawBrandAppealsClient
-from .types.create_brand_appeals_response import CreateBrandAppealsResponse
+from .types.create_brand_appeals_request_appeal_categories_item import CreateBrandAppealsRequestAppealCategoriesItem
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -64,11 +65,11 @@ class BrandAppealsClient:
         self,
         brand_id: str,
         *,
-        appeal_categories: typing.Sequence[str],
+        appeal_categories: typing.Sequence[CreateBrandAppealsRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
         explanation: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateBrandAppealsResponse:
+    ) -> SuccessResponse:
         """
         Submits an appeal for 10DLC brand identity verification. Provide any additional documentation to support the appeal. Use `appeal_category` to specify the appeal type:
         - `VERIFY_TAX_ID` — Use if the brand is UNVERIFIED due to a tax ID mismatch. Applies to private companies, public companies, non-profits, and government entities.
@@ -80,7 +81,7 @@ class BrandAppealsClient:
         brand_id : str
             The unique ID of the 10DLC Brand.
 
-        appeal_categories : typing.Sequence[str]
+        appeal_categories : typing.Sequence[CreateBrandAppealsRequestAppealCategoriesItem]
             List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`
 
         evidence : typing.Sequence[str]
@@ -94,7 +95,7 @@ class BrandAppealsClient:
 
         Returns
         -------
-        CreateBrandAppealsResponse
+        SuccessResponse
             Returns the submitted appeal.
 
         Examples
@@ -180,11 +181,11 @@ class AsyncBrandAppealsClient:
         self,
         brand_id: str,
         *,
-        appeal_categories: typing.Sequence[str],
+        appeal_categories: typing.Sequence[CreateBrandAppealsRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
         explanation: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateBrandAppealsResponse:
+    ) -> SuccessResponse:
         """
         Submits an appeal for 10DLC brand identity verification. Provide any additional documentation to support the appeal. Use `appeal_category` to specify the appeal type:
         - `VERIFY_TAX_ID` — Use if the brand is UNVERIFIED due to a tax ID mismatch. Applies to private companies, public companies, non-profits, and government entities.
@@ -196,7 +197,7 @@ class AsyncBrandAppealsClient:
         brand_id : str
             The unique ID of the 10DLC Brand.
 
-        appeal_categories : typing.Sequence[str]
+        appeal_categories : typing.Sequence[CreateBrandAppealsRequestAppealCategoriesItem]
             List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`
 
         evidence : typing.Sequence[str]
@@ -210,7 +211,7 @@ class AsyncBrandAppealsClient:
 
         Returns
         -------
-        CreateBrandAppealsResponse
+        SuccessResponse
             Returns the submitted appeal.
 
         Examples

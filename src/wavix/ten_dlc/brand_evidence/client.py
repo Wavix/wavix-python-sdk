@@ -6,9 +6,9 @@ from ... import core
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
 from ...types.list_brand_evidence_response import ListBrandEvidenceResponse
+from ...types.success_response import SuccessResponse
+from ...types.ten_dlc_brand_evidence import TenDlcBrandEvidence
 from .raw_client import AsyncRawBrandEvidenceClient, RawBrandEvidenceClient
-from .types.delete_brand_evidence_response import DeleteBrandEvidenceResponse
-from .types.upload_brand_evidence_response import UploadBrandEvidenceResponse
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -64,7 +64,7 @@ class BrandEvidenceClient:
 
     def upload(
         self, brand_id: str, *, file: core.File, request_options: typing.Optional[RequestOptions] = None
-    ) -> UploadBrandEvidenceResponse:
+    ) -> TenDlcBrandEvidence:
         """
         Uploads a supporting evidence file for the 10DLC Brand identified by `brand_id`. Supported formats include `.jpg`, `.png`, and `.pdf`. Maximum size is 10 MB.
 
@@ -81,7 +81,7 @@ class BrandEvidenceClient:
 
         Returns
         -------
-        UploadBrandEvidenceResponse
+        TenDlcBrandEvidence
             Returns the uploaded evidence file.
 
         Examples
@@ -137,7 +137,7 @@ class BrandEvidenceClient:
 
     def delete(
         self, brand_id: str, id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> DeleteBrandEvidenceResponse:
+    ) -> SuccessResponse:
         """
         Deletes the Brand evidence file identified by the evidence ID. Deletion is permanent.
 
@@ -154,7 +154,7 @@ class BrandEvidenceClient:
 
         Returns
         -------
-        DeleteBrandEvidenceResponse
+        SuccessResponse
             Returns a success confirmation. The evidence file is deleted.
 
         Examples
@@ -231,7 +231,7 @@ class AsyncBrandEvidenceClient:
 
     async def upload(
         self, brand_id: str, *, file: core.File, request_options: typing.Optional[RequestOptions] = None
-    ) -> UploadBrandEvidenceResponse:
+    ) -> TenDlcBrandEvidence:
         """
         Uploads a supporting evidence file for the 10DLC Brand identified by `brand_id`. Supported formats include `.jpg`, `.png`, and `.pdf`. Maximum size is 10 MB.
 
@@ -248,7 +248,7 @@ class AsyncBrandEvidenceClient:
 
         Returns
         -------
-        UploadBrandEvidenceResponse
+        TenDlcBrandEvidence
             Returns the uploaded evidence file.
 
         Examples
@@ -321,7 +321,7 @@ class AsyncBrandEvidenceClient:
 
     async def delete(
         self, brand_id: str, id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> DeleteBrandEvidenceResponse:
+    ) -> SuccessResponse:
         """
         Deletes the Brand evidence file identified by the evidence ID. Deletion is permanent.
 
@@ -338,7 +338,7 @@ class AsyncBrandEvidenceClient:
 
         Returns
         -------
-        DeleteBrandEvidenceResponse
+        SuccessResponse
             Returns a success confirmation. The evidence file is deleted.
 
         Examples

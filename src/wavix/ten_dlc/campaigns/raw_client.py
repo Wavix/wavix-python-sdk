@@ -15,15 +15,13 @@ from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
 from ...errors.not_found_error import NotFoundError
 from ...errors.too_many_requests_error import TooManyRequestsError
+from ...errors.unauthorized_error import UnauthorizedError
+from ...errors.unprocessable_entity_error import UnprocessableEntityError
 from ...types.success_response import SuccessResponse
-from ...types.validation_error_response import ValidationErrorResponse
-from .types.create_campaigns_response import CreateCampaignsResponse
-from .types.delete_campaigns_response import DeleteCampaignsResponse
-from .types.get_campaigns_response import GetCampaignsResponse
-from .types.list_by_brand_campaigns_response import ListByBrandCampaignsResponse
-from .types.list_campaigns_response import ListCampaignsResponse
+from ...types.ten_dlc_campaign import TenDlcCampaign
+from ...types.ten_dlc_campaign_list_response import TenDlcCampaignListResponse
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from .types.ten_dlc_campaign_update_request_usecase import TenDlcCampaignUpdateRequestUsecase
-from .types.update_campaigns_response import UpdateCampaignsResponse
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -46,7 +44,7 @@ class RawCampaignsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[ListCampaignsResponse]:
+    ) -> HttpResponse[TenDlcCampaignListResponse]:
         """
         Returns a paginated list of 10DLC Campaigns for the authenticated account, filtered by date, status, and use case.
 
@@ -81,7 +79,7 @@ class RawCampaignsClient:
 
         Returns
         -------
-        HttpResponse[ListCampaignsResponse]
+        HttpResponse[TenDlcCampaignListResponse]
             Returns a paginated list of 10DLC Campaigns.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -102,15 +100,48 @@ class RawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListCampaignsResponse,
+                    TenDlcCampaignListResponse,
                     parse_obj_as(
-                        type_=ListCampaignsResponse,  # type: ignore
+                        type_=TenDlcCampaignListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -142,7 +173,7 @@ class RawCampaignsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[ListByBrandCampaignsResponse]:
+    ) -> HttpResponse[TenDlcCampaignListResponse]:
         """
         Returns a paginated list of 10DLC Campaigns associated with the 10DLC Brand identified by `brand_id`.
 
@@ -180,7 +211,7 @@ class RawCampaignsClient:
 
         Returns
         -------
-        HttpResponse[ListByBrandCampaignsResponse]
+        HttpResponse[TenDlcCampaignListResponse]
             Returns a paginated list of 10DLC Campaigns.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -201,13 +232,35 @@ class RawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListByBrandCampaignsResponse,
+                    TenDlcCampaignListResponse,
                     parse_obj_as(
-                        type_=ListByBrandCampaignsResponse,  # type: ignore
+                        type_=TenDlcCampaignListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -272,7 +325,7 @@ class RawCampaignsClient:
         sample5: typing.Optional[str] = OMIT,
         privacy_policy: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[CreateCampaignsResponse]:
+    ) -> HttpResponse[TenDlcCampaign]:
         """
         Registers a 10DLC Campaign under the 10DLC Brand identified by `brand_id`. The Brand must have a verified identity status.
 
@@ -370,7 +423,7 @@ class RawCampaignsClient:
 
         Returns
         -------
-        HttpResponse[CreateCampaignsResponse]
+        HttpResponse[TenDlcCampaign]
             Returns the registered 10DLC Campaign.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -415,9 +468,9 @@ class RawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateCampaignsResponse,
+                    TenDlcCampaign,
                     parse_obj_as(
-                        type_=CreateCampaignsResponse,  # type: ignore
+                        type_=TenDlcCampaign,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -429,6 +482,17 @@ class RawCampaignsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -455,6 +519,17 @@ class RawCampaignsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
@@ -466,7 +541,7 @@ class RawCampaignsClient:
 
     def get(
         self, brand_id: str, campaign_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[GetCampaignsResponse]:
+    ) -> HttpResponse[TenDlcCampaign]:
         """
         Returns the 10DLC Campaign identified by `campaign_id` under the Brand identified by `brand_id`.
 
@@ -483,7 +558,7 @@ class RawCampaignsClient:
 
         Returns
         -------
-        HttpResponse[GetCampaignsResponse]
+        HttpResponse[TenDlcCampaign]
             Returns the 10DLC Campaign.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -494,13 +569,35 @@ class RawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetCampaignsResponse,
+                    TenDlcCampaign,
                     parse_obj_as(
-                        type_=GetCampaignsResponse,  # type: ignore
+                        type_=TenDlcCampaign,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -564,7 +661,7 @@ class RawCampaignsClient:
         privacy_policy: typing.Optional[str] = OMIT,
         embedded_link_sample: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[UpdateCampaignsResponse]:
+    ) -> HttpResponse[TenDlcCampaign]:
         """
         Updates the 10DLC Campaign identified by `campaign_id`. Only the provided fields are changed.
 
@@ -659,7 +756,7 @@ class RawCampaignsClient:
 
         Returns
         -------
-        HttpResponse[UpdateCampaignsResponse]
+        HttpResponse[TenDlcCampaign]
             Returns the updated 10DLC Campaign.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -702,9 +799,9 @@ class RawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    UpdateCampaignsResponse,
+                    TenDlcCampaign,
                     parse_obj_as(
-                        type_=UpdateCampaignsResponse,  # type: ignore
+                        type_=TenDlcCampaign,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -716,6 +813,17 @@ class RawCampaignsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -742,6 +850,17 @@ class RawCampaignsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
@@ -753,7 +872,7 @@ class RawCampaignsClient:
 
     def delete(
         self, brand_id: str, campaign_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[DeleteCampaignsResponse]:
+    ) -> HttpResponse[SuccessResponse]:
         """
         Deletes a 10DLC Campaign. Associated phone numbers cannot be used as Sender IDs once the Campaign is deleted.
 
@@ -770,7 +889,7 @@ class RawCampaignsClient:
 
         Returns
         -------
-        HttpResponse[DeleteCampaignsResponse]
+        HttpResponse[SuccessResponse]
             Returns a success confirmation. The 10DLC Campaign is deleted.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -781,13 +900,35 @@ class RawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    DeleteCampaignsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=DeleteCampaignsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -892,6 +1033,17 @@ class RawCampaignsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -918,9 +1070,9 @@ class RawCampaignsClient:
                 raise TooManyRequestsError(
                     headers=dict(_response.headers),
                     body=typing.cast(
-                        ValidationErrorResponse,
+                        typing.Any,
                         parse_obj_as(
-                            type_=ValidationErrorResponse,  # type: ignore
+                            type_=typing.Any,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -951,7 +1103,7 @@ class AsyncRawCampaignsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[ListCampaignsResponse]:
+    ) -> AsyncHttpResponse[TenDlcCampaignListResponse]:
         """
         Returns a paginated list of 10DLC Campaigns for the authenticated account, filtered by date, status, and use case.
 
@@ -986,7 +1138,7 @@ class AsyncRawCampaignsClient:
 
         Returns
         -------
-        AsyncHttpResponse[ListCampaignsResponse]
+        AsyncHttpResponse[TenDlcCampaignListResponse]
             Returns a paginated list of 10DLC Campaigns.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1007,15 +1159,48 @@ class AsyncRawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListCampaignsResponse,
+                    TenDlcCampaignListResponse,
                     parse_obj_as(
-                        type_=ListCampaignsResponse,  # type: ignore
+                        type_=TenDlcCampaignListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -1047,7 +1232,7 @@ class AsyncRawCampaignsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[ListByBrandCampaignsResponse]:
+    ) -> AsyncHttpResponse[TenDlcCampaignListResponse]:
         """
         Returns a paginated list of 10DLC Campaigns associated with the 10DLC Brand identified by `brand_id`.
 
@@ -1085,7 +1270,7 @@ class AsyncRawCampaignsClient:
 
         Returns
         -------
-        AsyncHttpResponse[ListByBrandCampaignsResponse]
+        AsyncHttpResponse[TenDlcCampaignListResponse]
             Returns a paginated list of 10DLC Campaigns.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1106,13 +1291,35 @@ class AsyncRawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListByBrandCampaignsResponse,
+                    TenDlcCampaignListResponse,
                     parse_obj_as(
-                        type_=ListByBrandCampaignsResponse,  # type: ignore
+                        type_=TenDlcCampaignListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -1177,7 +1384,7 @@ class AsyncRawCampaignsClient:
         sample5: typing.Optional[str] = OMIT,
         privacy_policy: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[CreateCampaignsResponse]:
+    ) -> AsyncHttpResponse[TenDlcCampaign]:
         """
         Registers a 10DLC Campaign under the 10DLC Brand identified by `brand_id`. The Brand must have a verified identity status.
 
@@ -1275,7 +1482,7 @@ class AsyncRawCampaignsClient:
 
         Returns
         -------
-        AsyncHttpResponse[CreateCampaignsResponse]
+        AsyncHttpResponse[TenDlcCampaign]
             Returns the registered 10DLC Campaign.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1320,9 +1527,9 @@ class AsyncRawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateCampaignsResponse,
+                    TenDlcCampaign,
                     parse_obj_as(
-                        type_=CreateCampaignsResponse,  # type: ignore
+                        type_=TenDlcCampaign,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1334,6 +1541,17 @@ class AsyncRawCampaignsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -1360,6 +1578,17 @@ class AsyncRawCampaignsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
@@ -1371,7 +1600,7 @@ class AsyncRawCampaignsClient:
 
     async def get(
         self, brand_id: str, campaign_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[GetCampaignsResponse]:
+    ) -> AsyncHttpResponse[TenDlcCampaign]:
         """
         Returns the 10DLC Campaign identified by `campaign_id` under the Brand identified by `brand_id`.
 
@@ -1388,7 +1617,7 @@ class AsyncRawCampaignsClient:
 
         Returns
         -------
-        AsyncHttpResponse[GetCampaignsResponse]
+        AsyncHttpResponse[TenDlcCampaign]
             Returns the 10DLC Campaign.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1399,13 +1628,35 @@ class AsyncRawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetCampaignsResponse,
+                    TenDlcCampaign,
                     parse_obj_as(
-                        type_=GetCampaignsResponse,  # type: ignore
+                        type_=TenDlcCampaign,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -1469,7 +1720,7 @@ class AsyncRawCampaignsClient:
         privacy_policy: typing.Optional[str] = OMIT,
         embedded_link_sample: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[UpdateCampaignsResponse]:
+    ) -> AsyncHttpResponse[TenDlcCampaign]:
         """
         Updates the 10DLC Campaign identified by `campaign_id`. Only the provided fields are changed.
 
@@ -1564,7 +1815,7 @@ class AsyncRawCampaignsClient:
 
         Returns
         -------
-        AsyncHttpResponse[UpdateCampaignsResponse]
+        AsyncHttpResponse[TenDlcCampaign]
             Returns the updated 10DLC Campaign.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1607,9 +1858,9 @@ class AsyncRawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    UpdateCampaignsResponse,
+                    TenDlcCampaign,
                     parse_obj_as(
-                        type_=UpdateCampaignsResponse,  # type: ignore
+                        type_=TenDlcCampaign,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1621,6 +1872,17 @@ class AsyncRawCampaignsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -1647,6 +1909,17 @@ class AsyncRawCampaignsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
@@ -1658,7 +1931,7 @@ class AsyncRawCampaignsClient:
 
     async def delete(
         self, brand_id: str, campaign_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[DeleteCampaignsResponse]:
+    ) -> AsyncHttpResponse[SuccessResponse]:
         """
         Deletes a 10DLC Campaign. Associated phone numbers cannot be used as Sender IDs once the Campaign is deleted.
 
@@ -1675,7 +1948,7 @@ class AsyncRawCampaignsClient:
 
         Returns
         -------
-        AsyncHttpResponse[DeleteCampaignsResponse]
+        AsyncHttpResponse[SuccessResponse]
             Returns a success confirmation. The 10DLC Campaign is deleted.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1686,13 +1959,35 @@ class AsyncRawCampaignsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    DeleteCampaignsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=DeleteCampaignsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -1797,6 +2092,17 @@ class AsyncRawCampaignsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -1823,9 +2129,9 @@ class AsyncRawCampaignsClient:
                 raise TooManyRequestsError(
                     headers=dict(_response.headers),
                     body=typing.cast(
-                        ValidationErrorResponse,
+                        typing.Any,
                         parse_obj_as(
-                            type_=ValidationErrorResponse,  # type: ignore
+                            type_=typing.Any,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),

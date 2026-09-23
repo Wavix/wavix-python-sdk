@@ -4,8 +4,8 @@ import typing
 
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
+from ...types.available_number_list_response import AvailableNumberListResponse
 from .raw_client import AsyncRawNumbersClient, RawNumbersClient
-from .types.list_numbers_response import ListNumbersResponse
 
 
 class NumbersClient:
@@ -32,7 +32,7 @@ class NumbersClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListNumbersResponse:
+    ) -> AvailableNumberListResponse:
         """
         Returns a paginated list of phone numbers available for purchase in the specified city.
 
@@ -58,7 +58,7 @@ class NumbersClient:
 
         Returns
         -------
-        ListNumbersResponse
+        AvailableNumberListResponse
             Returns a paginated list of available phone numbers.
 
         Examples
@@ -108,7 +108,7 @@ class AsyncNumbersClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListNumbersResponse:
+    ) -> AvailableNumberListResponse:
         """
         Returns a paginated list of phone numbers available for purchase in the specified city.
 
@@ -134,7 +134,7 @@ class AsyncNumbersClient:
 
         Returns
         -------
-        ListNumbersResponse
+        AvailableNumberListResponse
             Returns a paginated list of available phone numbers.
 
         Examples

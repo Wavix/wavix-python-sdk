@@ -3,3 +3,6 @@ LICENSE
 README.md
 .fernignore
 SECURITY.md
+.fern/replay.lock
+.fern/replay.yml
+.gitattributes

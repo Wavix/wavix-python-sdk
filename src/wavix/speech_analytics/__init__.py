@@ -6,20 +6,8 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .types import (
-        CreateSpeechAnalyticsResponse,
-        GetSpeechAnalyticsResponse,
-        GetSpeechAnalyticsResponseLanguage,
-        GetSpeechAnalyticsResponseStatus,
-    )
     from . import file
-_dynamic_imports: typing.Dict[str, str] = {
-    "CreateSpeechAnalyticsResponse": ".types",
-    "GetSpeechAnalyticsResponse": ".types",
-    "GetSpeechAnalyticsResponseLanguage": ".types",
-    "GetSpeechAnalyticsResponseStatus": ".types",
-    "file": ".file",
-}
+_dynamic_imports: typing.Dict[str, str] = {"file": ".file"}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -43,10 +31,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = [
-    "CreateSpeechAnalyticsResponse",
-    "GetSpeechAnalyticsResponse",
-    "GetSpeechAnalyticsResponseLanguage",
-    "GetSpeechAnalyticsResponseStatus",
-    "file",
-]
+__all__ = ["file"]

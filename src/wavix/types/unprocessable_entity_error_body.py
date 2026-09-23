@@ -7,14 +7,14 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
 class UnprocessableEntityErrorBody(UniversalBaseModel):
-    success: bool = pydantic.Field()
+    error: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Indicates whether the request was successful. Always `false` for this error.
+    Human-readable error description.
     """
 
-    message: str = pydantic.Field()
+    error_dids: typing.Optional[typing.List[str]] = pydantic.Field(default=None)
     """
-    Human-readable error description
+    Numbers from the cart that could not be purchased.
     """
 
     if IS_PYDANTIC_V2:

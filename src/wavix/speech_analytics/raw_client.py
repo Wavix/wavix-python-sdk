@@ -12,11 +12,14 @@ from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..errors.bad_request_error import BadRequestError
+from ..errors.forbidden_error import ForbiddenError
 from ..errors.not_found_error import NotFoundError
+from ..errors.unauthorized_error import UnauthorizedError
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
+from ..types.file_transcription_response import FileTranscriptionResponse
+from ..types.submit_file_transcription_response import SubmitFileTranscriptionResponse
 from ..types.success_response import SuccessResponse
-from .types.create_speech_analytics_response import CreateSpeechAnalyticsResponse
-from .types.get_speech_analytics_response import GetSpeechAnalyticsResponse
+from ..types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -34,7 +37,7 @@ class RawSpeechAnalyticsClient:
         callback_url: str,
         insights: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[CreateSpeechAnalyticsResponse]:
+    ) -> HttpResponse[SubmitFileTranscriptionResponse]:
         """
         Uploads an audio file for transcription. Transcription is asynchronous; Wavix sends a POST callback to `callback_url` when it completes, including the `request_id` returned by this request.
 
@@ -67,7 +70,7 @@ class RawSpeechAnalyticsClient:
 
         Returns
         -------
-        HttpResponse[CreateSpeechAnalyticsResponse]
+        HttpResponse[SubmitFileTranscriptionResponse]
             Returns the transcription `request_id` for the uploaded file.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -87,15 +90,37 @@ class RawSpeechAnalyticsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateSpeechAnalyticsResponse,
+                    SubmitFileTranscriptionResponse,
                     parse_obj_as(
-                        type_=CreateSpeechAnalyticsResponse,  # type: ignore
+                        type_=SubmitFileTranscriptionResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
                 raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -127,7 +152,7 @@ class RawSpeechAnalyticsClient:
 
     def get(
         self, request_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[GetSpeechAnalyticsResponse]:
+    ) -> HttpResponse[FileTranscriptionResponse]:
         """
         Returns the transcription for the request identified by `request_id`, including transcript, speaker turns, and insights when available.
 
@@ -141,7 +166,7 @@ class RawSpeechAnalyticsClient:
 
         Returns
         -------
-        HttpResponse[GetSpeechAnalyticsResponse]
+        HttpResponse[FileTranscriptionResponse]
             Returns the completed transcription.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -152,13 +177,46 @@ class RawSpeechAnalyticsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetSpeechAnalyticsResponse,
+                    FileTranscriptionResponse,
                     parse_obj_as(
-                        type_=GetSpeechAnalyticsResponse,  # type: ignore
+                        type_=FileTranscriptionResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 404:
                 raise NotFoundError(
                     headers=dict(_response.headers),
@@ -243,6 +301,28 @@ class RawSpeechAnalyticsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 404:
                 raise NotFoundError(
                     headers=dict(_response.headers),
@@ -286,7 +366,7 @@ class AsyncRawSpeechAnalyticsClient:
         callback_url: str,
         insights: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[CreateSpeechAnalyticsResponse]:
+    ) -> AsyncHttpResponse[SubmitFileTranscriptionResponse]:
         """
         Uploads an audio file for transcription. Transcription is asynchronous; Wavix sends a POST callback to `callback_url` when it completes, including the `request_id` returned by this request.
 
@@ -319,7 +399,7 @@ class AsyncRawSpeechAnalyticsClient:
 
         Returns
         -------
-        AsyncHttpResponse[CreateSpeechAnalyticsResponse]
+        AsyncHttpResponse[SubmitFileTranscriptionResponse]
             Returns the transcription `request_id` for the uploaded file.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -339,15 +419,37 @@ class AsyncRawSpeechAnalyticsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateSpeechAnalyticsResponse,
+                    SubmitFileTranscriptionResponse,
                     parse_obj_as(
-                        type_=CreateSpeechAnalyticsResponse,  # type: ignore
+                        type_=SubmitFileTranscriptionResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
                 raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -379,7 +481,7 @@ class AsyncRawSpeechAnalyticsClient:
 
     async def get(
         self, request_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[GetSpeechAnalyticsResponse]:
+    ) -> AsyncHttpResponse[FileTranscriptionResponse]:
         """
         Returns the transcription for the request identified by `request_id`, including transcript, speaker turns, and insights when available.
 
@@ -393,7 +495,7 @@ class AsyncRawSpeechAnalyticsClient:
 
         Returns
         -------
-        AsyncHttpResponse[GetSpeechAnalyticsResponse]
+        AsyncHttpResponse[FileTranscriptionResponse]
             Returns the completed transcription.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -404,13 +506,46 @@ class AsyncRawSpeechAnalyticsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetSpeechAnalyticsResponse,
+                    FileTranscriptionResponse,
                     parse_obj_as(
-                        type_=GetSpeechAnalyticsResponse,  # type: ignore
+                        type_=FileTranscriptionResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 404:
                 raise NotFoundError(
                     headers=dict(_response.headers),
@@ -486,6 +621,28 @@ class AsyncRawSpeechAnalyticsClient:
                 return AsyncHttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
                 raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,

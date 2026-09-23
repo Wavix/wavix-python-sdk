@@ -49,16 +49,16 @@ class LinkShortenerClient:
         Parameters
         ----------
         link : str
-            Target URL to shorten.
+            Target URL to shorten. Must be `https://` — the short link is publicly resolvable and redirects any visitor here, so only pass URLs you trust; this endpoint is a common target for open-redirect and phishing abuse.
 
         expiration_time : typing.Optional[dt.datetime]
             Expiration date and time in ISO 8601 format.
 
         fallback_url : typing.Optional[str]
-            Fallback URL for expired or invalid links.
+            Fallback URL for expired or invalid links. Must be `https://` — same open-redirect/phishing considerations as `link` apply.
 
         phone : typing.Optional[str]
-            Phone number for the short link.
+            Phone number the short link is associated with, in E.164 format (without the leading `+`). Used to attribute click metrics returned by short link metrics list.
 
         utm_campaign : typing.Optional[str]
             UTM campaign name for tracking insights.
@@ -134,16 +134,16 @@ class AsyncLinkShortenerClient:
         Parameters
         ----------
         link : str
-            Target URL to shorten.
+            Target URL to shorten. Must be `https://` — the short link is publicly resolvable and redirects any visitor here, so only pass URLs you trust; this endpoint is a common target for open-redirect and phishing abuse.
 
         expiration_time : typing.Optional[dt.datetime]
             Expiration date and time in ISO 8601 format.
 
         fallback_url : typing.Optional[str]
-            Fallback URL for expired or invalid links.
+            Fallback URL for expired or invalid links. Must be `https://` — same open-redirect/phishing considerations as `link` apply.
 
         phone : typing.Optional[str]
-            Phone number for the short link.
+            Phone number the short link is associated with, in E.164 format (without the leading `+`). Used to attribute click metrics returned by short link metrics list.
 
         utm_campaign : typing.Optional[str]
             UTM campaign name for tracking insights.

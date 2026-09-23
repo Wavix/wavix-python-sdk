@@ -6,12 +6,8 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .cdr_search_request_disposition import CdrSearchRequestDisposition
     from .cdr_search_request_type import CdrSearchRequestType
-_dynamic_imports: typing.Dict[str, str] = {
-    "CdrSearchRequestDisposition": ".cdr_search_request_disposition",
-    "CdrSearchRequestType": ".cdr_search_request_type",
-}
+_dynamic_imports: typing.Dict[str, str] = {"CdrSearchRequestType": ".cdr_search_request_type"}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -35,4 +31,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["CdrSearchRequestDisposition", "CdrSearchRequestType"]
+__all__ = ["CdrSearchRequestType"]

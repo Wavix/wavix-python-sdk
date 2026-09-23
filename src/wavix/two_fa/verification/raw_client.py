@@ -13,10 +13,14 @@ from ...core.request_options import RequestOptions
 from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
 from ...errors.not_found_error import NotFoundError
+from ...errors.too_many_requests_error import TooManyRequestsError
+from ...errors.unauthorized_error import UnauthorizedError
+from ...errors.unprocessable_entity_error import UnprocessableEntityError
 from ...types.success_response import SuccessResponse
-from .types.check_verification_response import CheckVerificationResponse
-from .types.create_verification_response import CreateVerificationResponse
-from .types.resend_verification_response import ResendVerificationResponse
+from ...types.two_factor_verification_check_response import TwoFactorVerificationCheckResponse
+from ...types.two_factor_verification_resend_response import TwoFactorVerificationResendResponse
+from ...types.two_factor_verification_response import TwoFactorVerificationResponse
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from .types.two_factor_verification_resend_request_channel import TwoFactorVerificationResendRequestChannel
 from pydantic import ValidationError
 
@@ -30,9 +34,9 @@ class RawVerificationClient:
 
     def create(
         self, *, service_id: str, to: str, channel: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[CreateVerificationResponse]:
+    ) -> HttpResponse[TwoFactorVerificationResponse]:
         """
-        Creates a 2FA verification and sends a one-time password (OTP) to the destination phone number over the selected channel. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
+        Creates a 2FA verification and sends a real one-time password (OTP) to the destination phone number over the selected channel; this bills the account per OTP sent. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
 
         The verification proceeds through three steps:
         1. Create a verification to generate and send an OTP.
@@ -55,7 +59,7 @@ class RawVerificationClient:
 
         Returns
         -------
-        HttpResponse[CreateVerificationResponse]
+        HttpResponse[TwoFactorVerificationResponse]
             Returns the created 2FA verification.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -75,9 +79,9 @@ class RawVerificationClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateVerificationResponse,
+                    TwoFactorVerificationResponse,
                     parse_obj_as(
-                        type_=CreateVerificationResponse,  # type: ignore
+                        type_=TwoFactorVerificationResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -93,8 +97,41 @@ class RawVerificationClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -119,7 +156,7 @@ class RawVerificationClient:
         *,
         channel: TwoFactorVerificationResendRequestChannel,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[ResendVerificationResponse]:
+    ) -> HttpResponse[TwoFactorVerificationResendResponse]:
         """
         Resends the OTP for the verification identified by `session_id` over the specified channel. Previously sent codes are invalidated.
 
@@ -136,7 +173,7 @@ class RawVerificationClient:
 
         Returns
         -------
-        HttpResponse[ResendVerificationResponse]
+        HttpResponse[TwoFactorVerificationResendResponse]
             Returns the resend result, including the channel used.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -154,9 +191,9 @@ class RawVerificationClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ResendVerificationResponse,
+                    TwoFactorVerificationResendResponse,
                     parse_obj_as(
-                        type_=ResendVerificationResponse,  # type: ignore
+                        type_=TwoFactorVerificationResendResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -172,8 +209,41 @@ class RawVerificationClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -194,9 +264,9 @@ class RawVerificationClient:
 
     def check(
         self, session_id: str, *, code: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[CheckVerificationResponse]:
+    ) -> HttpResponse[TwoFactorVerificationCheckResponse]:
         """
-        Validates the OTP submitted by the end user against the verification identified by `session_id`.
+        Validates the OTP submitted by the end user against the verification identified by `session_id`. Non-idempotent — each call consumes one of a limited number of attempts tracked server-side; once exhausted, the verification returns `429` until a new verification is created.
 
         Parameters
         ----------
@@ -211,7 +281,7 @@ class RawVerificationClient:
 
         Returns
         -------
-        HttpResponse[CheckVerificationResponse]
+        HttpResponse[TwoFactorVerificationCheckResponse]
             Returns the validation result in `is_valid`.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -229,9 +299,9 @@ class RawVerificationClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CheckVerificationResponse,
+                    TwoFactorVerificationCheckResponse,
                     parse_obj_as(
-                        type_=CheckVerificationResponse,  # type: ignore
+                        type_=TwoFactorVerificationCheckResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -247,8 +317,41 @@ class RawVerificationClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 429:
+                raise TooManyRequestsError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -312,6 +415,17 @@ class RawVerificationClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -350,9 +464,9 @@ class AsyncRawVerificationClient:
 
     async def create(
         self, *, service_id: str, to: str, channel: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[CreateVerificationResponse]:
+    ) -> AsyncHttpResponse[TwoFactorVerificationResponse]:
         """
-        Creates a 2FA verification and sends a one-time password (OTP) to the destination phone number over the selected channel. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
+        Creates a 2FA verification and sends a real one-time password (OTP) to the destination phone number over the selected channel; this bills the account per OTP sent. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
 
         The verification proceeds through three steps:
         1. Create a verification to generate and send an OTP.
@@ -375,7 +489,7 @@ class AsyncRawVerificationClient:
 
         Returns
         -------
-        AsyncHttpResponse[CreateVerificationResponse]
+        AsyncHttpResponse[TwoFactorVerificationResponse]
             Returns the created 2FA verification.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -395,9 +509,9 @@ class AsyncRawVerificationClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateVerificationResponse,
+                    TwoFactorVerificationResponse,
                     parse_obj_as(
-                        type_=CreateVerificationResponse,  # type: ignore
+                        type_=TwoFactorVerificationResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -413,8 +527,41 @@ class AsyncRawVerificationClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -439,7 +586,7 @@ class AsyncRawVerificationClient:
         *,
         channel: TwoFactorVerificationResendRequestChannel,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[ResendVerificationResponse]:
+    ) -> AsyncHttpResponse[TwoFactorVerificationResendResponse]:
         """
         Resends the OTP for the verification identified by `session_id` over the specified channel. Previously sent codes are invalidated.
 
@@ -456,7 +603,7 @@ class AsyncRawVerificationClient:
 
         Returns
         -------
-        AsyncHttpResponse[ResendVerificationResponse]
+        AsyncHttpResponse[TwoFactorVerificationResendResponse]
             Returns the resend result, including the channel used.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -474,9 +621,9 @@ class AsyncRawVerificationClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ResendVerificationResponse,
+                    TwoFactorVerificationResendResponse,
                     parse_obj_as(
-                        type_=ResendVerificationResponse,  # type: ignore
+                        type_=TwoFactorVerificationResendResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -492,8 +639,41 @@ class AsyncRawVerificationClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -514,9 +694,9 @@ class AsyncRawVerificationClient:
 
     async def check(
         self, session_id: str, *, code: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[CheckVerificationResponse]:
+    ) -> AsyncHttpResponse[TwoFactorVerificationCheckResponse]:
         """
-        Validates the OTP submitted by the end user against the verification identified by `session_id`.
+        Validates the OTP submitted by the end user against the verification identified by `session_id`. Non-idempotent — each call consumes one of a limited number of attempts tracked server-side; once exhausted, the verification returns `429` until a new verification is created.
 
         Parameters
         ----------
@@ -531,7 +711,7 @@ class AsyncRawVerificationClient:
 
         Returns
         -------
-        AsyncHttpResponse[CheckVerificationResponse]
+        AsyncHttpResponse[TwoFactorVerificationCheckResponse]
             Returns the validation result in `is_valid`.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -549,9 +729,9 @@ class AsyncRawVerificationClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CheckVerificationResponse,
+                    TwoFactorVerificationCheckResponse,
                     parse_obj_as(
-                        type_=CheckVerificationResponse,  # type: ignore
+                        type_=TwoFactorVerificationCheckResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -567,8 +747,41 @@ class AsyncRawVerificationClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 429:
+                raise TooManyRequestsError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -628,6 +841,17 @@ class AsyncRawVerificationClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),

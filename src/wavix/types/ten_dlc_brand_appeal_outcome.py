@@ -5,7 +5,7 @@ import typing
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from .ten_dlc_brand_appeal_outcome_feedback import TenDlcBrandAppealOutcomeFeedback
-from .ten_dlc_brand_appeal_outcome_vetting_status import TenDlcBrandAppealOutcomeVettingStatus
+from .ten_dlc_brand_identity_verification_status import TenDlcBrandIdentityVerificationStatus
 
 
 class TenDlcBrandAppealOutcome(UniversalBaseModel):
@@ -18,7 +18,7 @@ class TenDlcBrandAppealOutcome(UniversalBaseModel):
     An optional attributes that might be returned from TCR
     """
 
-    vetting_status: TenDlcBrandAppealOutcomeVettingStatus = pydantic.Field()
+    vetting_status: TenDlcBrandIdentityVerificationStatus = pydantic.Field()
     """
     Brand Identity Verification appeal outcome
     """

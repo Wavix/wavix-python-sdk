@@ -4,8 +4,8 @@ import typing
 
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
+from ...types.city_list_response import CityListResponse
 from .raw_client import AsyncRawCitiesClient, RawCitiesClient
-from .types.list_cities_response import ListCitiesResponse
 
 
 class CitiesClient:
@@ -29,7 +29,7 @@ class CitiesClient:
         *,
         text_enabled_only: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListCitiesResponse:
+    ) -> CityListResponse:
         """
         Returns a list of cities for countries where
          `has_provinces_or_states` is `false`.
@@ -47,7 +47,7 @@ class CitiesClient:
 
         Returns
         -------
-        ListCitiesResponse
+        CityListResponse
             Returns the list of cities.
 
         Examples
@@ -88,7 +88,7 @@ class AsyncCitiesClient:
         *,
         text_enabled_only: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListCitiesResponse:
+    ) -> CityListResponse:
         """
         Returns a list of cities for countries where
          `has_provinces_or_states` is `false`.
@@ -106,7 +106,7 @@ class AsyncCitiesClient:
 
         Returns
         -------
-        ListCitiesResponse
+        CityListResponse
             Returns the list of cities.
 
         Examples

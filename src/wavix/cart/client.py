@@ -4,10 +4,10 @@ import typing
 
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
+from ..types.available_number import AvailableNumber
+from ..types.cart_response import CartResponse
+from ..types.success_response import SuccessResponse
 from .raw_client import AsyncRawCartClient, RawCartClient
-from .types.checkout_cart_response import CheckoutCartResponse
-from .types.get_cart_response import GetCartResponse
-from .types.remove_cart_response import RemoveCartResponse
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -28,7 +28,7 @@ class CartClient:
         """
         return self._raw_client
 
-    def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> GetCartResponse:
+    def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> CartResponse:
         """
         Returns the current purchase cart, including the phone numbers it contains and the documents each requires.
 
@@ -39,7 +39,7 @@ class CartClient:
 
         Returns
         -------
-        GetCartResponse
+        CartResponse
             Returns the cart.
 
         Examples
@@ -56,7 +56,7 @@ class CartClient:
 
     def add(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[typing.Any]:
+    ) -> typing.List[AvailableNumber]:
         """
         Adds the listed phone numbers to the purchase cart.
 
@@ -70,7 +70,7 @@ class CartClient:
 
         Returns
         -------
-        typing.List[typing.Any]
+        typing.List[AvailableNumber]
             Returns the phone numbers now in the cart.
 
         Examples
@@ -89,7 +89,7 @@ class CartClient:
 
     def remove(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> RemoveCartResponse:
+    ) -> SuccessResponse:
         """
         Removes the listed phone numbers from the purchase cart.
 
@@ -103,7 +103,7 @@ class CartClient:
 
         Returns
         -------
-        RemoveCartResponse
+        SuccessResponse
             Returns a success confirmation. The numbers are removed from the cart.
 
         Examples
@@ -122,9 +122,9 @@ class CartClient:
 
     def checkout(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> CheckoutCartResponse:
+    ) -> SuccessResponse:
         """
-        Purchases the listed phone numbers from the cart. Activation and monthly fees are deducted from the account balance.
+        Purchases the listed phone numbers from the cart. Activation and monthly fees are debited from the account balance immediately, and the purchase cannot be reversed through this API.
 
         Parameters
         ----------
@@ -136,7 +136,7 @@ class CartClient:
 
         Returns
         -------
-        CheckoutCartResponse
+        SuccessResponse
             Returns a success confirmation. The phone numbers are purchased.
 
         Examples
@@ -169,7 +169,7 @@ class AsyncCartClient:
         """
         return self._raw_client
 
-    async def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> GetCartResponse:
+    async def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> CartResponse:
         """
         Returns the current purchase cart, including the phone numbers it contains and the documents each requires.
 
@@ -180,7 +180,7 @@ class AsyncCartClient:
 
         Returns
         -------
-        GetCartResponse
+        CartResponse
             Returns the cart.
 
         Examples
@@ -205,7 +205,7 @@ class AsyncCartClient:
 
     async def add(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[typing.Any]:
+    ) -> typing.List[AvailableNumber]:
         """
         Adds the listed phone numbers to the purchase cart.
 
@@ -219,7 +219,7 @@ class AsyncCartClient:
 
         Returns
         -------
-        typing.List[typing.Any]
+        typing.List[AvailableNumber]
             Returns the phone numbers now in the cart.
 
         Examples
@@ -246,7 +246,7 @@ class AsyncCartClient:
 
     async def remove(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> RemoveCartResponse:
+    ) -> SuccessResponse:
         """
         Removes the listed phone numbers from the purchase cart.
 
@@ -260,7 +260,7 @@ class AsyncCartClient:
 
         Returns
         -------
-        RemoveCartResponse
+        SuccessResponse
             Returns a success confirmation. The numbers are removed from the cart.
 
         Examples
@@ -287,9 +287,9 @@ class AsyncCartClient:
 
     async def checkout(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> CheckoutCartResponse:
+    ) -> SuccessResponse:
         """
-        Purchases the listed phone numbers from the cart. Activation and monthly fees are deducted from the account balance.
+        Purchases the listed phone numbers from the cart. Activation and monthly fees are debited from the account balance immediately, and the purchase cannot be reversed through this API.
 
         Parameters
         ----------
@@ -301,7 +301,7 @@ class AsyncCartClient:
 
         Returns
         -------
-        CheckoutCartResponse
+        SuccessResponse
             Returns a success confirmation. The phone numbers are purchased.
 
         Examples

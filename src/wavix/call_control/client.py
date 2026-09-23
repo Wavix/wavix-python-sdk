@@ -79,7 +79,7 @@ class CallControlClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> CallCreateResponse:
         """
-        Places an outbound call. Returns the call with its `uuid` for tracking and control.
+        Places a real, billable outbound PSTN call. Returns the call with its `uuid` for tracking and control.
 
         Parameters
         ----------
@@ -170,7 +170,7 @@ class CallControlClient:
 
     def delete(self, id: str, *, request_options: typing.Optional[RequestOptions] = None) -> SuccessResponse:
         """
-        Ends the active call identified by `id` by hanging up.
+        Ends the active call identified by `id` by hanging up. Irreversible — the call cannot be resumed once ended.
 
         Parameters
         ----------
@@ -246,7 +246,7 @@ class CallControlClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SuccessResponse:
         """
-        Answers the inbound call identified by `id`. Optionally starts media streaming on answer.
+        Answers the inbound call identified by `id`. Optionally starts recording, post-call transcription, or live media streaming on answer.
 
         Parameters
         ----------
@@ -445,7 +445,7 @@ class AsyncCallControlClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> CallCreateResponse:
         """
-        Places an outbound call. Returns the call with its `uuid` for tracking and control.
+        Places a real, billable outbound PSTN call. Returns the call with its `uuid` for tracking and control.
 
         Parameters
         ----------
@@ -552,7 +552,7 @@ class AsyncCallControlClient:
 
     async def delete(self, id: str, *, request_options: typing.Optional[RequestOptions] = None) -> SuccessResponse:
         """
-        Ends the active call identified by `id` by hanging up.
+        Ends the active call identified by `id` by hanging up. Irreversible — the call cannot be resumed once ended.
 
         Parameters
         ----------
@@ -646,7 +646,7 @@ class AsyncCallControlClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SuccessResponse:
         """
-        Answers the inbound call identified by `id`. Optionally starts media streaming on answer.
+        Answers the inbound call identified by `id`. Optionally starts recording, post-call transcription, or live media streaming on answer.
 
         Parameters
         ----------

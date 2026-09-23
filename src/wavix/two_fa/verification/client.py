@@ -5,10 +5,10 @@ import typing
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
 from ...types.success_response import SuccessResponse
+from ...types.two_factor_verification_check_response import TwoFactorVerificationCheckResponse
+from ...types.two_factor_verification_resend_response import TwoFactorVerificationResendResponse
+from ...types.two_factor_verification_response import TwoFactorVerificationResponse
 from .raw_client import AsyncRawVerificationClient, RawVerificationClient
-from .types.check_verification_response import CheckVerificationResponse
-from .types.create_verification_response import CreateVerificationResponse
-from .types.resend_verification_response import ResendVerificationResponse
 from .types.two_factor_verification_resend_request_channel import TwoFactorVerificationResendRequestChannel
 
 # this is used as the default value for optional parameters
@@ -32,9 +32,9 @@ class VerificationClient:
 
     def create(
         self, *, service_id: str, to: str, channel: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> CreateVerificationResponse:
+    ) -> TwoFactorVerificationResponse:
         """
-        Creates a 2FA verification and sends a one-time password (OTP) to the destination phone number over the selected channel. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
+        Creates a 2FA verification and sends a real one-time password (OTP) to the destination phone number over the selected channel; this bills the account per OTP sent. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
 
         The verification proceeds through three steps:
         1. Create a verification to generate and send an OTP.
@@ -57,7 +57,7 @@ class VerificationClient:
 
         Returns
         -------
-        CreateVerificationResponse
+        TwoFactorVerificationResponse
             Returns the created 2FA verification.
 
         Examples
@@ -84,7 +84,7 @@ class VerificationClient:
         *,
         channel: TwoFactorVerificationResendRequestChannel,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ResendVerificationResponse:
+    ) -> TwoFactorVerificationResendResponse:
         """
         Resends the OTP for the verification identified by `session_id` over the specified channel. Previously sent codes are invalidated.
 
@@ -101,7 +101,7 @@ class VerificationClient:
 
         Returns
         -------
-        ResendVerificationResponse
+        TwoFactorVerificationResendResponse
             Returns the resend result, including the channel used.
 
         Examples
@@ -121,9 +121,9 @@ class VerificationClient:
 
     def check(
         self, session_id: str, *, code: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> CheckVerificationResponse:
+    ) -> TwoFactorVerificationCheckResponse:
         """
-        Validates the OTP submitted by the end user against the verification identified by `session_id`.
+        Validates the OTP submitted by the end user against the verification identified by `session_id`. Non-idempotent — each call consumes one of a limited number of attempts tracked server-side; once exhausted, the verification returns `429` until a new verification is created.
 
         Parameters
         ----------
@@ -138,7 +138,7 @@ class VerificationClient:
 
         Returns
         -------
-        CheckVerificationResponse
+        TwoFactorVerificationCheckResponse
             Returns the validation result in `is_valid`.
 
         Examples
@@ -205,9 +205,9 @@ class AsyncVerificationClient:
 
     async def create(
         self, *, service_id: str, to: str, channel: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> CreateVerificationResponse:
+    ) -> TwoFactorVerificationResponse:
         """
-        Creates a 2FA verification and sends a one-time password (OTP) to the destination phone number over the selected channel. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
+        Creates a 2FA verification and sends a real one-time password (OTP) to the destination phone number over the selected channel; this bills the account per OTP sent. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
 
         The verification proceeds through three steps:
         1. Create a verification to generate and send an OTP.
@@ -230,7 +230,7 @@ class AsyncVerificationClient:
 
         Returns
         -------
-        CreateVerificationResponse
+        TwoFactorVerificationResponse
             Returns the created 2FA verification.
 
         Examples
@@ -265,7 +265,7 @@ class AsyncVerificationClient:
         *,
         channel: TwoFactorVerificationResendRequestChannel,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ResendVerificationResponse:
+    ) -> TwoFactorVerificationResendResponse:
         """
         Resends the OTP for the verification identified by `session_id` over the specified channel. Previously sent codes are invalidated.
 
@@ -282,7 +282,7 @@ class AsyncVerificationClient:
 
         Returns
         -------
-        ResendVerificationResponse
+        TwoFactorVerificationResendResponse
             Returns the resend result, including the channel used.
 
         Examples
@@ -310,9 +310,9 @@ class AsyncVerificationClient:
 
     async def check(
         self, session_id: str, *, code: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> CheckVerificationResponse:
+    ) -> TwoFactorVerificationCheckResponse:
         """
-        Validates the OTP submitted by the end user against the verification identified by `session_id`.
+        Validates the OTP submitted by the end user against the verification identified by `session_id`. Non-idempotent — each call consumes one of a limited number of attempts tracked server-side; once exhausted, the verification returns `429` until a new verification is created.
 
         Parameters
         ----------
@@ -327,7 +327,7 @@ class AsyncVerificationClient:
 
         Returns
         -------
-        CheckVerificationResponse
+        TwoFactorVerificationCheckResponse
             Returns the validation result in `is_valid`.
 
         Examples

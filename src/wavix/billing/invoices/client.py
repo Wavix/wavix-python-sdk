@@ -4,8 +4,8 @@ import typing
 
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
+from ...types.invoice_list_response import InvoiceListResponse
 from .raw_client import AsyncRawInvoicesClient, RawInvoicesClient
-from .types.list_invoices_response import ListInvoicesResponse
 
 
 class InvoicesClient:
@@ -29,7 +29,7 @@ class InvoicesClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListInvoicesResponse:
+    ) -> InvoiceListResponse:
         """
         Returns the auto-generated financial statements for the authenticated account, paginated and ordered by billing period.
 
@@ -46,7 +46,7 @@ class InvoicesClient:
 
         Returns
         -------
-        ListInvoicesResponse
+        InvoiceListResponse
             Returns a paginated list of financial statements.
 
         Examples
@@ -117,7 +117,7 @@ class AsyncInvoicesClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListInvoicesResponse:
+    ) -> InvoiceListResponse:
         """
         Returns the auto-generated financial statements for the authenticated account, paginated and ordered by billing period.
 
@@ -134,7 +134,7 @@ class AsyncInvoicesClient:
 
         Returns
         -------
-        ListInvoicesResponse
+        InvoiceListResponse
             Returns a paginated list of financial statements.
 
         Examples

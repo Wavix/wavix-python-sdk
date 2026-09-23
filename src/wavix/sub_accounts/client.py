@@ -41,6 +41,8 @@ class SubAccountsClient:
         self,
         *,
         status: typing.Optional[ListSubAccountsRequestStatus] = None,
+        page: typing.Optional[int] = None,
+        per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SubAccountsListResponse:
         """
@@ -50,6 +52,12 @@ class SubAccountsClient:
         ----------
         status : typing.Optional[ListSubAccountsRequestStatus]
             Filters sub-accounts by status. One of `enabled` (the sub-account is active) or `disabled` (the sub-account is suspended).
+
+        page : typing.Optional[int]
+            Page number to retrieve. Default `1`.
+
+        per_page : typing.Optional[int]
+            Number of records to return per page. Default `25`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -68,7 +76,7 @@ class SubAccountsClient:
         )
         client.sub_accounts.list()
         """
-        _response = self._raw_client.list(status=status, request_options=request_options)
+        _response = self._raw_client.list(status=status, page=page, per_page=per_page, request_options=request_options)
         return _response.data
 
     def create(
@@ -153,7 +161,7 @@ class SubAccountsClient:
         self,
         id: int,
         *,
-        name: str,
+        name: typing.Optional[str] = OMIT,
         status: typing.Optional[SubAccountsUpdateRequestStatus] = OMIT,
         default_destinations: typing.Optional[SubAccountsUpdateRequestDefaultDestinations] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -166,7 +174,7 @@ class SubAccountsClient:
         id : int
             The unique ID of the sub-account.
 
-        name : str
+        name : typing.Optional[str]
             Sub-account name.
 
         status : typing.Optional[SubAccountsUpdateRequestStatus]
@@ -236,6 +244,8 @@ class AsyncSubAccountsClient:
         self,
         *,
         status: typing.Optional[ListSubAccountsRequestStatus] = None,
+        page: typing.Optional[int] = None,
+        per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SubAccountsListResponse:
         """
@@ -245,6 +255,12 @@ class AsyncSubAccountsClient:
         ----------
         status : typing.Optional[ListSubAccountsRequestStatus]
             Filters sub-accounts by status. One of `enabled` (the sub-account is active) or `disabled` (the sub-account is suspended).
+
+        page : typing.Optional[int]
+            Page number to retrieve. Default `1`.
+
+        per_page : typing.Optional[int]
+            Number of records to return per page. Default `25`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -271,7 +287,9 @@ class AsyncSubAccountsClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.list(status=status, request_options=request_options)
+        _response = await self._raw_client.list(
+            status=status, page=page, per_page=per_page, request_options=request_options
+        )
         return _response.data
 
     async def create(
@@ -372,7 +390,7 @@ class AsyncSubAccountsClient:
         self,
         id: int,
         *,
-        name: str,
+        name: typing.Optional[str] = OMIT,
         status: typing.Optional[SubAccountsUpdateRequestStatus] = OMIT,
         default_destinations: typing.Optional[SubAccountsUpdateRequestDefaultDestinations] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -385,7 +403,7 @@ class AsyncSubAccountsClient:
         id : int
             The unique ID of the sub-account.
 
-        name : str
+        name : typing.Optional[str]
             Sub-account name.
 
         status : typing.Optional[SubAccountsUpdateRequestStatus]

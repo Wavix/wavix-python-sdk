@@ -2,31 +2,4 @@
 
 import typing
 
-import pydantic
-from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-
-
-class DocumentType(UniversalBaseModel):
-    id: int = pydantic.Field()
-    """
-    Document type ID.
-    """
-
-    name: str = pydantic.Field()
-    """
-    Document type name.
-    """
-
-    title: str = pydantic.Field()
-    """
-    Human-readable document type name.
-    """
-
-    if IS_PYDANTIC_V2:
-        model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
-    else:
-
-        class Config:
-            frozen = True
-            smart_union = True
-            extra = pydantic.Extra.allow
+DocumentType = typing.Union[typing.Literal["id", "address", "localaddress"], typing.Any]

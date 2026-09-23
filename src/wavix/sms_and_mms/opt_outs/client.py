@@ -7,8 +7,8 @@ from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
 from ...types.opt_out import OptOut
 from ...types.opt_outs_list_response import OptOutsListResponse
+from ...types.success_response import SuccessResponse
 from .raw_client import AsyncRawOptOutsClient, RawOptOutsClient
-from .types.create_opt_outs_response import CreateOptOutsResponse
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -102,9 +102,7 @@ class OptOutsClient:
         )
         return _response.data
 
-    def create(
-        self, *, opt_out: OptOut, request_options: typing.Optional[RequestOptions] = None
-    ) -> CreateOptOutsResponse:
+    def create(self, *, opt_out: OptOut, request_options: typing.Optional[RequestOptions] = None) -> SuccessResponse:
         """
         Opts a phone number out of receiving messages from a Sender ID, a 10DLC campaign, or all outbound messages.
 
@@ -117,7 +115,7 @@ class OptOutsClient:
 
         Returns
         -------
-        CreateOptOutsResponse
+        SuccessResponse
             Returns a success confirmation. The opt-out is created.
 
         Examples
@@ -235,7 +233,7 @@ class AsyncOptOutsClient:
 
     async def create(
         self, *, opt_out: OptOut, request_options: typing.Optional[RequestOptions] = None
-    ) -> CreateOptOutsResponse:
+    ) -> SuccessResponse:
         """
         Opts a phone number out of receiving messages from a Sender ID, a 10DLC campaign, or all outbound messages.
 
@@ -248,7 +246,7 @@ class AsyncOptOutsClient:
 
         Returns
         -------
-        CreateOptOutsResponse
+        SuccessResponse
             Returns a success confirmation. The opt-out is created.
 
         Examples

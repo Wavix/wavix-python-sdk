@@ -14,10 +14,12 @@ from ...core.serialization import convert_and_respect_annotation_metadata
 from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
 from ...errors.not_found_error import NotFoundError
+from ...errors.unauthorized_error import UnauthorizedError
 from ...errors.unprocessable_entity_error import UnprocessableEntityError
 from ...types.opt_out import OptOut
 from ...types.opt_outs_list_response import OptOutsListResponse
-from .types.create_opt_outs_response import CreateOptOutsResponse
+from ...types.success_response import SuccessResponse
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -104,6 +106,17 @@ class RawOptOutsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -137,7 +150,7 @@ class RawOptOutsClient:
 
     def create(
         self, *, opt_out: OptOut, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[CreateOptOutsResponse]:
+    ) -> HttpResponse[SuccessResponse]:
         """
         Opts a phone number out of receiving messages from a Sender ID, a 10DLC campaign, or all outbound messages.
 
@@ -150,7 +163,7 @@ class RawOptOutsClient:
 
         Returns
         -------
-        HttpResponse[CreateOptOutsResponse]
+        HttpResponse[SuccessResponse]
             Returns a success confirmation. The opt-out is created.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -170,9 +183,9 @@ class RawOptOutsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateOptOutsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=CreateOptOutsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -184,6 +197,17 @@ class RawOptOutsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -311,6 +335,17 @@ class AsyncRawOptOutsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -344,7 +379,7 @@ class AsyncRawOptOutsClient:
 
     async def create(
         self, *, opt_out: OptOut, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[CreateOptOutsResponse]:
+    ) -> AsyncHttpResponse[SuccessResponse]:
         """
         Opts a phone number out of receiving messages from a Sender ID, a 10DLC campaign, or all outbound messages.
 
@@ -357,7 +392,7 @@ class AsyncRawOptOutsClient:
 
         Returns
         -------
-        AsyncHttpResponse[CreateOptOutsResponse]
+        AsyncHttpResponse[SuccessResponse]
             Returns a success confirmation. The opt-out is created.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -377,9 +412,9 @@ class AsyncRawOptOutsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateOptOutsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=CreateOptOutsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -391,6 +426,17 @@ class AsyncRawOptOutsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),

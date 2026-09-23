@@ -77,7 +77,6 @@ class SipTrunksClient:
         ip_restrict: bool,
         didinfo_enabled: bool,
         call_restrict: bool,
-        cost_limit: bool,
         channels_restrict: bool,
         rewrite_enabled: bool,
         transcription_enabled: bool,
@@ -86,6 +85,7 @@ class SipTrunksClient:
         multiple_numbers: typing.Optional[bool] = OMIT,
         allowed_ips: typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]] = OMIT,
         call_limit: typing.Optional[int] = OMIT,
+        cost_limit: typing.Optional[bool] = OMIT,
         max_call_cost: typing.Optional[float] = OMIT,
         max_channels: typing.Optional[int] = OMIT,
         rewrite_prefix: typing.Optional[str] = OMIT,
@@ -118,9 +118,6 @@ class SipTrunksClient:
         call_restrict : bool
             Indicates whether a maximum call duration limit is enforced for the SIP trunk
 
-        cost_limit : bool
-            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
-
         channels_restrict : bool
             Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
 
@@ -146,6 +143,9 @@ class SipTrunksClient:
 
         call_limit : typing.Optional[int]
             Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
+
+        cost_limit : typing.Optional[bool]
+            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
 
         max_call_cost : typing.Optional[float]
             Maximum cost for an outbound call, in USD
@@ -191,7 +191,6 @@ class SipTrunksClient:
             ip_restrict=False,
             didinfo_enabled=True,
             call_restrict=True,
-            cost_limit=True,
             channels_restrict=False,
             rewrite_enabled=True,
             transcription_enabled=True,
@@ -205,7 +204,6 @@ class SipTrunksClient:
             ip_restrict=ip_restrict,
             didinfo_enabled=didinfo_enabled,
             call_restrict=call_restrict,
-            cost_limit=cost_limit,
             channels_restrict=channels_restrict,
             rewrite_enabled=rewrite_enabled,
             transcription_enabled=transcription_enabled,
@@ -214,6 +212,7 @@ class SipTrunksClient:
             multiple_numbers=multiple_numbers,
             allowed_ips=allowed_ips,
             call_limit=call_limit,
+            cost_limit=cost_limit,
             max_call_cost=max_call_cost,
             max_channels=max_channels,
             rewrite_prefix=rewrite_prefix,
@@ -266,7 +265,6 @@ class SipTrunksClient:
         ip_restrict: bool,
         didinfo_enabled: bool,
         call_restrict: bool,
-        cost_limit: bool,
         channels_restrict: bool,
         rewrite_enabled: bool,
         transcription_enabled: bool,
@@ -275,6 +273,7 @@ class SipTrunksClient:
         multiple_numbers: typing.Optional[bool] = OMIT,
         allowed_ips: typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]] = OMIT,
         call_limit: typing.Optional[int] = OMIT,
+        cost_limit: typing.Optional[bool] = OMIT,
         max_call_cost: typing.Optional[float] = OMIT,
         max_channels: typing.Optional[int] = OMIT,
         rewrite_prefix: typing.Optional[str] = OMIT,
@@ -310,9 +309,6 @@ class SipTrunksClient:
         call_restrict : bool
             Indicates whether a maximum call duration limit is enforced for the SIP trunk
 
-        cost_limit : bool
-            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
-
         channels_restrict : bool
             Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
 
@@ -338,6 +334,9 @@ class SipTrunksClient:
 
         call_limit : typing.Optional[int]
             Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
+
+        cost_limit : typing.Optional[bool]
+            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
 
         max_call_cost : typing.Optional[float]
             Maximum cost for an outbound call, in USD
@@ -384,7 +383,6 @@ class SipTrunksClient:
             ip_restrict=False,
             didinfo_enabled=True,
             call_restrict=True,
-            cost_limit=True,
             channels_restrict=False,
             rewrite_enabled=True,
             transcription_enabled=True,
@@ -399,7 +397,6 @@ class SipTrunksClient:
             ip_restrict=ip_restrict,
             didinfo_enabled=didinfo_enabled,
             call_restrict=call_restrict,
-            cost_limit=cost_limit,
             channels_restrict=channels_restrict,
             rewrite_enabled=rewrite_enabled,
             transcription_enabled=transcription_enabled,
@@ -408,6 +405,7 @@ class SipTrunksClient:
             multiple_numbers=multiple_numbers,
             allowed_ips=allowed_ips,
             call_limit=call_limit,
+            cost_limit=cost_limit,
             max_call_cost=max_call_cost,
             max_channels=max_channels,
             rewrite_prefix=rewrite_prefix,
@@ -521,7 +519,6 @@ class AsyncSipTrunksClient:
         ip_restrict: bool,
         didinfo_enabled: bool,
         call_restrict: bool,
-        cost_limit: bool,
         channels_restrict: bool,
         rewrite_enabled: bool,
         transcription_enabled: bool,
@@ -530,6 +527,7 @@ class AsyncSipTrunksClient:
         multiple_numbers: typing.Optional[bool] = OMIT,
         allowed_ips: typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]] = OMIT,
         call_limit: typing.Optional[int] = OMIT,
+        cost_limit: typing.Optional[bool] = OMIT,
         max_call_cost: typing.Optional[float] = OMIT,
         max_channels: typing.Optional[int] = OMIT,
         rewrite_prefix: typing.Optional[str] = OMIT,
@@ -562,9 +560,6 @@ class AsyncSipTrunksClient:
         call_restrict : bool
             Indicates whether a maximum call duration limit is enforced for the SIP trunk
 
-        cost_limit : bool
-            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
-
         channels_restrict : bool
             Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
 
@@ -590,6 +585,9 @@ class AsyncSipTrunksClient:
 
         call_limit : typing.Optional[int]
             Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
+
+        cost_limit : typing.Optional[bool]
+            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
 
         max_call_cost : typing.Optional[float]
             Maximum cost for an outbound call, in USD
@@ -640,7 +638,6 @@ class AsyncSipTrunksClient:
                 ip_restrict=False,
                 didinfo_enabled=True,
                 call_restrict=True,
-                cost_limit=True,
                 channels_restrict=False,
                 rewrite_enabled=True,
                 transcription_enabled=True,
@@ -657,7 +654,6 @@ class AsyncSipTrunksClient:
             ip_restrict=ip_restrict,
             didinfo_enabled=didinfo_enabled,
             call_restrict=call_restrict,
-            cost_limit=cost_limit,
             channels_restrict=channels_restrict,
             rewrite_enabled=rewrite_enabled,
             transcription_enabled=transcription_enabled,
@@ -666,6 +662,7 @@ class AsyncSipTrunksClient:
             multiple_numbers=multiple_numbers,
             allowed_ips=allowed_ips,
             call_limit=call_limit,
+            cost_limit=cost_limit,
             max_call_cost=max_call_cost,
             max_channels=max_channels,
             rewrite_prefix=rewrite_prefix,
@@ -726,7 +723,6 @@ class AsyncSipTrunksClient:
         ip_restrict: bool,
         didinfo_enabled: bool,
         call_restrict: bool,
-        cost_limit: bool,
         channels_restrict: bool,
         rewrite_enabled: bool,
         transcription_enabled: bool,
@@ -735,6 +731,7 @@ class AsyncSipTrunksClient:
         multiple_numbers: typing.Optional[bool] = OMIT,
         allowed_ips: typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]] = OMIT,
         call_limit: typing.Optional[int] = OMIT,
+        cost_limit: typing.Optional[bool] = OMIT,
         max_call_cost: typing.Optional[float] = OMIT,
         max_channels: typing.Optional[int] = OMIT,
         rewrite_prefix: typing.Optional[str] = OMIT,
@@ -770,9 +767,6 @@ class AsyncSipTrunksClient:
         call_restrict : bool
             Indicates whether a maximum call duration limit is enforced for the SIP trunk
 
-        cost_limit : bool
-            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
-
         channels_restrict : bool
             Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
 
@@ -798,6 +792,9 @@ class AsyncSipTrunksClient:
 
         call_limit : typing.Optional[int]
             Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
+
+        cost_limit : typing.Optional[bool]
+            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
 
         max_call_cost : typing.Optional[float]
             Maximum cost for an outbound call, in USD
@@ -849,7 +846,6 @@ class AsyncSipTrunksClient:
                 ip_restrict=False,
                 didinfo_enabled=True,
                 call_restrict=True,
-                cost_limit=True,
                 channels_restrict=False,
                 rewrite_enabled=True,
                 transcription_enabled=True,
@@ -867,7 +863,6 @@ class AsyncSipTrunksClient:
             ip_restrict=ip_restrict,
             didinfo_enabled=didinfo_enabled,
             call_restrict=call_restrict,
-            cost_limit=cost_limit,
             channels_restrict=channels_restrict,
             rewrite_enabled=rewrite_enabled,
             transcription_enabled=transcription_enabled,
@@ -876,6 +871,7 @@ class AsyncSipTrunksClient:
             multiple_numbers=multiple_numbers,
             allowed_ips=allowed_ips,
             call_limit=call_limit,
+            cost_limit=cost_limit,
             max_call_cost=max_call_cost,
             max_channels=max_channels,
             rewrite_prefix=rewrite_prefix,

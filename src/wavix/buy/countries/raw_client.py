@@ -10,7 +10,9 @@ from ...core.parse_error import ParsingError
 from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
 from ...errors.forbidden_error import ForbiddenError
-from .types.list_countries_response import ListCountriesResponse
+from ...errors.unauthorized_error import UnauthorizedError
+from ...types.country_list_response import CountryListResponse
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
 
 
@@ -23,7 +25,7 @@ class RawCountriesClient:
         *,
         text_enabled_only: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[ListCountriesResponse]:
+    ) -> HttpResponse[CountryListResponse]:
         """
         Returns a list of countries where phone numbers are available.
 
@@ -37,7 +39,7 @@ class RawCountriesClient:
 
         Returns
         -------
-        HttpResponse[ListCountriesResponse]
+        HttpResponse[CountryListResponse]
             Returns the list of countries with available phone numbers.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -51,13 +53,24 @@ class RawCountriesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListCountriesResponse,
+                    CountryListResponse,
                     parse_obj_as(
-                        type_=ListCountriesResponse,  # type: ignore
+                        type_=CountryListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -88,7 +101,7 @@ class AsyncRawCountriesClient:
         *,
         text_enabled_only: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[ListCountriesResponse]:
+    ) -> AsyncHttpResponse[CountryListResponse]:
         """
         Returns a list of countries where phone numbers are available.
 
@@ -102,7 +115,7 @@ class AsyncRawCountriesClient:
 
         Returns
         -------
-        AsyncHttpResponse[ListCountriesResponse]
+        AsyncHttpResponse[CountryListResponse]
             Returns the list of countries with available phone numbers.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -116,13 +129,24 @@ class AsyncRawCountriesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListCountriesResponse,
+                    CountryListResponse,
                     parse_obj_as(
-                        type_=ListCountriesResponse,  # type: ignore
+                        type_=CountryListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),

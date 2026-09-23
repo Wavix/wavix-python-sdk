@@ -11,9 +11,12 @@ from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
 from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
+from ...errors.not_found_error import NotFoundError
+from ...errors.unauthorized_error import UnauthorizedError
+from ...errors.unprocessable_entity_error import UnprocessableEntityError
+from ...types.success_response import SuccessResponse
 from ...types.ten_dlc_event_subscription import TenDlcEventSubscription
-from .types.create_subscriptions_response import CreateSubscriptionsResponse
-from .types.delete_subscriptions_response import DeleteSubscriptionsResponse
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -55,6 +58,28 @@ class RawSubscriptionsClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -77,7 +102,7 @@ class RawSubscriptionsClient:
 
     def create(
         self, *, subscription_category: str, url: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[CreateSubscriptionsResponse]:
+    ) -> HttpResponse[TenDlcEventSubscription]:
         """
         Registers a callback URL to receive Wavix 10DLC event notifications.
 
@@ -94,7 +119,7 @@ class RawSubscriptionsClient:
 
         Returns
         -------
-        HttpResponse[CreateSubscriptionsResponse]
+        HttpResponse[TenDlcEventSubscription]
             Returns the created 10DLC event subscription.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -113,15 +138,48 @@ class RawSubscriptionsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateSubscriptionsResponse,
+                    TenDlcEventSubscription,
                     parse_obj_as(
-                        type_=CreateSubscriptionsResponse,  # type: ignore
+                        type_=TenDlcEventSubscription,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -142,7 +200,7 @@ class RawSubscriptionsClient:
 
     def delete(
         self, *, subscription_category: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[DeleteSubscriptionsResponse]:
+    ) -> HttpResponse[SuccessResponse]:
         """
         Removes the 10DLC event subscription for the specified event category.
 
@@ -156,7 +214,7 @@ class RawSubscriptionsClient:
 
         Returns
         -------
-        HttpResponse[DeleteSubscriptionsResponse]
+        HttpResponse[SuccessResponse]
             Returns a success confirmation. The event subscription is removed.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -170,9 +228,9 @@ class RawSubscriptionsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    DeleteSubscriptionsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=DeleteSubscriptionsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -188,8 +246,30 @@ class RawSubscriptionsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -244,6 +324,28 @@ class AsyncRawSubscriptionsClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -266,7 +368,7 @@ class AsyncRawSubscriptionsClient:
 
     async def create(
         self, *, subscription_category: str, url: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[CreateSubscriptionsResponse]:
+    ) -> AsyncHttpResponse[TenDlcEventSubscription]:
         """
         Registers a callback URL to receive Wavix 10DLC event notifications.
 
@@ -283,7 +385,7 @@ class AsyncRawSubscriptionsClient:
 
         Returns
         -------
-        AsyncHttpResponse[CreateSubscriptionsResponse]
+        AsyncHttpResponse[TenDlcEventSubscription]
             Returns the created 10DLC event subscription.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -302,15 +404,48 @@ class AsyncRawSubscriptionsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateSubscriptionsResponse,
+                    TenDlcEventSubscription,
                     parse_obj_as(
-                        type_=CreateSubscriptionsResponse,  # type: ignore
+                        type_=TenDlcEventSubscription,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -331,7 +466,7 @@ class AsyncRawSubscriptionsClient:
 
     async def delete(
         self, *, subscription_category: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[DeleteSubscriptionsResponse]:
+    ) -> AsyncHttpResponse[SuccessResponse]:
         """
         Removes the 10DLC event subscription for the specified event category.
 
@@ -345,7 +480,7 @@ class AsyncRawSubscriptionsClient:
 
         Returns
         -------
-        AsyncHttpResponse[DeleteSubscriptionsResponse]
+        AsyncHttpResponse[SuccessResponse]
             Returns a success confirmation. The event subscription is removed.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -359,9 +494,9 @@ class AsyncRawSubscriptionsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    DeleteSubscriptionsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=DeleteSubscriptionsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -377,8 +512,30 @@ class AsyncRawSubscriptionsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,

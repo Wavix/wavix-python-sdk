@@ -63,7 +63,7 @@ class BrandVettingsClient:
         self, brand_id: str, *, evp_id: str, vetting_class: str, request_options: typing.Optional[RequestOptions] = None
     ) -> TenDlcBrandVetting:
         """
-        Requests external vetting for a 10DLC Brand. Supported providers: `AEGIS`, `CV`, `WMC`. Supported classes: `STANDARD`, `ENHANCED`.
+        Requests external vetting for a 10DLC Brand. Supported providers: `AEGIS`, `CV`, `WMC`. Supported classes: `STANDARD`, `ENHANCED`. Charges a 10DLC brand vetting fee (Standard or Enhanced); fails with an insufficient-funds error when the balance cannot cover it.
 
         Parameters
         ----------
@@ -216,7 +216,7 @@ class AsyncBrandVettingsClient:
         self, brand_id: str, *, evp_id: str, vetting_class: str, request_options: typing.Optional[RequestOptions] = None
     ) -> TenDlcBrandVetting:
         """
-        Requests external vetting for a 10DLC Brand. Supported providers: `AEGIS`, `CV`, `WMC`. Supported classes: `STANDARD`, `ENHANCED`.
+        Requests external vetting for a 10DLC Brand. Supported providers: `AEGIS`, `CV`, `WMC`. Supported classes: `STANDARD`, `ENHANCED`. Charges a 10DLC brand vetting fee (Standard or Enhanced); fails with an insufficient-funds error when the balance cannot cover it.
 
         Parameters
         ----------

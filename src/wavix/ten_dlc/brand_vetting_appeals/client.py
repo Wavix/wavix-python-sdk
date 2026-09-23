@@ -4,9 +4,12 @@ import typing
 
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
+from ...types.success_response import SuccessResponse
 from ...types.ten_dlc_brand_vetting_appeal import TenDlcBrandVettingAppeal
 from .raw_client import AsyncRawBrandVettingAppealsClient, RawBrandVettingAppealsClient
-from .types.create_brand_vetting_appeals_response import CreateBrandVettingAppealsResponse
+from .types.ten_dlc_brand_vetting_appeal_create_request_appeal_categories_item import (
+    TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem,
+)
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -64,13 +67,13 @@ class BrandVettingAppealsClient:
         self,
         brand_id: str,
         *,
-        appeal_categories: typing.Sequence[str],
+        appeal_categories: typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
         explanation: typing.Optional[str] = OMIT,
         evp_id: typing.Optional[str] = OMIT,
         vetting_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateBrandVettingAppealsResponse:
+    ) -> SuccessResponse:
         """
         Submits an appeal for an external vetting of the 10DLC Brand identified by `brand_id`.
 
@@ -79,8 +82,8 @@ class BrandVettingAppealsClient:
         brand_id : str
             The unique ID of the 10DLC Brand.
 
-        appeal_categories : typing.Sequence[str]
-            List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`.
+        appeal_categories : typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem]
+            List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`. `LOW_SCORE` is only valid for vetting appeals — brand identity appeals (`ten_dlc_brand_appeals_create`) do not accept it.
 
         evidence : typing.Sequence[str]
             List of evidence IDs associated with the appeal.
@@ -99,7 +102,7 @@ class BrandVettingAppealsClient:
 
         Returns
         -------
-        CreateBrandVettingAppealsResponse
+        SuccessResponse
             Returns the submitted appeal.
 
         Examples
@@ -187,13 +190,13 @@ class AsyncBrandVettingAppealsClient:
         self,
         brand_id: str,
         *,
-        appeal_categories: typing.Sequence[str],
+        appeal_categories: typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
         explanation: typing.Optional[str] = OMIT,
         evp_id: typing.Optional[str] = OMIT,
         vetting_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateBrandVettingAppealsResponse:
+    ) -> SuccessResponse:
         """
         Submits an appeal for an external vetting of the 10DLC Brand identified by `brand_id`.
 
@@ -202,8 +205,8 @@ class AsyncBrandVettingAppealsClient:
         brand_id : str
             The unique ID of the 10DLC Brand.
 
-        appeal_categories : typing.Sequence[str]
-            List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`.
+        appeal_categories : typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem]
+            List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`. `LOW_SCORE` is only valid for vetting appeals — brand identity appeals (`ten_dlc_brand_appeals_create`) do not accept it.
 
         evidence : typing.Sequence[str]
             List of evidence IDs associated with the appeal.
@@ -222,7 +225,7 @@ class AsyncBrandVettingAppealsClient:
 
         Returns
         -------
-        CreateBrandVettingAppealsResponse
+        SuccessResponse
             Returns the submitted appeal.
 
         Examples

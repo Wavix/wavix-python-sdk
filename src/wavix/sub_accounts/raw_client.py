@@ -37,6 +37,8 @@ class RawSubAccountsClient:
         self,
         *,
         status: typing.Optional[ListSubAccountsRequestStatus] = None,
+        page: typing.Optional[int] = None,
+        per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[SubAccountsListResponse]:
         """
@@ -46,6 +48,12 @@ class RawSubAccountsClient:
         ----------
         status : typing.Optional[ListSubAccountsRequestStatus]
             Filters sub-accounts by status. One of `enabled` (the sub-account is active) or `disabled` (the sub-account is suspended).
+
+        page : typing.Optional[int]
+            Page number to retrieve. Default `1`.
+
+        per_page : typing.Optional[int]
+            Number of records to return per page. Default `25`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -60,6 +68,8 @@ class RawSubAccountsClient:
             method="GET",
             params={
                 "status": status,
+                "page": page,
+                "per_page": per_page,
             },
             request_options=request_options,
         )
@@ -168,6 +178,17 @@ class RawSubAccountsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -233,6 +254,17 @@ class RawSubAccountsClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),
@@ -279,7 +311,7 @@ class RawSubAccountsClient:
         self,
         id: int,
         *,
-        name: str,
+        name: typing.Optional[str] = OMIT,
         status: typing.Optional[SubAccountsUpdateRequestStatus] = OMIT,
         default_destinations: typing.Optional[SubAccountsUpdateRequestDefaultDestinations] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -292,7 +324,7 @@ class RawSubAccountsClient:
         id : int
             The unique ID of the sub-account.
 
-        name : str
+        name : typing.Optional[str]
             Sub-account name.
 
         status : typing.Optional[SubAccountsUpdateRequestStatus]
@@ -410,6 +442,8 @@ class AsyncRawSubAccountsClient:
         self,
         *,
         status: typing.Optional[ListSubAccountsRequestStatus] = None,
+        page: typing.Optional[int] = None,
+        per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[SubAccountsListResponse]:
         """
@@ -419,6 +453,12 @@ class AsyncRawSubAccountsClient:
         ----------
         status : typing.Optional[ListSubAccountsRequestStatus]
             Filters sub-accounts by status. One of `enabled` (the sub-account is active) or `disabled` (the sub-account is suspended).
+
+        page : typing.Optional[int]
+            Page number to retrieve. Default `1`.
+
+        per_page : typing.Optional[int]
+            Number of records to return per page. Default `25`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -433,6 +473,8 @@ class AsyncRawSubAccountsClient:
             method="GET",
             params={
                 "status": status,
+                "page": page,
+                "per_page": per_page,
             },
             request_options=request_options,
         )
@@ -541,6 +583,17 @@ class AsyncRawSubAccountsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -606,6 +659,17 @@ class AsyncRawSubAccountsClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),
@@ -652,7 +716,7 @@ class AsyncRawSubAccountsClient:
         self,
         id: int,
         *,
-        name: str,
+        name: typing.Optional[str] = OMIT,
         status: typing.Optional[SubAccountsUpdateRequestStatus] = OMIT,
         default_destinations: typing.Optional[SubAccountsUpdateRequestDefaultDestinations] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -665,7 +729,7 @@ class AsyncRawSubAccountsClient:
         id : int
             The unique ID of the sub-account.
 
-        name : str
+        name : typing.Optional[str]
             Sub-account name.
 
         status : typing.Optional[SubAccountsUpdateRequestStatus]

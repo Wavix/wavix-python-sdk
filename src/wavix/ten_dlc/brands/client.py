@@ -4,17 +4,15 @@ import typing
 
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
+from ...types.success_response import SuccessResponse
+from ...types.ten_dlc_brand import TenDlcBrand
 from ...types.ten_dlc_brand_create_request import TenDlcBrandCreateRequest
+from ...types.ten_dlc_brand_list_response import TenDlcBrandListResponse
+from ...types.ten_dlc_brand_qualification_result import TenDlcBrandQualificationResult
 from .raw_client import AsyncRawBrandsClient, RawBrandsClient
-from .types.create_brands_response import CreateBrandsResponse
-from .types.delete_brands_response import DeleteBrandsResponse
-from .types.get_brands_response import GetBrandsResponse
-from .types.list_brands_response import ListBrandsResponse
 from .types.qualify_usecase_brands_request_use_case import QualifyUsecaseBrandsRequestUseCase
-from .types.qualify_usecase_brands_response import QualifyUsecaseBrandsResponse
 from .types.ten_dlc_brand_update_request_entity_type import TenDlcBrandUpdateRequestEntityType
 from .types.ten_dlc_brand_update_request_vertical import TenDlcBrandUpdateRequestVertical
-from .types.update_brands_response import UpdateBrandsResponse
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -51,7 +49,7 @@ class BrandsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListBrandsResponse:
+    ) -> TenDlcBrandListResponse:
         """
         Returns a paginated list of 10DLC Brands for the authenticated account, filtered by date, name, legal name, and status.
 
@@ -98,7 +96,7 @@ class BrandsClient:
 
         Returns
         -------
-        ListBrandsResponse
+        TenDlcBrandListResponse
             Returns a paginated list of 10DLC Brands.
 
         Examples
@@ -142,9 +140,9 @@ class BrandsClient:
 
     def create(
         self, *, request: TenDlcBrandCreateRequest, request_options: typing.Optional[RequestOptions] = None
-    ) -> CreateBrandsResponse:
+    ) -> TenDlcBrand:
         """
-        Registers a 10DLC Brand. TCR automatically verifies the brand identity. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
+        Registers a 10DLC Brand. Submits the company's legal identity data (EIN/Tax ID, legal company name, contact and address) to The Campaign Registry (TCR), which verifies the brand identity. Charges a 10DLC brand registration fee on successful submission; fails with an insufficient-funds error when the balance cannot cover it. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
 
         Parameters
         ----------
@@ -155,7 +153,7 @@ class BrandsClient:
 
         Returns
         -------
-        CreateBrandsResponse
+        TenDlcBrand
             Returns the registered 10DLC Brand.
 
         Examples
@@ -172,7 +170,7 @@ class BrandsClient:
         _response = self._raw_client.create(request=request, request_options=request_options)
         return _response.data
 
-    def get(self, brand_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetBrandsResponse:
+    def get(self, brand_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> TenDlcBrand:
         """
         Returns the 10DLC Brand identified by `brand_id`.
 
@@ -186,7 +184,7 @@ class BrandsClient:
 
         Returns
         -------
-        GetBrandsResponse
+        TenDlcBrand
             Returns the 10DLC Brand.
 
         Examples
@@ -227,7 +225,7 @@ class BrandsClient:
         country: typing.Optional[str] = OMIT,
         mock: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> UpdateBrandsResponse:
+    ) -> TenDlcBrand:
         """
         Updates the 10DLC Brand identified by `brand_id`. Changing identity fields, including `ein_taxid`, `ein_taxid_country`, and `entity_type`, resets the Brand status to `UNVERIFIED` and triggers automatic re-submission. Brands in `VETTED_VERIFIED` status or with active Campaigns cannot be updated.
 
@@ -308,7 +306,7 @@ class BrandsClient:
 
         Returns
         -------
-        UpdateBrandsResponse
+        TenDlcBrand
             Returns the updated 10DLC Brand.
 
         Examples
@@ -347,7 +345,7 @@ class BrandsClient:
         )
         return _response.data
 
-    def delete(self, brand_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> DeleteBrandsResponse:
+    def delete(self, brand_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> SuccessResponse:
         """
         Deletes a 10DLC Brand. Brands with active campaigns cannot be deleted.
 
@@ -361,7 +359,7 @@ class BrandsClient:
 
         Returns
         -------
-        DeleteBrandsResponse
+        SuccessResponse
             Returns a success confirmation. The 10DLC Brand is deleted.
 
         Examples
@@ -384,7 +382,7 @@ class BrandsClient:
         use_case: QualifyUsecaseBrandsRequestUseCase,
         *,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> QualifyUsecaseBrandsResponse:
+    ) -> TenDlcBrandQualificationResult:
         """
         Returns the qualification results for a 10DLC Brand use case. Includes MNO-specific attributes, restrictions, and fees.
 
@@ -401,7 +399,7 @@ class BrandsClient:
 
         Returns
         -------
-        QualifyUsecaseBrandsResponse
+        TenDlcBrandQualificationResult
             Returns the use case qualification results for the Brand.
 
         Examples
@@ -451,7 +449,7 @@ class AsyncBrandsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListBrandsResponse:
+    ) -> TenDlcBrandListResponse:
         """
         Returns a paginated list of 10DLC Brands for the authenticated account, filtered by date, name, legal name, and status.
 
@@ -498,7 +496,7 @@ class AsyncBrandsClient:
 
         Returns
         -------
-        ListBrandsResponse
+        TenDlcBrandListResponse
             Returns a paginated list of 10DLC Brands.
 
         Examples
@@ -550,9 +548,9 @@ class AsyncBrandsClient:
 
     async def create(
         self, *, request: TenDlcBrandCreateRequest, request_options: typing.Optional[RequestOptions] = None
-    ) -> CreateBrandsResponse:
+    ) -> TenDlcBrand:
         """
-        Registers a 10DLC Brand. TCR automatically verifies the brand identity. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
+        Registers a 10DLC Brand. Submits the company's legal identity data (EIN/Tax ID, legal company name, contact and address) to The Campaign Registry (TCR), which verifies the brand identity. Charges a 10DLC brand registration fee on successful submission; fails with an insufficient-funds error when the balance cannot cover it. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
 
         Parameters
         ----------
@@ -563,7 +561,7 @@ class AsyncBrandsClient:
 
         Returns
         -------
-        CreateBrandsResponse
+        TenDlcBrand
             Returns the registered 10DLC Brand.
 
         Examples
@@ -588,7 +586,7 @@ class AsyncBrandsClient:
         _response = await self._raw_client.create(request=request, request_options=request_options)
         return _response.data
 
-    async def get(self, brand_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetBrandsResponse:
+    async def get(self, brand_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> TenDlcBrand:
         """
         Returns the 10DLC Brand identified by `brand_id`.
 
@@ -602,7 +600,7 @@ class AsyncBrandsClient:
 
         Returns
         -------
-        GetBrandsResponse
+        TenDlcBrand
             Returns the 10DLC Brand.
 
         Examples
@@ -651,7 +649,7 @@ class AsyncBrandsClient:
         country: typing.Optional[str] = OMIT,
         mock: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> UpdateBrandsResponse:
+    ) -> TenDlcBrand:
         """
         Updates the 10DLC Brand identified by `brand_id`. Changing identity fields, including `ein_taxid`, `ein_taxid_country`, and `entity_type`, resets the Brand status to `UNVERIFIED` and triggers automatic re-submission. Brands in `VETTED_VERIFIED` status or with active Campaigns cannot be updated.
 
@@ -732,7 +730,7 @@ class AsyncBrandsClient:
 
         Returns
         -------
-        UpdateBrandsResponse
+        TenDlcBrand
             Returns the updated 10DLC Brand.
 
         Examples
@@ -781,7 +779,7 @@ class AsyncBrandsClient:
 
     async def delete(
         self, brand_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> DeleteBrandsResponse:
+    ) -> SuccessResponse:
         """
         Deletes a 10DLC Brand. Brands with active campaigns cannot be deleted.
 
@@ -795,7 +793,7 @@ class AsyncBrandsClient:
 
         Returns
         -------
-        DeleteBrandsResponse
+        SuccessResponse
             Returns a success confirmation. The 10DLC Brand is deleted.
 
         Examples
@@ -826,7 +824,7 @@ class AsyncBrandsClient:
         use_case: QualifyUsecaseBrandsRequestUseCase,
         *,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> QualifyUsecaseBrandsResponse:
+    ) -> TenDlcBrandQualificationResult:
         """
         Returns the qualification results for a 10DLC Brand use case. Includes MNO-specific attributes, restrictions, and fees.
 
@@ -843,7 +841,7 @@ class AsyncBrandsClient:
 
         Returns
         -------
-        QualifyUsecaseBrandsResponse
+        TenDlcBrandQualificationResult
             Returns the use case qualification results for the Brand.
 
         Examples
