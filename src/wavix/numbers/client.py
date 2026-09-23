@@ -9,9 +9,9 @@ from ..core.request_options import RequestOptions
 from ..types.number import Number
 from ..types.number_destination import NumberDestination
 from ..types.number_list_response import NumberListResponse
+from ..types.success_response import SuccessResponse
 from .raw_client import AsyncRawNumbersClient, RawNumbersClient
 from .types.bulk_update_numbers_response import BulkUpdateNumbersResponse
-from .types.delete_numbers_response import DeleteNumbersResponse
 
 if typing.TYPE_CHECKING:
     from .papers.client import AsyncPapersClient, PapersClient
@@ -111,7 +111,7 @@ class NumbersClient:
         ids: typing.Optional[typing.Union[int, typing.Sequence[int]]] = None,
         dids: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> DeleteNumbersResponse:
+    ) -> SuccessResponse:
         """
         Releases the listed phone numbers back to stock. Selection accepts either `ids` (record IDs) or `dids` (phone numbers), but not both.
 
@@ -128,7 +128,7 @@ class NumbersClient:
 
         Returns
         -------
-        DeleteNumbersResponse
+        SuccessResponse
             Returns a success confirmation. The numbers are released back to stock.
 
         Examples
@@ -434,7 +434,7 @@ class AsyncNumbersClient:
         ids: typing.Optional[typing.Union[int, typing.Sequence[int]]] = None,
         dids: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> DeleteNumbersResponse:
+    ) -> SuccessResponse:
         """
         Releases the listed phone numbers back to stock. Selection accepts either `ids` (record IDs) or `dids` (phone numbers), but not both.
 
@@ -451,7 +451,7 @@ class AsyncNumbersClient:
 
         Returns
         -------
-        DeleteNumbersResponse
+        SuccessResponse
             Returns a success confirmation. The numbers are released back to stock.
 
         Examples

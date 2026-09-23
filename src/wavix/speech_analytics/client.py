@@ -7,10 +7,10 @@ import typing
 from .. import core
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
+from ..types.file_transcription_response import FileTranscriptionResponse
+from ..types.submit_file_transcription_response import SubmitFileTranscriptionResponse
 from ..types.success_response import SuccessResponse
 from .raw_client import AsyncRawSpeechAnalyticsClient, RawSpeechAnalyticsClient
-from .types.create_speech_analytics_response import CreateSpeechAnalyticsResponse
-from .types.get_speech_analytics_response import GetSpeechAnalyticsResponse
 
 if typing.TYPE_CHECKING:
     from .file.client import AsyncFileClient, FileClient
@@ -42,7 +42,7 @@ class SpeechAnalyticsClient:
         callback_url: str,
         insights: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateSpeechAnalyticsResponse:
+    ) -> SubmitFileTranscriptionResponse:
         """
         Uploads an audio file for transcription. Transcription is asynchronous; Wavix sends a POST callback to `callback_url` when it completes, including the `request_id` returned by this request.
 
@@ -75,7 +75,7 @@ class SpeechAnalyticsClient:
 
         Returns
         -------
-        CreateSpeechAnalyticsResponse
+        SubmitFileTranscriptionResponse
             Returns the transcription `request_id` for the uploaded file.
 
         Examples
@@ -96,7 +96,7 @@ class SpeechAnalyticsClient:
 
     def get(
         self, request_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetSpeechAnalyticsResponse:
+    ) -> FileTranscriptionResponse:
         """
         Returns the transcription for the request identified by `request_id`, including transcript, speaker turns, and insights when available.
 
@@ -110,7 +110,7 @@ class SpeechAnalyticsClient:
 
         Returns
         -------
-        GetSpeechAnalyticsResponse
+        FileTranscriptionResponse
             Returns the completed transcription.
 
         Examples
@@ -207,7 +207,7 @@ class AsyncSpeechAnalyticsClient:
         callback_url: str,
         insights: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateSpeechAnalyticsResponse:
+    ) -> SubmitFileTranscriptionResponse:
         """
         Uploads an audio file for transcription. Transcription is asynchronous; Wavix sends a POST callback to `callback_url` when it completes, including the `request_id` returned by this request.
 
@@ -240,7 +240,7 @@ class AsyncSpeechAnalyticsClient:
 
         Returns
         -------
-        CreateSpeechAnalyticsResponse
+        SubmitFileTranscriptionResponse
             Returns the transcription `request_id` for the uploaded file.
 
         Examples
@@ -269,7 +269,7 @@ class AsyncSpeechAnalyticsClient:
 
     async def get(
         self, request_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetSpeechAnalyticsResponse:
+    ) -> FileTranscriptionResponse:
         """
         Returns the transcription for the request identified by `request_id`, including transcript, speaker turns, and insights when available.
 
@@ -283,7 +283,7 @@ class AsyncSpeechAnalyticsClient:
 
         Returns
         -------
-        GetSpeechAnalyticsResponse
+        FileTranscriptionResponse
             Returns the completed transcription.
 
         Examples

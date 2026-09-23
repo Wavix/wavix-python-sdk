@@ -13,7 +13,9 @@ from ...core.request_options import RequestOptions
 from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
 from ...errors.not_found_error import NotFoundError
-from .types.list_numbers_response import ListNumbersResponse
+from ...errors.unauthorized_error import UnauthorizedError
+from ...types.available_number_list_response import AvailableNumberListResponse
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
 
 
@@ -30,7 +32,7 @@ class RawNumbersClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[ListNumbersResponse]:
+    ) -> HttpResponse[AvailableNumberListResponse]:
         """
         Returns a paginated list of phone numbers available for purchase in the specified city.
 
@@ -56,7 +58,7 @@ class RawNumbersClient:
 
         Returns
         -------
-        HttpResponse[ListNumbersResponse]
+        HttpResponse[AvailableNumberListResponse]
             Returns a paginated list of available phone numbers.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -72,9 +74,9 @@ class RawNumbersClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListNumbersResponse,
+                    AvailableNumberListResponse,
                     parse_obj_as(
-                        type_=ListNumbersResponse,  # type: ignore
+                        type_=AvailableNumberListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -86,6 +88,17 @@ class RawNumbersClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -135,7 +148,7 @@ class AsyncRawNumbersClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[ListNumbersResponse]:
+    ) -> AsyncHttpResponse[AvailableNumberListResponse]:
         """
         Returns a paginated list of phone numbers available for purchase in the specified city.
 
@@ -161,7 +174,7 @@ class AsyncRawNumbersClient:
 
         Returns
         -------
-        AsyncHttpResponse[ListNumbersResponse]
+        AsyncHttpResponse[AvailableNumberListResponse]
             Returns a paginated list of available phone numbers.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -177,9 +190,9 @@ class AsyncRawNumbersClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListNumbersResponse,
+                    AvailableNumberListResponse,
                     parse_obj_as(
-                        type_=ListNumbersResponse,  # type: ignore
+                        type_=AvailableNumberListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -191,6 +204,17 @@ class AsyncRawNumbersClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),

@@ -4,10 +4,9 @@ import typing
 
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
+from ...types.success_response import SuccessResponse
 from ...types.ten_dlc_event_subscription import TenDlcEventSubscription
 from .raw_client import AsyncRawSubscriptionsClient, RawSubscriptionsClient
-from .types.create_subscriptions_response import CreateSubscriptionsResponse
-from .types.delete_subscriptions_response import DeleteSubscriptionsResponse
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -56,7 +55,7 @@ class SubscriptionsClient:
 
     def create(
         self, *, subscription_category: str, url: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> CreateSubscriptionsResponse:
+    ) -> TenDlcEventSubscription:
         """
         Registers a callback URL to receive Wavix 10DLC event notifications.
 
@@ -73,7 +72,7 @@ class SubscriptionsClient:
 
         Returns
         -------
-        CreateSubscriptionsResponse
+        TenDlcEventSubscription
             Returns the created 10DLC event subscription.
 
         Examples
@@ -95,7 +94,7 @@ class SubscriptionsClient:
 
     def delete(
         self, *, subscription_category: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> DeleteSubscriptionsResponse:
+    ) -> SuccessResponse:
         """
         Removes the 10DLC event subscription for the specified event category.
 
@@ -109,7 +108,7 @@ class SubscriptionsClient:
 
         Returns
         -------
-        DeleteSubscriptionsResponse
+        SuccessResponse
             Returns a success confirmation. The event subscription is removed.
 
         Examples
@@ -182,7 +181,7 @@ class AsyncSubscriptionsClient:
 
     async def create(
         self, *, subscription_category: str, url: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> CreateSubscriptionsResponse:
+    ) -> TenDlcEventSubscription:
         """
         Registers a callback URL to receive Wavix 10DLC event notifications.
 
@@ -199,7 +198,7 @@ class AsyncSubscriptionsClient:
 
         Returns
         -------
-        CreateSubscriptionsResponse
+        TenDlcEventSubscription
             Returns the created 10DLC event subscription.
 
         Examples
@@ -229,7 +228,7 @@ class AsyncSubscriptionsClient:
 
     async def delete(
         self, *, subscription_category: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> DeleteSubscriptionsResponse:
+    ) -> SuccessResponse:
         """
         Removes the 10DLC event subscription for the specified event category.
 
@@ -243,7 +242,7 @@ class AsyncSubscriptionsClient:
 
         Returns
         -------
-        DeleteSubscriptionsResponse
+        SuccessResponse
             Returns a success confirmation. The event subscription is removed.
 
         Examples

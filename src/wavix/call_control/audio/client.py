@@ -30,7 +30,7 @@ class AudioClient:
         self, id: str, *, audio_file: str, request_options: typing.Optional[RequestOptions] = None
     ) -> SuccessResponse:
         """
-        Plays an audio prompt into the active call identified by `id`.
+        Plays an audio prompt into the active call identified by `id`. The audio is audible to the remote party in real time.
 
         Parameters
         ----------
@@ -114,7 +114,7 @@ class AsyncAudioClient:
         self, id: str, *, audio_file: str, request_options: typing.Optional[RequestOptions] = None
     ) -> SuccessResponse:
         """
-        Plays an audio prompt into the active call identified by `id`.
+        Plays an audio prompt into the active call identified by `id`. The audio is audible to the remote party in real time.
 
         Parameters
         ----------

@@ -4,7 +4,7 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .document_type import DocumentType
+from .document_type_info import DocumentTypeInfo
 from .number import Number
 from .pagination import Pagination
 
@@ -15,7 +15,7 @@ class NumberListResponse(UniversalBaseModel):
     List of phone numbers on the account.
     """
 
-    doc_types: typing.List[DocumentType] = pydantic.Field()
+    doc_types: typing.List[DocumentTypeInfo] = pydantic.Field()
     """
     Documents required to activate phone numbers.
     """

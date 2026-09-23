@@ -4,6 +4,9 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from .ten_dlc_brand_appeal_create_request_appeal_categories_item import (
+    TenDlcBrandAppealCreateRequestAppealCategoriesItem,
+)
 
 
 class TenDlcBrandAppealCreateRequest(UniversalBaseModel):
@@ -11,7 +14,7 @@ class TenDlcBrandAppealCreateRequest(UniversalBaseModel):
     Brand identity verification appeal details.
     """
 
-    appeal_categories: typing.List[str] = pydantic.Field()
+    appeal_categories: typing.List[TenDlcBrandAppealCreateRequestAppealCategoriesItem] = pydantic.Field()
     """
     List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`
     """

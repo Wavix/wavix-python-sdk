@@ -15,6 +15,7 @@ from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.bad_request_error import BadRequestError
 from ..errors.forbidden_error import ForbiddenError
 from ..errors.not_found_error import NotFoundError
+from ..errors.unauthorized_error import UnauthorizedError
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.call_disposition import CallDisposition
 from ..types.cdr_list_response import CdrListResponse
@@ -24,7 +25,7 @@ from ..types.cdr_transcription_search_response import CdrTranscriptionSearchResp
 from ..types.success_response import SuccessResponse
 from ..types.transcription_filter import TranscriptionFilter
 from ..types.transcription_language import TranscriptionLanguage
-from .types.cdr_search_request_disposition import CdrSearchRequestDisposition
+from ..types.unauthorized_error_response import UnauthorizedErrorResponse
 from .types.cdr_search_request_type import CdrSearchRequestType
 from pydantic import ValidationError
 
@@ -66,7 +67,7 @@ class RawCdrsClient:
             Filters CDRs by call direction. One of `placed` (outbound calls dialed by the account) or `received` (inbound calls answered by the account).
 
         disposition : typing.Optional[CallDisposition]
-            Filters CDRs by call disposition. One of `answered` (the called party answered), `busy` (the called party was busy), `rejected` (the call was declined), `failed` (the call could not be routed), or `all` (no disposition filter).
+            Filters CDRs by call disposition. One of `answered` (the called party answered), `noanswer` (no answer within the ring timeout), `busy` (the called party was busy), `failed` (the call could not be routed), or `all` (no disposition filter).
 
         from_search : typing.Optional[str]
             Filters CDRs by originating phone number. Accepts a full or partial number.
@@ -132,6 +133,39 @@ class RawCdrsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
@@ -147,15 +181,15 @@ class RawCdrsClient:
         type: CdrSearchRequestType,
         from_: dt.date,
         to: dt.date,
-        page: int,
-        per_page: int,
         from_search: typing.Optional[str] = OMIT,
         to_search: typing.Optional[str] = OMIT,
         sip_trunk: typing.Optional[str] = OMIT,
         min_duration: typing.Optional[int] = OMIT,
         transcription: typing.Optional[TranscriptionFilter] = OMIT,
         uuid_: typing.Optional[str] = OMIT,
-        disposition: typing.Optional[CdrSearchRequestDisposition] = OMIT,
+        disposition: typing.Optional[CallDisposition] = OMIT,
+        page: typing.Optional[int] = OMIT,
+        per_page: typing.Optional[int] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[CdrTranscriptionSearchResponse]:
         """
@@ -171,12 +205,6 @@ class RawCdrsClient:
 
         to : dt.date
             End date for call search in `YYYY-MM-DD` format.
-
-        page : int
-            Page number to retrieve.
-
-        per_page : int
-            Number of records per page.
 
         from_search : typing.Optional[str]
             Originating phone number to filter results. Accepts full or partial number.
@@ -195,11 +223,17 @@ class RawCdrsClient:
         uuid_ : typing.Optional[str]
             Call ID.
 
-        disposition : typing.Optional[CdrSearchRequestDisposition]
+        disposition : typing.Optional[CallDisposition]
             Call disposition to filter results.  If omitted, returns only answered
-             calls. Allowed values: `answered`, `busy`, `rejected`,
+             calls. Allowed values: `answered`, `noanswer`, `busy`,
               `failed`, `all`. Use `all` to return calls
                regardless of their disposition.
+
+        page : typing.Optional[int]
+            Page number to retrieve.
+
+        per_page : typing.Optional[int]
+            Number of records per page.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -244,6 +278,17 @@ class RawCdrsClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -284,7 +329,7 @@ class RawCdrsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[SuccessResponse]:
         """
-        Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result.
+        Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result. Billed per minute at the account's call-transcription rate; fails with an insufficient-funds error when the balance cannot cover it.
 
         Parameters
         ----------
@@ -327,6 +372,28 @@ class RawCdrsClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -403,6 +470,17 @@ class RawCdrsClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -478,6 +556,39 @@ class RawCdrsClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 404:
                 raise NotFoundError(
                     headers=dict(_response.headers),
@@ -528,7 +639,7 @@ class RawCdrsClient:
             Filters CDRs by call direction. One of `placed` (outbound calls dialed by the account) or `received` (inbound calls answered by the account).
 
         disposition : typing.Optional[CallDisposition]
-            Filters CDRs by call disposition. One of `answered` (the called party answered), `busy` (the called party was busy), `rejected` (the call was declined), `failed` (the call could not be routed), or `all` (no disposition filter).
+            Filters CDRs by call disposition. One of `answered` (the called party answered), `noanswer` (no answer within the ring timeout), `busy` (the called party was busy), `failed` (the call could not be routed), or `all` (no disposition filter).
 
         from_search : typing.Optional[str]
             Filters CDRs by originating phone number. Accepts a full or partial number.
@@ -583,6 +694,17 @@ class RawCdrsClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -638,7 +760,7 @@ class AsyncRawCdrsClient:
             Filters CDRs by call direction. One of `placed` (outbound calls dialed by the account) or `received` (inbound calls answered by the account).
 
         disposition : typing.Optional[CallDisposition]
-            Filters CDRs by call disposition. One of `answered` (the called party answered), `busy` (the called party was busy), `rejected` (the call was declined), `failed` (the call could not be routed), or `all` (no disposition filter).
+            Filters CDRs by call disposition. One of `answered` (the called party answered), `noanswer` (no answer within the ring timeout), `busy` (the called party was busy), `failed` (the call could not be routed), or `all` (no disposition filter).
 
         from_search : typing.Optional[str]
             Filters CDRs by originating phone number. Accepts a full or partial number.
@@ -704,6 +826,39 @@ class AsyncRawCdrsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
@@ -719,15 +874,15 @@ class AsyncRawCdrsClient:
         type: CdrSearchRequestType,
         from_: dt.date,
         to: dt.date,
-        page: int,
-        per_page: int,
         from_search: typing.Optional[str] = OMIT,
         to_search: typing.Optional[str] = OMIT,
         sip_trunk: typing.Optional[str] = OMIT,
         min_duration: typing.Optional[int] = OMIT,
         transcription: typing.Optional[TranscriptionFilter] = OMIT,
         uuid_: typing.Optional[str] = OMIT,
-        disposition: typing.Optional[CdrSearchRequestDisposition] = OMIT,
+        disposition: typing.Optional[CallDisposition] = OMIT,
+        page: typing.Optional[int] = OMIT,
+        per_page: typing.Optional[int] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[CdrTranscriptionSearchResponse]:
         """
@@ -743,12 +898,6 @@ class AsyncRawCdrsClient:
 
         to : dt.date
             End date for call search in `YYYY-MM-DD` format.
-
-        page : int
-            Page number to retrieve.
-
-        per_page : int
-            Number of records per page.
 
         from_search : typing.Optional[str]
             Originating phone number to filter results. Accepts full or partial number.
@@ -767,11 +916,17 @@ class AsyncRawCdrsClient:
         uuid_ : typing.Optional[str]
             Call ID.
 
-        disposition : typing.Optional[CdrSearchRequestDisposition]
+        disposition : typing.Optional[CallDisposition]
             Call disposition to filter results.  If omitted, returns only answered
-             calls. Allowed values: `answered`, `busy`, `rejected`,
+             calls. Allowed values: `answered`, `noanswer`, `busy`,
               `failed`, `all`. Use `all` to return calls
                regardless of their disposition.
+
+        page : typing.Optional[int]
+            Page number to retrieve.
+
+        per_page : typing.Optional[int]
+            Number of records per page.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -816,6 +971,17 @@ class AsyncRawCdrsClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -856,7 +1022,7 @@ class AsyncRawCdrsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[SuccessResponse]:
         """
-        Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result.
+        Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result. Billed per minute at the account's call-transcription rate; fails with an insufficient-funds error when the balance cannot cover it.
 
         Parameters
         ----------
@@ -899,6 +1065,28 @@ class AsyncRawCdrsClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -975,6 +1163,17 @@ class AsyncRawCdrsClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -1050,6 +1249,39 @@ class AsyncRawCdrsClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 404:
                 raise NotFoundError(
                     headers=dict(_response.headers),
@@ -1100,7 +1332,7 @@ class AsyncRawCdrsClient:
             Filters CDRs by call direction. One of `placed` (outbound calls dialed by the account) or `received` (inbound calls answered by the account).
 
         disposition : typing.Optional[CallDisposition]
-            Filters CDRs by call disposition. One of `answered` (the called party answered), `busy` (the called party was busy), `rejected` (the call was declined), `failed` (the call could not be routed), or `all` (no disposition filter).
+            Filters CDRs by call disposition. One of `answered` (the called party answered), `noanswer` (no answer within the ring timeout), `busy` (the called party was busy), `failed` (the call could not be routed), or `all` (no disposition filter).
 
         from_search : typing.Optional[str]
             Filters CDRs by originating phone number. Accepts a full or partial number.
@@ -1155,6 +1387,17 @@ class AsyncRawCdrsClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),

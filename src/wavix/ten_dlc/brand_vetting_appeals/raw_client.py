@@ -10,11 +10,17 @@ from ...core.jsonable_encoder import encode_path_param
 from ...core.parse_error import ParsingError
 from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
+from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
 from ...errors.not_found_error import NotFoundError
+from ...errors.unauthorized_error import UnauthorizedError
 from ...errors.unprocessable_entity_error import UnprocessableEntityError
+from ...types.success_response import SuccessResponse
 from ...types.ten_dlc_brand_vetting_appeal import TenDlcBrandVettingAppeal
-from .types.create_brand_vetting_appeals_response import CreateBrandVettingAppealsResponse
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
+from .types.ten_dlc_brand_vetting_appeal_create_request_appeal_categories_item import (
+    TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem,
+)
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -59,6 +65,28 @@ class RawBrandVettingAppealsClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -94,13 +122,13 @@ class RawBrandVettingAppealsClient:
         self,
         brand_id: str,
         *,
-        appeal_categories: typing.Sequence[str],
+        appeal_categories: typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
         explanation: typing.Optional[str] = OMIT,
         evp_id: typing.Optional[str] = OMIT,
         vetting_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[CreateBrandVettingAppealsResponse]:
+    ) -> HttpResponse[SuccessResponse]:
         """
         Submits an appeal for an external vetting of the 10DLC Brand identified by `brand_id`.
 
@@ -109,8 +137,8 @@ class RawBrandVettingAppealsClient:
         brand_id : str
             The unique ID of the 10DLC Brand.
 
-        appeal_categories : typing.Sequence[str]
-            List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`.
+        appeal_categories : typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem]
+            List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`. `LOW_SCORE` is only valid for vetting appeals — brand identity appeals (`ten_dlc_brand_appeals_create`) do not accept it.
 
         evidence : typing.Sequence[str]
             List of evidence IDs associated with the appeal.
@@ -129,7 +157,7 @@ class RawBrandVettingAppealsClient:
 
         Returns
         -------
-        HttpResponse[CreateBrandVettingAppealsResponse]
+        HttpResponse[SuccessResponse]
             Returns the submitted appeal.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -151,13 +179,35 @@ class RawBrandVettingAppealsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateBrandVettingAppealsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=CreateBrandVettingAppealsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -239,6 +289,28 @@ class AsyncRawBrandVettingAppealsClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -274,13 +346,13 @@ class AsyncRawBrandVettingAppealsClient:
         self,
         brand_id: str,
         *,
-        appeal_categories: typing.Sequence[str],
+        appeal_categories: typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
         explanation: typing.Optional[str] = OMIT,
         evp_id: typing.Optional[str] = OMIT,
         vetting_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[CreateBrandVettingAppealsResponse]:
+    ) -> AsyncHttpResponse[SuccessResponse]:
         """
         Submits an appeal for an external vetting of the 10DLC Brand identified by `brand_id`.
 
@@ -289,8 +361,8 @@ class AsyncRawBrandVettingAppealsClient:
         brand_id : str
             The unique ID of the 10DLC Brand.
 
-        appeal_categories : typing.Sequence[str]
-            List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`.
+        appeal_categories : typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem]
+            List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`. `LOW_SCORE` is only valid for vetting appeals — brand identity appeals (`ten_dlc_brand_appeals_create`) do not accept it.
 
         evidence : typing.Sequence[str]
             List of evidence IDs associated with the appeal.
@@ -309,7 +381,7 @@ class AsyncRawBrandVettingAppealsClient:
 
         Returns
         -------
-        AsyncHttpResponse[CreateBrandVettingAppealsResponse]
+        AsyncHttpResponse[SuccessResponse]
             Returns the submitted appeal.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -331,13 +403,35 @@ class AsyncRawBrandVettingAppealsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateBrandVettingAppealsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=CreateBrandVettingAppealsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),

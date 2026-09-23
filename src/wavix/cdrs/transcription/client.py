@@ -48,7 +48,7 @@ class TranscriptionClient:
             token="YOUR_TOKEN",
         )
         client.cdrs.transcription.get(
-            call_id="bbaa37bf-430a-46da-ade3-c248e407016",
+            call_id="bbaa37bf-430a-46da-ade3-c248e4070160",
         )
         """
         _response = self._raw_client.get(call_id, request_options=request_options)
@@ -102,7 +102,7 @@ class AsyncTranscriptionClient:
 
         async def main() -> None:
             await client.cdrs.transcription.get(
-                call_id="bbaa37bf-430a-46da-ade3-c248e407016",
+                call_id="bbaa37bf-430a-46da-ade3-c248e4070160",
             )
 
 

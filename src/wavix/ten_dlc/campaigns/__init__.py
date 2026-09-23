@@ -6,28 +6,8 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .types import (
-        CreateCampaignsResponse,
-        DeleteCampaignsResponse,
-        GetCampaignsResponse,
-        ListByBrandCampaignsResponse,
-        ListByBrandCampaignsResponsePagination,
-        ListCampaignsResponse,
-        ListCampaignsResponsePagination,
-        TenDlcCampaignUpdateRequestUsecase,
-        UpdateCampaignsResponse,
-    )
-_dynamic_imports: typing.Dict[str, str] = {
-    "CreateCampaignsResponse": ".types",
-    "DeleteCampaignsResponse": ".types",
-    "GetCampaignsResponse": ".types",
-    "ListByBrandCampaignsResponse": ".types",
-    "ListByBrandCampaignsResponsePagination": ".types",
-    "ListCampaignsResponse": ".types",
-    "ListCampaignsResponsePagination": ".types",
-    "TenDlcCampaignUpdateRequestUsecase": ".types",
-    "UpdateCampaignsResponse": ".types",
-}
+    from .types import TenDlcCampaignUpdateRequestUsecase
+_dynamic_imports: typing.Dict[str, str] = {"TenDlcCampaignUpdateRequestUsecase": ".types"}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -51,14 +31,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = [
-    "CreateCampaignsResponse",
-    "DeleteCampaignsResponse",
-    "GetCampaignsResponse",
-    "ListByBrandCampaignsResponse",
-    "ListByBrandCampaignsResponsePagination",
-    "ListCampaignsResponse",
-    "ListCampaignsResponsePagination",
-    "TenDlcCampaignUpdateRequestUsecase",
-    "UpdateCampaignsResponse",
-]
+__all__ = ["TenDlcCampaignUpdateRequestUsecase"]

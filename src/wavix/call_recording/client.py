@@ -175,7 +175,7 @@ class CallRecordingClient:
 
     def delete(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> SuccessResponse:
         """
-        Deletes the call recording identified by `id`. Deletion is permanent and removes the recording file.
+        Deletes the call recording identified by `id`. Deletion is permanent — the audio file is unrecoverable.
 
         Parameters
         ----------
@@ -392,7 +392,7 @@ class AsyncCallRecordingClient:
 
     async def delete(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> SuccessResponse:
         """
-        Deletes the call recording identified by `id`. Deletion is permanent and removes the recording file.
+        Deletes the call recording identified by `id`. Deletion is permanent — the audio file is unrecoverable.
 
         Parameters
         ----------

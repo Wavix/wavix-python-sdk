@@ -4,8 +4,8 @@ import typing
 
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
+from ...types.country_list_response import CountryListResponse
 from .raw_client import AsyncRawCountriesClient, RawCountriesClient
-from .types.list_countries_response import ListCountriesResponse
 
 
 class CountriesClient:
@@ -28,7 +28,7 @@ class CountriesClient:
         *,
         text_enabled_only: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListCountriesResponse:
+    ) -> CountryListResponse:
         """
         Returns a list of countries where phone numbers are available.
 
@@ -42,7 +42,7 @@ class CountriesClient:
 
         Returns
         -------
-        ListCountriesResponse
+        CountryListResponse
             Returns the list of countries with available phone numbers.
 
         Examples
@@ -78,7 +78,7 @@ class AsyncCountriesClient:
         *,
         text_enabled_only: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListCountriesResponse:
+    ) -> CountryListResponse:
         """
         Returns a list of countries where phone numbers are available.
 
@@ -92,7 +92,7 @@ class AsyncCountriesClient:
 
         Returns
         -------
-        ListCountriesResponse
+        CountryListResponse
             Returns the list of countries with available phone numbers.
 
         Examples

@@ -4,6 +4,7 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from .document_type import DocumentType
 
 
 class AvailableNumber(UniversalBaseModel):
@@ -66,9 +67,9 @@ class AvailableNumber(UniversalBaseModel):
     Phone number in E.164 format.
     """
 
-    require_docs: typing.List[int] = pydantic.Field()
+    require_docs: typing.List[DocumentType] = pydantic.Field()
     """
-    Documents required to activate the phone number.
+    Documents to activate the number.
     """
 
     sms_enabled: bool = pydantic.Field()

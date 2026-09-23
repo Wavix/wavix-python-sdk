@@ -6,11 +6,9 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .delete_sender_ids_response import DeleteSenderIdsResponse
     from .sender_id_create_request_monthly_volume import SenderIdCreateRequestMonthlyVolume
     from .sender_id_create_request_usecase import SenderIdCreateRequestUsecase
 _dynamic_imports: typing.Dict[str, str] = {
-    "DeleteSenderIdsResponse": ".delete_sender_ids_response",
     "SenderIdCreateRequestMonthlyVolume": ".sender_id_create_request_monthly_volume",
     "SenderIdCreateRequestUsecase": ".sender_id_create_request_usecase",
 }
@@ -37,4 +35,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["DeleteSenderIdsResponse", "SenderIdCreateRequestMonthlyVolume", "SenderIdCreateRequestUsecase"]
+__all__ = ["SenderIdCreateRequestMonthlyVolume", "SenderIdCreateRequestUsecase"]

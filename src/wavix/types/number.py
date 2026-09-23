@@ -5,6 +5,7 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from .document_type import DocumentType
 from .inbound_call_destination import InboundCallDestination
 from .number_document import NumberDocument
 
@@ -65,14 +66,14 @@ class Number(UniversalBaseModel):
     Maximum number of concurrent inbound calls.
     """
 
-    require_docs: typing.List[str] = pydantic.Field()
+    require_docs: typing.List[DocumentType] = pydantic.Field()
     """
-    Documents required to activate the phone number.
+    Documents to activate the number.
     """
 
     documents: typing.List[NumberDocument] = pydantic.Field()
     """
-    Uploaded documents for the phone number.
+    Uploaded documents.
     """
 
     domestic_cli: bool = pydantic.Field()

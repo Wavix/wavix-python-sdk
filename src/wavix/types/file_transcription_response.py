@@ -7,8 +7,8 @@ import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from .file_transcript_response import FileTranscriptResponse
 from .file_transcript_turn import FileTranscriptTurn
-from .file_transcription_response_language import FileTranscriptionResponseLanguage
-from .file_transcription_response_status import FileTranscriptionResponseStatus
+from .transcription_language import TranscriptionLanguage
+from .transcription_status import TranscriptionStatus
 
 
 class FileTranscriptionResponse(UniversalBaseModel):
@@ -27,7 +27,7 @@ class FileTranscriptionResponse(UniversalBaseModel):
     Transcription request ID.
     """
 
-    language: FileTranscriptionResponseLanguage = pydantic.Field()
+    language: typing.Optional[TranscriptionLanguage] = pydantic.Field(default=None)
     """
     Transcription language.
     """
@@ -42,7 +42,7 @@ class FileTranscriptionResponse(UniversalBaseModel):
     Total transcription charge in USD.
     """
 
-    status: FileTranscriptionResponseStatus = pydantic.Field()
+    status: TranscriptionStatus = pydantic.Field()
     """
     Transcription status. Possible values are `completed`, `failed`.
     """

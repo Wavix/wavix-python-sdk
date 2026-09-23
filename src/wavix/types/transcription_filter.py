@@ -10,17 +10,17 @@ from .transcription_filter_client import TranscriptionFilterClient
 
 
 class TranscriptionFilter(UniversalBaseModel):
-    agent: TranscriptionFilterAgent = pydantic.Field()
+    agent: typing.Optional[TranscriptionFilterAgent] = pydantic.Field(default=None)
     """
     Search in an agent's spoken words and phrases
     """
 
-    client: TranscriptionFilterClient = pydantic.Field()
+    client: typing.Optional[TranscriptionFilterClient] = pydantic.Field(default=None)
     """
     Search in an customer's spoken words and phrases
     """
 
-    any: TranscriptionFilterAny = pydantic.Field()
+    any: typing.Optional[TranscriptionFilterAny] = pydantic.Field(default=None)
     """
     Search in both speakers' spoken words and phrases
     """

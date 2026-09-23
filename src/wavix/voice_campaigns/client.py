@@ -32,7 +32,7 @@ class VoiceCampaignsClient:
         self, *, voice_campaign: VoiceCampaignResponse, request_options: typing.Optional[RequestOptions] = None
     ) -> VoiceCampaignsCreateResponse:
         """
-        Launches a voice campaign that places an outbound call using a pre-configured scenario. Track progress with the returned voice campaign `id`.
+        Launches a voice campaign that places a real outbound call using a pre-configured scenario. Track progress with the returned voice campaign `id`.
 
         Parameters
         ----------
@@ -115,7 +115,7 @@ class AsyncVoiceCampaignsClient:
         self, *, voice_campaign: VoiceCampaignResponse, request_options: typing.Optional[RequestOptions] = None
     ) -> VoiceCampaignsCreateResponse:
         """
-        Launches a voice campaign that places an outbound call using a pre-configured scenario. Track progress with the returned voice campaign `id`.
+        Launches a voice campaign that places a real outbound call using a pre-configured scenario. Track progress with the returned voice campaign `id`.
 
         Parameters
         ----------

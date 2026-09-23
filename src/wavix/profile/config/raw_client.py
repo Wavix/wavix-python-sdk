@@ -9,8 +9,11 @@ from ...core.http_response import AsyncHttpResponse, HttpResponse
 from ...core.parse_error import ParsingError
 from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
+from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
-from .types.get_config_response import GetConfigResponse
+from ...errors.unauthorized_error import UnauthorizedError
+from ...types.profile_config_response import ProfileConfigResponse
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
 
 
@@ -18,7 +21,7 @@ class RawConfigClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetConfigResponse]:
+    def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[ProfileConfigResponse]:
         """
         Returns the balance and global limits configured for the authenticated account.
 
@@ -29,7 +32,7 @@ class RawConfigClient:
 
         Returns
         -------
-        HttpResponse[GetConfigResponse]
+        HttpResponse[ProfileConfigResponse]
             Returns the account settings.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -40,13 +43,35 @@ class RawConfigClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetConfigResponse,
+                    ProfileConfigResponse,
                     parse_obj_as(
-                        type_=GetConfigResponse,  # type: ignore
+                        type_=ProfileConfigResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -74,7 +99,7 @@ class AsyncRawConfigClient:
 
     async def get(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[GetConfigResponse]:
+    ) -> AsyncHttpResponse[ProfileConfigResponse]:
         """
         Returns the balance and global limits configured for the authenticated account.
 
@@ -85,7 +110,7 @@ class AsyncRawConfigClient:
 
         Returns
         -------
-        AsyncHttpResponse[GetConfigResponse]
+        AsyncHttpResponse[ProfileConfigResponse]
             Returns the account settings.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -96,13 +121,35 @@ class AsyncRawConfigClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetConfigResponse,
+                    ProfileConfigResponse,
                     parse_obj_as(
-                        type_=GetConfigResponse,  # type: ignore
+                        type_=ProfileConfigResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),

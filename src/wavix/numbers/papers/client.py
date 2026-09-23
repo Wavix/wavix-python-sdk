@@ -5,7 +5,7 @@ import typing
 from ... import core
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
-from ...types.document_type_id import DocumentTypeId
+from ...types.document_type import DocumentType
 from ...types.number_document import NumberDocument
 from .raw_client import AsyncRawPapersClient, RawPapersClient
 
@@ -33,7 +33,7 @@ class PapersClient:
         *,
         did_ids: str,
         doc_attachment: core.File,
-        doc_id: DocumentTypeId,
+        doc_id: DocumentType,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> typing.List[NumberDocument]:
         """
@@ -52,7 +52,7 @@ class PapersClient:
         doc_attachment : core.File
             See core.File for more documentation
 
-        doc_id : DocumentTypeId
+        doc_id : DocumentType
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -71,7 +71,7 @@ class PapersClient:
         )
         client.numbers.papers.upload(
             did_ids="did_ids",
-            doc_id=1,
+            doc_id="id",
         )
         """
         _response = self._raw_client.upload(
@@ -100,7 +100,7 @@ class AsyncPapersClient:
         *,
         did_ids: str,
         doc_attachment: core.File,
-        doc_id: DocumentTypeId,
+        doc_id: DocumentType,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> typing.List[NumberDocument]:
         """
@@ -119,7 +119,7 @@ class AsyncPapersClient:
         doc_attachment : core.File
             See core.File for more documentation
 
-        doc_id : DocumentTypeId
+        doc_id : DocumentType
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -143,7 +143,7 @@ class AsyncPapersClient:
         async def main() -> None:
             await client.numbers.papers.upload(
                 did_ids="did_ids",
-                doc_id=1,
+                doc_id="id",
             )
 
 

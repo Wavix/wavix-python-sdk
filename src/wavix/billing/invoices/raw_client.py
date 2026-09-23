@@ -11,9 +11,12 @@ from ...core.jsonable_encoder import encode_path_param
 from ...core.parse_error import ParsingError
 from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
+from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
 from ...errors.not_found_error import NotFoundError
-from .types.list_invoices_response import ListInvoicesResponse
+from ...errors.unauthorized_error import UnauthorizedError
+from ...types.invoice_list_response import InvoiceListResponse
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
 
 
@@ -27,7 +30,7 @@ class RawInvoicesClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[ListInvoicesResponse]:
+    ) -> HttpResponse[InvoiceListResponse]:
         """
         Returns the auto-generated financial statements for the authenticated account, paginated and ordered by billing period.
 
@@ -44,7 +47,7 @@ class RawInvoicesClient:
 
         Returns
         -------
-        HttpResponse[ListInvoicesResponse]
+        HttpResponse[InvoiceListResponse]
             Returns a paginated list of financial statements.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -59,13 +62,35 @@ class RawInvoicesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListInvoicesResponse,
+                    InvoiceListResponse,
                     parse_obj_as(
-                        type_=ListInvoicesResponse,  # type: ignore
+                        type_=InvoiceListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -120,6 +145,17 @@ class RawInvoicesClient:
                             response=_response, data=(_chunk for _chunk in _response.iter_bytes(chunk_size=_chunk_size))
                         )
                     _response.read()
+                    if _response.status_code == 401:
+                        raise UnauthorizedError(
+                            headers=dict(_response.headers),
+                            body=typing.cast(
+                                UnauthorizedErrorResponse,
+                                parse_obj_as(
+                                    type_=UnauthorizedErrorResponse,  # type: ignore
+                                    object_=_response.json(),
+                                ),
+                            ),
+                        )
                     if _response.status_code == 403:
                         raise ForbiddenError(
                             headers=dict(_response.headers),
@@ -169,7 +205,7 @@ class AsyncRawInvoicesClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[ListInvoicesResponse]:
+    ) -> AsyncHttpResponse[InvoiceListResponse]:
         """
         Returns the auto-generated financial statements for the authenticated account, paginated and ordered by billing period.
 
@@ -186,7 +222,7 @@ class AsyncRawInvoicesClient:
 
         Returns
         -------
-        AsyncHttpResponse[ListInvoicesResponse]
+        AsyncHttpResponse[InvoiceListResponse]
             Returns a paginated list of financial statements.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -201,13 +237,35 @@ class AsyncRawInvoicesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListInvoicesResponse,
+                    InvoiceListResponse,
                     parse_obj_as(
-                        type_=ListInvoicesResponse,  # type: ignore
+                        type_=InvoiceListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -263,6 +321,17 @@ class AsyncRawInvoicesClient:
                             data=(_chunk async for _chunk in _response.aiter_bytes(chunk_size=_chunk_size)),
                         )
                     await _response.aread()
+                    if _response.status_code == 401:
+                        raise UnauthorizedError(
+                            headers=dict(_response.headers),
+                            body=typing.cast(
+                                UnauthorizedErrorResponse,
+                                parse_obj_as(
+                                    type_=UnauthorizedErrorResponse,  # type: ignore
+                                    object_=_response.json(),
+                                ),
+                            ),
+                        )
                     if _response.status_code == 403:
                         raise ForbiddenError(
                             headers=dict(_response.headers),

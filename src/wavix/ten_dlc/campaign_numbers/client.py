@@ -4,10 +4,9 @@ import typing
 
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
+from ...types.success_response import SuccessResponse
+from ...types.ten_dlc_campaign_number_list_response import TenDlcCampaignNumberListResponse
 from .raw_client import AsyncRawCampaignNumbersClient, RawCampaignNumbersClient
-from .types.link_campaign_numbers_response import LinkCampaignNumbersResponse
-from .types.list_campaign_numbers_response import ListCampaignNumbersResponse
-from .types.unlink_campaign_numbers_response import UnlinkCampaignNumbersResponse
 
 
 class CampaignNumbersClient:
@@ -27,7 +26,7 @@ class CampaignNumbersClient:
 
     def link(
         self, brand_id: str, campaign_id: str, number: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> LinkCampaignNumbersResponse:
+    ) -> SuccessResponse:
         """
         Links a phone number to a 10DLC Campaign. Wavix automatically creates a Sender ID once the number is approved.
 
@@ -47,7 +46,7 @@ class CampaignNumbersClient:
 
         Returns
         -------
-        LinkCampaignNumbersResponse
+        SuccessResponse
             Returns a success confirmation. The phone number is linked to the Campaign.
 
         Examples
@@ -68,7 +67,7 @@ class CampaignNumbersClient:
 
     def unlink(
         self, brand_id: str, campaign_id: str, number: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> UnlinkCampaignNumbersResponse:
+    ) -> SuccessResponse:
         """
         Unlinks a phone number from a 10DLC Campaign. The associated Sender ID is also deleted.
 
@@ -88,7 +87,7 @@ class CampaignNumbersClient:
 
         Returns
         -------
-        UnlinkCampaignNumbersResponse
+        SuccessResponse
             Returns a success confirmation. The phone number is unlinked from the Campaign.
 
         Examples
@@ -109,7 +108,7 @@ class CampaignNumbersClient:
 
     def list(
         self, brand_id: str, campaign_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> ListCampaignNumbersResponse:
+    ) -> TenDlcCampaignNumberListResponse:
         """
         Returns the phone numbers linked to the 10DLC Campaign identified by `campaign_id`.
 
@@ -126,7 +125,7 @@ class CampaignNumbersClient:
 
         Returns
         -------
-        ListCampaignNumbersResponse
+        TenDlcCampaignNumberListResponse
             Returns the phone numbers linked to the Campaign.
 
         Examples
@@ -162,7 +161,7 @@ class AsyncCampaignNumbersClient:
 
     async def link(
         self, brand_id: str, campaign_id: str, number: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> LinkCampaignNumbersResponse:
+    ) -> SuccessResponse:
         """
         Links a phone number to a 10DLC Campaign. Wavix automatically creates a Sender ID once the number is approved.
 
@@ -182,7 +181,7 @@ class AsyncCampaignNumbersClient:
 
         Returns
         -------
-        LinkCampaignNumbersResponse
+        SuccessResponse
             Returns a success confirmation. The phone number is linked to the Campaign.
 
         Examples
@@ -211,7 +210,7 @@ class AsyncCampaignNumbersClient:
 
     async def unlink(
         self, brand_id: str, campaign_id: str, number: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> UnlinkCampaignNumbersResponse:
+    ) -> SuccessResponse:
         """
         Unlinks a phone number from a 10DLC Campaign. The associated Sender ID is also deleted.
 
@@ -231,7 +230,7 @@ class AsyncCampaignNumbersClient:
 
         Returns
         -------
-        UnlinkCampaignNumbersResponse
+        SuccessResponse
             Returns a success confirmation. The phone number is unlinked from the Campaign.
 
         Examples
@@ -260,7 +259,7 @@ class AsyncCampaignNumbersClient:
 
     async def list(
         self, brand_id: str, campaign_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> ListCampaignNumbersResponse:
+    ) -> TenDlcCampaignNumberListResponse:
         """
         Returns the phone numbers linked to the 10DLC Campaign identified by `campaign_id`.
 
@@ -277,7 +276,7 @@ class AsyncCampaignNumbersClient:
 
         Returns
         -------
-        ListCampaignNumbersResponse
+        TenDlcCampaignNumberListResponse
             Returns the phone numbers linked to the Campaign.
 
         Examples

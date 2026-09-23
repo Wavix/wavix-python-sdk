@@ -12,9 +12,12 @@ from ..core.request_options import RequestOptions
 from ..errors.bad_request_error import BadRequestError
 from ..errors.forbidden_error import ForbiddenError
 from ..errors.not_found_error import NotFoundError
-from .types.checkout_cart_response import CheckoutCartResponse
-from .types.get_cart_response import GetCartResponse
-from .types.remove_cart_response import RemoveCartResponse
+from ..errors.unauthorized_error import UnauthorizedError
+from ..errors.unprocessable_entity_error import UnprocessableEntityError
+from ..types.available_number import AvailableNumber
+from ..types.cart_response import CartResponse
+from ..types.success_response import SuccessResponse
+from ..types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -25,7 +28,7 @@ class RawCartClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetCartResponse]:
+    def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CartResponse]:
         """
         Returns the current purchase cart, including the phone numbers it contains and the documents each requires.
 
@@ -36,7 +39,7 @@ class RawCartClient:
 
         Returns
         -------
-        HttpResponse[GetCartResponse]
+        HttpResponse[CartResponse]
             Returns the cart.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -47,20 +50,20 @@ class RawCartClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetCartResponse,
+                    CartResponse,
                     parse_obj_as(
-                        type_=GetCartResponse,  # type: ignore
+                        type_=CartResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(
+            if _response.status_code == 401:
+                raise UnauthorizedError(
                     headers=dict(_response.headers),
                     body=typing.cast(
-                        typing.Any,
+                        UnauthorizedErrorResponse,
                         parse_obj_as(
-                            type_=typing.Any,  # type: ignore
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -87,7 +90,7 @@ class RawCartClient:
 
     def add(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[typing.Any]]:
+    ) -> HttpResponse[typing.List[AvailableNumber]]:
         """
         Adds the listed phone numbers to the purchase cart.
 
@@ -101,7 +104,7 @@ class RawCartClient:
 
         Returns
         -------
-        HttpResponse[typing.List[typing.Any]]
+        HttpResponse[typing.List[AvailableNumber]]
             Returns the phone numbers now in the cart.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -119,9 +122,9 @@ class RawCartClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[typing.Any],
+                    typing.List[AvailableNumber],
                     parse_obj_as(
-                        type_=typing.List[typing.Any],  # type: ignore
+                        type_=typing.List[AvailableNumber],  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -133,6 +136,17 @@ class RawCartClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -170,7 +184,7 @@ class RawCartClient:
 
     def remove(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[RemoveCartResponse]:
+    ) -> HttpResponse[SuccessResponse]:
         """
         Removes the listed phone numbers from the purchase cart.
 
@@ -184,7 +198,7 @@ class RawCartClient:
 
         Returns
         -------
-        HttpResponse[RemoveCartResponse]
+        HttpResponse[SuccessResponse]
             Returns a success confirmation. The numbers are removed from the cart.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -202,9 +216,9 @@ class RawCartClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RemoveCartResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=RemoveCartResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -216,6 +230,17 @@ class RawCartClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -253,9 +278,9 @@ class RawCartClient:
 
     def checkout(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[CheckoutCartResponse]:
+    ) -> HttpResponse[SuccessResponse]:
         """
-        Purchases the listed phone numbers from the cart. Activation and monthly fees are deducted from the account balance.
+        Purchases the listed phone numbers from the cart. Activation and monthly fees are debited from the account balance immediately, and the purchase cannot be reversed through this API.
 
         Parameters
         ----------
@@ -267,7 +292,7 @@ class RawCartClient:
 
         Returns
         -------
-        HttpResponse[CheckoutCartResponse]
+        HttpResponse[SuccessResponse]
             Returns a success confirmation. The phone numbers are purchased.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -285,13 +310,35 @@ class RawCartClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CheckoutCartResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=CheckoutCartResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -305,6 +352,17 @@ class RawCartClient:
                 )
             if _response.status_code == 404:
                 raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -328,9 +386,7 @@ class AsyncRawCartClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    async def get(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[GetCartResponse]:
+    async def get(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CartResponse]:
         """
         Returns the current purchase cart, including the phone numbers it contains and the documents each requires.
 
@@ -341,7 +397,7 @@ class AsyncRawCartClient:
 
         Returns
         -------
-        AsyncHttpResponse[GetCartResponse]
+        AsyncHttpResponse[CartResponse]
             Returns the cart.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -352,20 +408,20 @@ class AsyncRawCartClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetCartResponse,
+                    CartResponse,
                     parse_obj_as(
-                        type_=GetCartResponse,  # type: ignore
+                        type_=CartResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(
+            if _response.status_code == 401:
+                raise UnauthorizedError(
                     headers=dict(_response.headers),
                     body=typing.cast(
-                        typing.Any,
+                        UnauthorizedErrorResponse,
                         parse_obj_as(
-                            type_=typing.Any,  # type: ignore
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -392,7 +448,7 @@ class AsyncRawCartClient:
 
     async def add(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[typing.Any]]:
+    ) -> AsyncHttpResponse[typing.List[AvailableNumber]]:
         """
         Adds the listed phone numbers to the purchase cart.
 
@@ -406,7 +462,7 @@ class AsyncRawCartClient:
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[typing.Any]]
+        AsyncHttpResponse[typing.List[AvailableNumber]]
             Returns the phone numbers now in the cart.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -424,9 +480,9 @@ class AsyncRawCartClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[typing.Any],
+                    typing.List[AvailableNumber],
                     parse_obj_as(
-                        type_=typing.List[typing.Any],  # type: ignore
+                        type_=typing.List[AvailableNumber],  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -438,6 +494,17 @@ class AsyncRawCartClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -475,7 +542,7 @@ class AsyncRawCartClient:
 
     async def remove(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[RemoveCartResponse]:
+    ) -> AsyncHttpResponse[SuccessResponse]:
         """
         Removes the listed phone numbers from the purchase cart.
 
@@ -489,7 +556,7 @@ class AsyncRawCartClient:
 
         Returns
         -------
-        AsyncHttpResponse[RemoveCartResponse]
+        AsyncHttpResponse[SuccessResponse]
             Returns a success confirmation. The numbers are removed from the cart.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -507,9 +574,9 @@ class AsyncRawCartClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RemoveCartResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=RemoveCartResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -521,6 +588,17 @@ class AsyncRawCartClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -558,9 +636,9 @@ class AsyncRawCartClient:
 
     async def checkout(
         self, *, ids: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[CheckoutCartResponse]:
+    ) -> AsyncHttpResponse[SuccessResponse]:
         """
-        Purchases the listed phone numbers from the cart. Activation and monthly fees are deducted from the account balance.
+        Purchases the listed phone numbers from the cart. Activation and monthly fees are debited from the account balance immediately, and the purchase cannot be reversed through this API.
 
         Parameters
         ----------
@@ -572,7 +650,7 @@ class AsyncRawCartClient:
 
         Returns
         -------
-        AsyncHttpResponse[CheckoutCartResponse]
+        AsyncHttpResponse[SuccessResponse]
             Returns a success confirmation. The phone numbers are purchased.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -590,13 +668,35 @@ class AsyncRawCartClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CheckoutCartResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=CheckoutCartResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -610,6 +710,17 @@ class AsyncRawCartClient:
                 )
             if _response.status_code == 404:
                 raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,

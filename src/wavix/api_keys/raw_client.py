@@ -19,6 +19,7 @@ from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.api_key import ApiKey
 from ..types.api_key_calls_scope_permission import ApiKeyCallsScopePermission
 from ..types.api_key_scope_permission import ApiKeyScopePermission
+from ..types.api_key_with_secret import ApiKeyWithSecret
 from ..types.success_response import SuccessResponse
 from ..types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
@@ -121,7 +122,7 @@ class RawApiKeysClient:
         account: typing.Optional[ApiKeyScopePermission] = OMIT,
         subaccounts: typing.Optional[ApiKeyScopePermission] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[ApiKey]:
+    ) -> HttpResponse[ApiKeyWithSecret]:
         """
         Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`.
 
@@ -188,8 +189,8 @@ class RawApiKeysClient:
 
         Returns
         -------
-        HttpResponse[ApiKey]
-            Returns the created API key.
+        HttpResponse[ApiKeyWithSecret]
+            Returns the created API key, including the one-time `value` secret.
         """
         _response = self._client_wrapper.httpx_client.request(
             "v1/api-keys",
@@ -249,9 +250,9 @@ class RawApiKeysClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ApiKey,
+                    ApiKeyWithSecret,
                     parse_obj_as(
-                        type_=ApiKey,  # type: ignore
+                        type_=ApiKeyWithSecret,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -343,6 +344,17 @@ class RawApiKeysClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),
@@ -703,7 +715,7 @@ class AsyncRawApiKeysClient:
         account: typing.Optional[ApiKeyScopePermission] = OMIT,
         subaccounts: typing.Optional[ApiKeyScopePermission] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[ApiKey]:
+    ) -> AsyncHttpResponse[ApiKeyWithSecret]:
         """
         Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`.
 
@@ -770,8 +782,8 @@ class AsyncRawApiKeysClient:
 
         Returns
         -------
-        AsyncHttpResponse[ApiKey]
-            Returns the created API key.
+        AsyncHttpResponse[ApiKeyWithSecret]
+            Returns the created API key, including the one-time `value` secret.
         """
         _response = await self._client_wrapper.httpx_client.request(
             "v1/api-keys",
@@ -831,9 +843,9 @@ class AsyncRawApiKeysClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ApiKey,
+                    ApiKeyWithSecret,
                     parse_obj_as(
-                        type_=ApiKey,  # type: ignore
+                        type_=ApiKeyWithSecret,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -925,6 +937,17 @@ class AsyncRawApiKeysClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),

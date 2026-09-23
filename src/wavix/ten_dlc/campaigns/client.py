@@ -6,14 +6,10 @@ import typing
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
 from ...types.success_response import SuccessResponse
+from ...types.ten_dlc_campaign import TenDlcCampaign
+from ...types.ten_dlc_campaign_list_response import TenDlcCampaignListResponse
 from .raw_client import AsyncRawCampaignsClient, RawCampaignsClient
-from .types.create_campaigns_response import CreateCampaignsResponse
-from .types.delete_campaigns_response import DeleteCampaignsResponse
-from .types.get_campaigns_response import GetCampaignsResponse
-from .types.list_by_brand_campaigns_response import ListByBrandCampaignsResponse
-from .types.list_campaigns_response import ListCampaignsResponse
 from .types.ten_dlc_campaign_update_request_usecase import TenDlcCampaignUpdateRequestUsecase
-from .types.update_campaigns_response import UpdateCampaignsResponse
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -46,7 +42,7 @@ class CampaignsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListCampaignsResponse:
+    ) -> TenDlcCampaignListResponse:
         """
         Returns a paginated list of 10DLC Campaigns for the authenticated account, filtered by date, status, and use case.
 
@@ -81,7 +77,7 @@ class CampaignsClient:
 
         Returns
         -------
-        ListCampaignsResponse
+        TenDlcCampaignListResponse
             Returns a paginated list of 10DLC Campaigns.
 
         Examples
@@ -134,7 +130,7 @@ class CampaignsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListByBrandCampaignsResponse:
+    ) -> TenDlcCampaignListResponse:
         """
         Returns a paginated list of 10DLC Campaigns associated with the 10DLC Brand identified by `brand_id`.
 
@@ -172,7 +168,7 @@ class CampaignsClient:
 
         Returns
         -------
-        ListByBrandCampaignsResponse
+        TenDlcCampaignListResponse
             Returns a paginated list of 10DLC Campaigns.
 
         Examples
@@ -247,7 +243,7 @@ class CampaignsClient:
         sample5: typing.Optional[str] = OMIT,
         privacy_policy: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateCampaignsResponse:
+    ) -> TenDlcCampaign:
         """
         Registers a 10DLC Campaign under the 10DLC Brand identified by `brand_id`. The Brand must have a verified identity status.
 
@@ -345,7 +341,7 @@ class CampaignsClient:
 
         Returns
         -------
-        CreateCampaignsResponse
+        TenDlcCampaign
             Returns the registered 10DLC Campaign.
 
         Examples
@@ -423,7 +419,7 @@ class CampaignsClient:
 
     def get(
         self, brand_id: str, campaign_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetCampaignsResponse:
+    ) -> TenDlcCampaign:
         """
         Returns the 10DLC Campaign identified by `campaign_id` under the Brand identified by `brand_id`.
 
@@ -440,7 +436,7 @@ class CampaignsClient:
 
         Returns
         -------
-        GetCampaignsResponse
+        TenDlcCampaign
             Returns the 10DLC Campaign.
 
         Examples
@@ -490,7 +486,7 @@ class CampaignsClient:
         privacy_policy: typing.Optional[str] = OMIT,
         embedded_link_sample: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> UpdateCampaignsResponse:
+    ) -> TenDlcCampaign:
         """
         Updates the 10DLC Campaign identified by `campaign_id`. Only the provided fields are changed.
 
@@ -585,7 +581,7 @@ class CampaignsClient:
 
         Returns
         -------
-        UpdateCampaignsResponse
+        TenDlcCampaign
             Returns the updated 10DLC Campaign.
 
         Examples
@@ -635,7 +631,7 @@ class CampaignsClient:
 
     def delete(
         self, brand_id: str, campaign_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> DeleteCampaignsResponse:
+    ) -> SuccessResponse:
         """
         Deletes a 10DLC Campaign. Associated phone numbers cannot be used as Sender IDs once the Campaign is deleted.
 
@@ -652,7 +648,7 @@ class CampaignsClient:
 
         Returns
         -------
-        DeleteCampaignsResponse
+        SuccessResponse
             Returns a success confirmation. The 10DLC Campaign is deleted.
 
         Examples
@@ -756,7 +752,7 @@ class AsyncCampaignsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListCampaignsResponse:
+    ) -> TenDlcCampaignListResponse:
         """
         Returns a paginated list of 10DLC Campaigns for the authenticated account, filtered by date, status, and use case.
 
@@ -791,7 +787,7 @@ class AsyncCampaignsClient:
 
         Returns
         -------
-        ListCampaignsResponse
+        TenDlcCampaignListResponse
             Returns a paginated list of 10DLC Campaigns.
 
         Examples
@@ -851,7 +847,7 @@ class AsyncCampaignsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ListByBrandCampaignsResponse:
+    ) -> TenDlcCampaignListResponse:
         """
         Returns a paginated list of 10DLC Campaigns associated with the 10DLC Brand identified by `brand_id`.
 
@@ -889,7 +885,7 @@ class AsyncCampaignsClient:
 
         Returns
         -------
-        ListByBrandCampaignsResponse
+        TenDlcCampaignListResponse
             Returns a paginated list of 10DLC Campaigns.
 
         Examples
@@ -971,7 +967,7 @@ class AsyncCampaignsClient:
         sample5: typing.Optional[str] = OMIT,
         privacy_policy: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateCampaignsResponse:
+    ) -> TenDlcCampaign:
         """
         Registers a 10DLC Campaign under the 10DLC Brand identified by `brand_id`. The Brand must have a verified identity status.
 
@@ -1069,7 +1065,7 @@ class AsyncCampaignsClient:
 
         Returns
         -------
-        CreateCampaignsResponse
+        TenDlcCampaign
             Returns the registered 10DLC Campaign.
 
         Examples
@@ -1155,7 +1151,7 @@ class AsyncCampaignsClient:
 
     async def get(
         self, brand_id: str, campaign_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetCampaignsResponse:
+    ) -> TenDlcCampaign:
         """
         Returns the 10DLC Campaign identified by `campaign_id` under the Brand identified by `brand_id`.
 
@@ -1172,7 +1168,7 @@ class AsyncCampaignsClient:
 
         Returns
         -------
-        GetCampaignsResponse
+        TenDlcCampaign
             Returns the 10DLC Campaign.
 
         Examples
@@ -1230,7 +1226,7 @@ class AsyncCampaignsClient:
         privacy_policy: typing.Optional[str] = OMIT,
         embedded_link_sample: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> UpdateCampaignsResponse:
+    ) -> TenDlcCampaign:
         """
         Updates the 10DLC Campaign identified by `campaign_id`. Only the provided fields are changed.
 
@@ -1325,7 +1321,7 @@ class AsyncCampaignsClient:
 
         Returns
         -------
-        UpdateCampaignsResponse
+        TenDlcCampaign
             Returns the updated 10DLC Campaign.
 
         Examples
@@ -1383,7 +1379,7 @@ class AsyncCampaignsClient:
 
     async def delete(
         self, brand_id: str, campaign_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> DeleteCampaignsResponse:
+    ) -> SuccessResponse:
         """
         Deletes a 10DLC Campaign. Associated phone numbers cannot be used as Sender IDs once the Campaign is deleted.
 
@@ -1400,7 +1396,7 @@ class AsyncCampaignsClient:
 
         Returns
         -------
-        DeleteCampaignsResponse
+        SuccessResponse
             Returns a success confirmation. The 10DLC Campaign is deleted.
 
         Examples

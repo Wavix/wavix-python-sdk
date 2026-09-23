@@ -29,19 +29,31 @@ class TokensClient:
         """
         return self._raw_client
 
-    def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> WebRtcTokensListResponse:
+    def list(
+        self,
+        *,
+        page: typing.Optional[int] = None,
+        per_page: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> WebRtcTokensListResponse:
         """
-        Returns a paginated list of active Wavix Embeddable widget tokens for the authenticated account.
+        Returns a paginated list of Wavix Embeddable widget tokens for the authenticated account.
 
         Parameters
         ----------
+        page : typing.Optional[int]
+            Page number to retrieve. Default `1`.
+
+        per_page : typing.Optional[int]
+            Number of records to return per page. Default `25`.
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
         WebRtcTokensListResponse
-            Returns a paginated list of active widget tokens.
+            Returns a paginated list of widget tokens.
 
         Examples
         --------
@@ -52,7 +64,7 @@ class TokensClient:
         )
         client.webrtc.tokens.list()
         """
-        _response = self._raw_client.list(request_options=request_options)
+        _response = self._raw_client.list(page=page, per_page=per_page, request_options=request_options)
         return _response.data
 
     def create(
@@ -75,7 +87,7 @@ class TokensClient:
             Arbitrary client-defined data to associate with the token.
 
         ttl : typing.Optional[int]
-            Time to live in seconds. Pass `null` for no expiration.
+            Time to live in seconds. Default `3600`. Pass `null` for no expiration.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -218,19 +230,31 @@ class AsyncTokensClient:
         """
         return self._raw_client
 
-    async def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> WebRtcTokensListResponse:
+    async def list(
+        self,
+        *,
+        page: typing.Optional[int] = None,
+        per_page: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> WebRtcTokensListResponse:
         """
-        Returns a paginated list of active Wavix Embeddable widget tokens for the authenticated account.
+        Returns a paginated list of Wavix Embeddable widget tokens for the authenticated account.
 
         Parameters
         ----------
+        page : typing.Optional[int]
+            Page number to retrieve. Default `1`.
+
+        per_page : typing.Optional[int]
+            Number of records to return per page. Default `25`.
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
         WebRtcTokensListResponse
-            Returns a paginated list of active widget tokens.
+            Returns a paginated list of widget tokens.
 
         Examples
         --------
@@ -249,7 +273,7 @@ class AsyncTokensClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.list(request_options=request_options)
+        _response = await self._raw_client.list(page=page, per_page=per_page, request_options=request_options)
         return _response.data
 
     async def create(
@@ -272,7 +296,7 @@ class AsyncTokensClient:
             Arbitrary client-defined data to associate with the token.
 
         ttl : typing.Optional[int]
-            Time to live in seconds. Pass `null` for no expiration.
+            Time to live in seconds. Default `3600`. Pass `null` for no expiration.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.

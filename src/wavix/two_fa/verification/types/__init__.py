@@ -6,15 +6,9 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .check_verification_response import CheckVerificationResponse
-    from .create_verification_response import CreateVerificationResponse
-    from .resend_verification_response import ResendVerificationResponse
     from .two_factor_verification_resend_request_channel import TwoFactorVerificationResendRequestChannel
 _dynamic_imports: typing.Dict[str, str] = {
-    "CheckVerificationResponse": ".check_verification_response",
-    "CreateVerificationResponse": ".create_verification_response",
-    "ResendVerificationResponse": ".resend_verification_response",
-    "TwoFactorVerificationResendRequestChannel": ".two_factor_verification_resend_request_channel",
+    "TwoFactorVerificationResendRequestChannel": ".two_factor_verification_resend_request_channel"
 }
 
 
@@ -39,9 +33,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = [
-    "CheckVerificationResponse",
-    "CreateVerificationResponse",
-    "ResendVerificationResponse",
-    "TwoFactorVerificationResendRequestChannel",
-]
+__all__ = ["TwoFactorVerificationResendRequestChannel"]

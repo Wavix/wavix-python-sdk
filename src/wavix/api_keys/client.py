@@ -7,6 +7,7 @@ from ..core.request_options import RequestOptions
 from ..types.api_key import ApiKey
 from ..types.api_key_calls_scope_permission import ApiKeyCallsScopePermission
 from ..types.api_key_scope_permission import ApiKeyScopePermission
+from ..types.api_key_with_secret import ApiKeyWithSecret
 from ..types.success_response import SuccessResponse
 from .raw_client import AsyncRawApiKeysClient, RawApiKeysClient
 
@@ -84,7 +85,7 @@ class ApiKeysClient:
         account: typing.Optional[ApiKeyScopePermission] = OMIT,
         subaccounts: typing.Optional[ApiKeyScopePermission] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ApiKey:
+    ) -> ApiKeyWithSecret:
         """
         Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`.
 
@@ -151,8 +152,8 @@ class ApiKeysClient:
 
         Returns
         -------
-        ApiKey
-            Returns the created API key.
+        ApiKeyWithSecret
+            Returns the created API key, including the one-time `value` secret.
 
         Examples
         --------
@@ -451,7 +452,7 @@ class AsyncApiKeysClient:
         account: typing.Optional[ApiKeyScopePermission] = OMIT,
         subaccounts: typing.Optional[ApiKeyScopePermission] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> ApiKey:
+    ) -> ApiKeyWithSecret:
         """
         Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`.
 
@@ -518,8 +519,8 @@ class AsyncApiKeysClient:
 
         Returns
         -------
-        ApiKey
-            Returns the created API key.
+        ApiKeyWithSecret
+            Returns the created API key, including the one-time `value` secret.
 
         Examples
         --------

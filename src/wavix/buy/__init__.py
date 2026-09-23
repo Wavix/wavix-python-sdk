@@ -7,17 +7,7 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from . import cities, countries, numbers, region_cities, regions
-    from .cities import ListCitiesResponse
-    from .countries import ListCountriesResponse
-    from .numbers import ListNumbersResponse
-    from .region_cities import ListRegionCitiesResponse
-    from .regions import ListRegionsResponse
 _dynamic_imports: typing.Dict[str, str] = {
-    "ListCitiesResponse": ".cities",
-    "ListCountriesResponse": ".countries",
-    "ListNumbersResponse": ".numbers",
-    "ListRegionCitiesResponse": ".region_cities",
-    "ListRegionsResponse": ".regions",
     "cities": ".cities",
     "countries": ".countries",
     "numbers": ".numbers",
@@ -47,15 +37,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = [
-    "ListCitiesResponse",
-    "ListCountriesResponse",
-    "ListNumbersResponse",
-    "ListRegionCitiesResponse",
-    "ListRegionsResponse",
-    "cities",
-    "countries",
-    "numbers",
-    "region_cities",
-    "regions",
-]
+__all__ = ["cities", "countries", "numbers", "region_cities", "regions"]

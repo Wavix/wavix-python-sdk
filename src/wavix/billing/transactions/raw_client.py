@@ -12,10 +12,13 @@ from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
 from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
+from ...errors.not_found_error import NotFoundError
 from ...errors.service_unavailable_error import ServiceUnavailableError
+from ...errors.unauthorized_error import UnauthorizedError
+from ...types.billing_transaction_list_response import BillingTransactionListResponse
 from ...types.transaction_type import TransactionType
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from ...types.validation_error_response import ValidationErrorResponse
-from .types.list_transactions_response import ListTransactionsResponse
 from pydantic import ValidationError
 
 
@@ -34,7 +37,7 @@ class RawTransactionsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[ListTransactionsResponse]:
+    ) -> HttpResponse[BillingTransactionListResponse]:
         """
         Returns a paginated list of billing transactions for the authenticated account within the requested date range.
 
@@ -66,7 +69,7 @@ class RawTransactionsClient:
 
         Returns
         -------
-        HttpResponse[ListTransactionsResponse]
+        HttpResponse[BillingTransactionListResponse]
             Returns a paginated list of billing transactions.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -86,9 +89,9 @@ class RawTransactionsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListTransactionsResponse,
+                    BillingTransactionListResponse,
                     parse_obj_as(
-                        type_=ListTransactionsResponse,  # type: ignore
+                        type_=BillingTransactionListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -104,8 +107,30 @@ class RawTransactionsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -151,7 +176,7 @@ class AsyncRawTransactionsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[ListTransactionsResponse]:
+    ) -> AsyncHttpResponse[BillingTransactionListResponse]:
         """
         Returns a paginated list of billing transactions for the authenticated account within the requested date range.
 
@@ -183,7 +208,7 @@ class AsyncRawTransactionsClient:
 
         Returns
         -------
-        AsyncHttpResponse[ListTransactionsResponse]
+        AsyncHttpResponse[BillingTransactionListResponse]
             Returns a paginated list of billing transactions.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -203,9 +228,9 @@ class AsyncRawTransactionsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListTransactionsResponse,
+                    BillingTransactionListResponse,
                     parse_obj_as(
-                        type_=ListTransactionsResponse,  # type: ignore
+                        type_=BillingTransactionListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -221,8 +246,30 @@ class AsyncRawTransactionsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,

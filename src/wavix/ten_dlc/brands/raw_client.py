@@ -14,17 +14,17 @@ from ...core.serialization import convert_and_respect_annotation_metadata
 from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
 from ...errors.not_found_error import NotFoundError
+from ...errors.unauthorized_error import UnauthorizedError
 from ...errors.unprocessable_entity_error import UnprocessableEntityError
+from ...types.success_response import SuccessResponse
+from ...types.ten_dlc_brand import TenDlcBrand
 from ...types.ten_dlc_brand_create_request import TenDlcBrandCreateRequest
-from .types.create_brands_response import CreateBrandsResponse
-from .types.delete_brands_response import DeleteBrandsResponse
-from .types.get_brands_response import GetBrandsResponse
-from .types.list_brands_response import ListBrandsResponse
+from ...types.ten_dlc_brand_list_response import TenDlcBrandListResponse
+from ...types.ten_dlc_brand_qualification_result import TenDlcBrandQualificationResult
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from .types.qualify_usecase_brands_request_use_case import QualifyUsecaseBrandsRequestUseCase
-from .types.qualify_usecase_brands_response import QualifyUsecaseBrandsResponse
 from .types.ten_dlc_brand_update_request_entity_type import TenDlcBrandUpdateRequestEntityType
 from .types.ten_dlc_brand_update_request_vertical import TenDlcBrandUpdateRequestVertical
-from .types.update_brands_response import UpdateBrandsResponse
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -51,7 +51,7 @@ class RawBrandsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[ListBrandsResponse]:
+    ) -> HttpResponse[TenDlcBrandListResponse]:
         """
         Returns a paginated list of 10DLC Brands for the authenticated account, filtered by date, name, legal name, and status.
 
@@ -98,7 +98,7 @@ class RawBrandsClient:
 
         Returns
         -------
-        HttpResponse[ListBrandsResponse]
+        HttpResponse[TenDlcBrandListResponse]
             Returns a paginated list of 10DLC Brands.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -123,9 +123,9 @@ class RawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListBrandsResponse,
+                    TenDlcBrandListResponse,
                     parse_obj_as(
-                        type_=ListBrandsResponse,  # type: ignore
+                        type_=TenDlcBrandListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -137,6 +137,17 @@ class RawBrandsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -163,9 +174,9 @@ class RawBrandsClient:
 
     def create(
         self, *, request: TenDlcBrandCreateRequest, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[CreateBrandsResponse]:
+    ) -> HttpResponse[TenDlcBrand]:
         """
-        Registers a 10DLC Brand. TCR automatically verifies the brand identity. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
+        Registers a 10DLC Brand. Submits the company's legal identity data (EIN/Tax ID, legal company name, contact and address) to The Campaign Registry (TCR), which verifies the brand identity. Charges a 10DLC brand registration fee on successful submission; fails with an insufficient-funds error when the balance cannot cover it. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
 
         Parameters
         ----------
@@ -176,7 +187,7 @@ class RawBrandsClient:
 
         Returns
         -------
-        HttpResponse[CreateBrandsResponse]
+        HttpResponse[TenDlcBrand]
             Returns the registered 10DLC Brand.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -194,9 +205,9 @@ class RawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateBrandsResponse,
+                    TenDlcBrand,
                     parse_obj_as(
-                        type_=CreateBrandsResponse,  # type: ignore
+                        type_=TenDlcBrand,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -212,8 +223,41 @@ class RawBrandsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -234,7 +278,7 @@ class RawBrandsClient:
 
     def get(
         self, brand_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[GetBrandsResponse]:
+    ) -> HttpResponse[TenDlcBrand]:
         """
         Returns the 10DLC Brand identified by `brand_id`.
 
@@ -248,7 +292,7 @@ class RawBrandsClient:
 
         Returns
         -------
-        HttpResponse[GetBrandsResponse]
+        HttpResponse[TenDlcBrand]
             Returns the 10DLC Brand.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -259,13 +303,35 @@ class RawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetBrandsResponse,
+                    TenDlcBrand,
                     parse_obj_as(
-                        type_=GetBrandsResponse,  # type: ignore
+                        type_=TenDlcBrand,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -321,7 +387,7 @@ class RawBrandsClient:
         country: typing.Optional[str] = OMIT,
         mock: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[UpdateBrandsResponse]:
+    ) -> HttpResponse[TenDlcBrand]:
         """
         Updates the 10DLC Brand identified by `brand_id`. Changing identity fields, including `ein_taxid`, `ein_taxid_country`, and `entity_type`, resets the Brand status to `UNVERIFIED` and triggers automatic re-submission. Brands in `VETTED_VERIFIED` status or with active Campaigns cannot be updated.
 
@@ -402,7 +468,7 @@ class RawBrandsClient:
 
         Returns
         -------
-        HttpResponse[UpdateBrandsResponse]
+        HttpResponse[TenDlcBrand]
             Returns the updated 10DLC Brand.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -438,9 +504,9 @@ class RawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    UpdateBrandsResponse,
+                    TenDlcBrand,
                     parse_obj_as(
-                        type_=UpdateBrandsResponse,  # type: ignore
+                        type_=TenDlcBrand,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -452,6 +518,17 @@ class RawBrandsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -500,7 +577,7 @@ class RawBrandsClient:
 
     def delete(
         self, brand_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[DeleteBrandsResponse]:
+    ) -> HttpResponse[SuccessResponse]:
         """
         Deletes a 10DLC Brand. Brands with active campaigns cannot be deleted.
 
@@ -514,7 +591,7 @@ class RawBrandsClient:
 
         Returns
         -------
-        HttpResponse[DeleteBrandsResponse]
+        HttpResponse[SuccessResponse]
             Returns a success confirmation. The 10DLC Brand is deleted.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -525,13 +602,35 @@ class RawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    DeleteBrandsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=DeleteBrandsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -569,7 +668,7 @@ class RawBrandsClient:
         use_case: QualifyUsecaseBrandsRequestUseCase,
         *,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[QualifyUsecaseBrandsResponse]:
+    ) -> HttpResponse[TenDlcBrandQualificationResult]:
         """
         Returns the qualification results for a 10DLC Brand use case. Includes MNO-specific attributes, restrictions, and fees.
 
@@ -586,7 +685,7 @@ class RawBrandsClient:
 
         Returns
         -------
-        HttpResponse[QualifyUsecaseBrandsResponse]
+        HttpResponse[TenDlcBrandQualificationResult]
             Returns the use case qualification results for the Brand.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -597,13 +696,35 @@ class RawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    QualifyUsecaseBrandsResponse,
+                    TenDlcBrandQualificationResult,
                     parse_obj_as(
-                        type_=QualifyUsecaseBrandsResponse,  # type: ignore
+                        type_=TenDlcBrandQualificationResult,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -667,7 +788,7 @@ class AsyncRawBrandsClient:
         page: typing.Optional[int] = None,
         per_page: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[ListBrandsResponse]:
+    ) -> AsyncHttpResponse[TenDlcBrandListResponse]:
         """
         Returns a paginated list of 10DLC Brands for the authenticated account, filtered by date, name, legal name, and status.
 
@@ -714,7 +835,7 @@ class AsyncRawBrandsClient:
 
         Returns
         -------
-        AsyncHttpResponse[ListBrandsResponse]
+        AsyncHttpResponse[TenDlcBrandListResponse]
             Returns a paginated list of 10DLC Brands.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -739,9 +860,9 @@ class AsyncRawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListBrandsResponse,
+                    TenDlcBrandListResponse,
                     parse_obj_as(
-                        type_=ListBrandsResponse,  # type: ignore
+                        type_=TenDlcBrandListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -753,6 +874,17 @@ class AsyncRawBrandsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -779,9 +911,9 @@ class AsyncRawBrandsClient:
 
     async def create(
         self, *, request: TenDlcBrandCreateRequest, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[CreateBrandsResponse]:
+    ) -> AsyncHttpResponse[TenDlcBrand]:
         """
-        Registers a 10DLC Brand. TCR automatically verifies the brand identity. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
+        Registers a 10DLC Brand. Submits the company's legal identity data (EIN/Tax ID, legal company name, contact and address) to The Campaign Registry (TCR), which verifies the brand identity. Charges a 10DLC brand registration fee on successful submission; fails with an insufficient-funds error when the balance cannot cover it. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
 
         Parameters
         ----------
@@ -792,7 +924,7 @@ class AsyncRawBrandsClient:
 
         Returns
         -------
-        AsyncHttpResponse[CreateBrandsResponse]
+        AsyncHttpResponse[TenDlcBrand]
             Returns the registered 10DLC Brand.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -810,9 +942,9 @@ class AsyncRawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateBrandsResponse,
+                    TenDlcBrand,
                     parse_obj_as(
-                        type_=CreateBrandsResponse,  # type: ignore
+                        type_=TenDlcBrand,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -828,8 +960,41 @@ class AsyncRawBrandsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -850,7 +1015,7 @@ class AsyncRawBrandsClient:
 
     async def get(
         self, brand_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[GetBrandsResponse]:
+    ) -> AsyncHttpResponse[TenDlcBrand]:
         """
         Returns the 10DLC Brand identified by `brand_id`.
 
@@ -864,7 +1029,7 @@ class AsyncRawBrandsClient:
 
         Returns
         -------
-        AsyncHttpResponse[GetBrandsResponse]
+        AsyncHttpResponse[TenDlcBrand]
             Returns the 10DLC Brand.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -875,13 +1040,35 @@ class AsyncRawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetBrandsResponse,
+                    TenDlcBrand,
                     parse_obj_as(
-                        type_=GetBrandsResponse,  # type: ignore
+                        type_=TenDlcBrand,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -937,7 +1124,7 @@ class AsyncRawBrandsClient:
         country: typing.Optional[str] = OMIT,
         mock: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[UpdateBrandsResponse]:
+    ) -> AsyncHttpResponse[TenDlcBrand]:
         """
         Updates the 10DLC Brand identified by `brand_id`. Changing identity fields, including `ein_taxid`, `ein_taxid_country`, and `entity_type`, resets the Brand status to `UNVERIFIED` and triggers automatic re-submission. Brands in `VETTED_VERIFIED` status or with active Campaigns cannot be updated.
 
@@ -1018,7 +1205,7 @@ class AsyncRawBrandsClient:
 
         Returns
         -------
-        AsyncHttpResponse[UpdateBrandsResponse]
+        AsyncHttpResponse[TenDlcBrand]
             Returns the updated 10DLC Brand.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1054,9 +1241,9 @@ class AsyncRawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    UpdateBrandsResponse,
+                    TenDlcBrand,
                     parse_obj_as(
-                        type_=UpdateBrandsResponse,  # type: ignore
+                        type_=TenDlcBrand,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1068,6 +1255,17 @@ class AsyncRawBrandsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -1116,7 +1314,7 @@ class AsyncRawBrandsClient:
 
     async def delete(
         self, brand_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[DeleteBrandsResponse]:
+    ) -> AsyncHttpResponse[SuccessResponse]:
         """
         Deletes a 10DLC Brand. Brands with active campaigns cannot be deleted.
 
@@ -1130,7 +1328,7 @@ class AsyncRawBrandsClient:
 
         Returns
         -------
-        AsyncHttpResponse[DeleteBrandsResponse]
+        AsyncHttpResponse[SuccessResponse]
             Returns a success confirmation. The 10DLC Brand is deleted.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1141,13 +1339,35 @@ class AsyncRawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    DeleteBrandsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=DeleteBrandsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -1185,7 +1405,7 @@ class AsyncRawBrandsClient:
         use_case: QualifyUsecaseBrandsRequestUseCase,
         *,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[QualifyUsecaseBrandsResponse]:
+    ) -> AsyncHttpResponse[TenDlcBrandQualificationResult]:
         """
         Returns the qualification results for a 10DLC Brand use case. Includes MNO-specific attributes, restrictions, and fees.
 
@@ -1202,7 +1422,7 @@ class AsyncRawBrandsClient:
 
         Returns
         -------
-        AsyncHttpResponse[QualifyUsecaseBrandsResponse]
+        AsyncHttpResponse[TenDlcBrandQualificationResult]
             Returns the use case qualification results for the Brand.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1213,13 +1433,35 @@ class AsyncRawBrandsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    QualifyUsecaseBrandsResponse,
+                    TenDlcBrandQualificationResult,
                     parse_obj_as(
-                        type_=QualifyUsecaseBrandsResponse,  # type: ignore
+                        type_=TenDlcBrandQualificationResult,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),

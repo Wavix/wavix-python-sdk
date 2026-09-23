@@ -101,6 +101,17 @@ class RawCallRecordingClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),
@@ -289,7 +300,7 @@ class RawCallRecordingClient:
         self, id: int, *, request_options: typing.Optional[RequestOptions] = None
     ) -> HttpResponse[SuccessResponse]:
         """
-        Deletes the call recording identified by `id`. Deletion is permanent and removes the recording file.
+        Deletes the call recording identified by `id`. Deletion is permanent — the audio file is unrecoverable.
 
         Parameters
         ----------
@@ -452,6 +463,17 @@ class AsyncRawCallRecordingClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),
@@ -642,7 +664,7 @@ class AsyncRawCallRecordingClient:
         self, id: int, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[SuccessResponse]:
         """
-        Deletes the call recording identified by `id`. Deletion is permanent and removes the recording file.
+        Deletes the call recording identified by `id`. Deletion is permanent — the audio file is unrecoverable.
 
         Parameters
         ----------

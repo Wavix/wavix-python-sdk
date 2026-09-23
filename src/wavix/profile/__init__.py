@@ -8,9 +8,7 @@ from importlib import import_module
 if typing.TYPE_CHECKING:
     from .types import ProfileUpdateRequestCompanyInfo, ProfileUpdateRequestCompanyInfoIndustry
     from . import config
-    from .config import GetConfigResponse
 _dynamic_imports: typing.Dict[str, str] = {
-    "GetConfigResponse": ".config",
     "ProfileUpdateRequestCompanyInfo": ".types",
     "ProfileUpdateRequestCompanyInfoIndustry": ".types",
     "config": ".config",
@@ -38,4 +36,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["GetConfigResponse", "ProfileUpdateRequestCompanyInfo", "ProfileUpdateRequestCompanyInfoIndustry", "config"]
+__all__ = ["ProfileUpdateRequestCompanyInfo", "ProfileUpdateRequestCompanyInfoIndustry", "config"]

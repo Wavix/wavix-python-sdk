@@ -8,8 +8,8 @@ from ...types.sender_id_details import SenderIdDetails
 from ...types.sender_id_list_response import SenderIdListResponse
 from ...types.sender_id_response import SenderIdResponse
 from ...types.sender_id_type import SenderIdType
+from ...types.success_response import SuccessResponse
 from .raw_client import AsyncRawSenderIdsClient, RawSenderIdsClient
-from .types.delete_sender_ids_response import DeleteSenderIdsResponse
 from .types.sender_id_create_request_monthly_volume import SenderIdCreateRequestMonthlyVolume
 from .types.sender_id_create_request_usecase import SenderIdCreateRequestUsecase
 
@@ -70,7 +70,7 @@ class SenderIdsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SenderIdDetails:
         """
-        Creates a Sender ID. Use the 10DLC API to create Sender IDs in the US.
+        Creates a Sender ID. Use the 10DLC API to create Sender IDs in the US. Registering a Sender ID incurs a recurring monthly fee, billed to the account balance.
 
         Parameters
         ----------
@@ -155,7 +155,7 @@ class SenderIdsClient:
         _response = self._raw_client.get(id, request_options=request_options)
         return _response.data
 
-    def delete(self, id: str, *, request_options: typing.Optional[RequestOptions] = None) -> DeleteSenderIdsResponse:
+    def delete(self, id: str, *, request_options: typing.Optional[RequestOptions] = None) -> SuccessResponse:
         """
         Deletes the Sender ID identified by `id`. Deletion is permanent.
 
@@ -169,7 +169,7 @@ class SenderIdsClient:
 
         Returns
         -------
-        DeleteSenderIdsResponse
+        SuccessResponse
             Returns a success confirmation. The Sender ID is deleted.
 
         Examples
@@ -248,7 +248,7 @@ class AsyncSenderIdsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SenderIdDetails:
         """
-        Creates a Sender ID. Use the 10DLC API to create Sender IDs in the US.
+        Creates a Sender ID. Use the 10DLC API to create Sender IDs in the US. Registering a Sender ID incurs a recurring monthly fee, billed to the account balance.
 
         Parameters
         ----------
@@ -349,9 +349,7 @@ class AsyncSenderIdsClient:
         _response = await self._raw_client.get(id, request_options=request_options)
         return _response.data
 
-    async def delete(
-        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> DeleteSenderIdsResponse:
+    async def delete(self, id: str, *, request_options: typing.Optional[RequestOptions] = None) -> SuccessResponse:
         """
         Deletes the Sender ID identified by `id`. Deletion is permanent.
 
@@ -365,7 +363,7 @@ class AsyncSenderIdsClient:
 
         Returns
         -------
-        DeleteSenderIdsResponse
+        SuccessResponse
             Returns a success confirmation. The Sender ID is deleted.
 
         Examples

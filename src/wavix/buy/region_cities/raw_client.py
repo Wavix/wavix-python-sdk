@@ -13,7 +13,9 @@ from ...core.request_options import RequestOptions
 from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
 from ...errors.not_found_error import NotFoundError
-from .types.list_region_cities_response import ListRegionCitiesResponse
+from ...errors.unauthorized_error import UnauthorizedError
+from ...types.city_list_response import CityListResponse
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
 
 
@@ -28,7 +30,7 @@ class RawRegionCitiesClient:
         *,
         text_enabled_only: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[ListRegionCitiesResponse]:
+    ) -> HttpResponse[CityListResponse]:
         """
         Returns a list of cities in the specified region for countries where `has_provinces_or_states` is `true`.
 
@@ -48,7 +50,7 @@ class RawRegionCitiesClient:
 
         Returns
         -------
-        HttpResponse[ListRegionCitiesResponse]
+        HttpResponse[CityListResponse]
             Returns the list of cities.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -62,9 +64,9 @@ class RawRegionCitiesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListRegionCitiesResponse,
+                    CityListResponse,
                     parse_obj_as(
-                        type_=ListRegionCitiesResponse,  # type: ignore
+                        type_=CityListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -76,6 +78,17 @@ class RawRegionCitiesClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -123,7 +136,7 @@ class AsyncRawRegionCitiesClient:
         *,
         text_enabled_only: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[ListRegionCitiesResponse]:
+    ) -> AsyncHttpResponse[CityListResponse]:
         """
         Returns a list of cities in the specified region for countries where `has_provinces_or_states` is `true`.
 
@@ -143,7 +156,7 @@ class AsyncRawRegionCitiesClient:
 
         Returns
         -------
-        AsyncHttpResponse[ListRegionCitiesResponse]
+        AsyncHttpResponse[CityListResponse]
             Returns the list of cities.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -157,9 +170,9 @@ class AsyncRawRegionCitiesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ListRegionCitiesResponse,
+                    CityListResponse,
                     parse_obj_as(
-                        type_=ListRegionCitiesResponse,  # type: ignore
+                        type_=CityListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -171,6 +184,17 @@ class AsyncRawRegionCitiesClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),

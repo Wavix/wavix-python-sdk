@@ -4,7 +4,7 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .document_type_id import DocumentTypeId
+from .document_type import DocumentType
 
 
 class NumberDocument(UniversalBaseModel):
@@ -37,7 +37,11 @@ class NumberDocument(UniversalBaseModel):
     The uploaded document name
     """
 
-    doc_type_id: DocumentTypeId
+    doc_type: typing.Optional[DocumentType] = pydantic.Field(default=None)
+    """
+    Document type.
+    """
+
     status: str = pydantic.Field()
     """
     Status of the uploaded document. Can be either `approved`, `pending`, or `rejected`

@@ -6,17 +6,10 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .types import (
-        GetMessagesResponse,
-        ListAllMessagesRequestMessageType,
-        ListMessagesRequestMessageType,
-        ListMessagesResponse,
-    )
+    from .types import ListAllMessagesRequestMessageType, ListMessagesRequestMessageType
 _dynamic_imports: typing.Dict[str, str] = {
-    "GetMessagesResponse": ".types",
     "ListAllMessagesRequestMessageType": ".types",
     "ListMessagesRequestMessageType": ".types",
-    "ListMessagesResponse": ".types",
 }
 
 
@@ -41,9 +34,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = [
-    "GetMessagesResponse",
-    "ListAllMessagesRequestMessageType",
-    "ListMessagesRequestMessageType",
-    "ListMessagesResponse",
-]
+__all__ = ["ListAllMessagesRequestMessageType", "ListMessagesRequestMessageType"]

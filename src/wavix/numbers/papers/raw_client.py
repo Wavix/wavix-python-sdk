@@ -12,8 +12,10 @@ from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
 from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
-from ...types.document_type_id import DocumentTypeId
+from ...errors.unauthorized_error import UnauthorizedError
+from ...types.document_type import DocumentType
 from ...types.number_document import NumberDocument
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -29,7 +31,7 @@ class RawPapersClient:
         *,
         did_ids: str,
         doc_attachment: core.File,
-        doc_id: DocumentTypeId,
+        doc_id: DocumentType,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[typing.List[NumberDocument]]:
         """
@@ -48,7 +50,7 @@ class RawPapersClient:
         doc_attachment : core.File
             See core.File for more documentation
 
-        doc_id : DocumentTypeId
+        doc_id : DocumentType
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -93,6 +95,17 @@ class RawPapersClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -123,7 +136,7 @@ class AsyncRawPapersClient:
         *,
         did_ids: str,
         doc_attachment: core.File,
-        doc_id: DocumentTypeId,
+        doc_id: DocumentType,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[typing.List[NumberDocument]]:
         """
@@ -142,7 +155,7 @@ class AsyncRawPapersClient:
         doc_attachment : core.File
             See core.File for more documentation
 
-        doc_id : DocumentTypeId
+        doc_id : DocumentType
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -183,6 +196,17 @@ class AsyncRawPapersClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),

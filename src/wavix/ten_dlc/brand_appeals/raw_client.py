@@ -13,9 +13,12 @@ from ...core.request_options import RequestOptions
 from ...errors.bad_request_error import BadRequestError
 from ...errors.forbidden_error import ForbiddenError
 from ...errors.not_found_error import NotFoundError
+from ...errors.unauthorized_error import UnauthorizedError
 from ...errors.unprocessable_entity_error import UnprocessableEntityError
+from ...types.success_response import SuccessResponse
 from ...types.ten_dlc_brand_appeal import TenDlcBrandAppeal
-from .types.create_brand_appeals_response import CreateBrandAppealsResponse
+from ...types.unauthorized_error_response import UnauthorizedErrorResponse
+from .types.create_brand_appeals_request_appeal_categories_item import CreateBrandAppealsRequestAppealCategoriesItem
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -71,6 +74,17 @@ class RawBrandAppealsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -106,11 +120,11 @@ class RawBrandAppealsClient:
         self,
         brand_id: str,
         *,
-        appeal_categories: typing.Sequence[str],
+        appeal_categories: typing.Sequence[CreateBrandAppealsRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
         explanation: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[CreateBrandAppealsResponse]:
+    ) -> HttpResponse[SuccessResponse]:
         """
         Submits an appeal for 10DLC brand identity verification. Provide any additional documentation to support the appeal. Use `appeal_category` to specify the appeal type:
         - `VERIFY_TAX_ID` — Use if the brand is UNVERIFIED due to a tax ID mismatch. Applies to private companies, public companies, non-profits, and government entities.
@@ -122,7 +136,7 @@ class RawBrandAppealsClient:
         brand_id : str
             The unique ID of the 10DLC Brand.
 
-        appeal_categories : typing.Sequence[str]
+        appeal_categories : typing.Sequence[CreateBrandAppealsRequestAppealCategoriesItem]
             List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`
 
         evidence : typing.Sequence[str]
@@ -136,7 +150,7 @@ class RawBrandAppealsClient:
 
         Returns
         -------
-        HttpResponse[CreateBrandAppealsResponse]
+        HttpResponse[SuccessResponse]
             Returns the submitted appeal.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -156,15 +170,37 @@ class RawBrandAppealsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateBrandAppealsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=CreateBrandAppealsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
                 raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -255,6 +291,17 @@ class AsyncRawBrandAppealsClient:
                         ),
                     ),
                 )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -290,11 +337,11 @@ class AsyncRawBrandAppealsClient:
         self,
         brand_id: str,
         *,
-        appeal_categories: typing.Sequence[str],
+        appeal_categories: typing.Sequence[CreateBrandAppealsRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
         explanation: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[CreateBrandAppealsResponse]:
+    ) -> AsyncHttpResponse[SuccessResponse]:
         """
         Submits an appeal for 10DLC brand identity verification. Provide any additional documentation to support the appeal. Use `appeal_category` to specify the appeal type:
         - `VERIFY_TAX_ID` — Use if the brand is UNVERIFIED due to a tax ID mismatch. Applies to private companies, public companies, non-profits, and government entities.
@@ -306,7 +353,7 @@ class AsyncRawBrandAppealsClient:
         brand_id : str
             The unique ID of the 10DLC Brand.
 
-        appeal_categories : typing.Sequence[str]
+        appeal_categories : typing.Sequence[CreateBrandAppealsRequestAppealCategoriesItem]
             List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`
 
         evidence : typing.Sequence[str]
@@ -320,7 +367,7 @@ class AsyncRawBrandAppealsClient:
 
         Returns
         -------
-        AsyncHttpResponse[CreateBrandAppealsResponse]
+        AsyncHttpResponse[SuccessResponse]
             Returns the submitted appeal.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -340,15 +387,37 @@ class AsyncRawBrandAppealsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateBrandAppealsResponse,
+                    SuccessResponse,
                     parse_obj_as(
-                        type_=CreateBrandAppealsResponse,  # type: ignore
+                        type_=SuccessResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
                 raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,

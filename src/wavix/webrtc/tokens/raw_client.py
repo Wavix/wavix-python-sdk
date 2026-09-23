@@ -30,24 +30,38 @@ class RawTokensClient:
         self._client_wrapper = client_wrapper
 
     def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
+        self,
+        *,
+        page: typing.Optional[int] = None,
+        per_page: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[WebRtcTokensListResponse]:
         """
-        Returns a paginated list of active Wavix Embeddable widget tokens for the authenticated account.
+        Returns a paginated list of Wavix Embeddable widget tokens for the authenticated account.
 
         Parameters
         ----------
+        page : typing.Optional[int]
+            Page number to retrieve. Default `1`.
+
+        per_page : typing.Optional[int]
+            Number of records to return per page. Default `25`.
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
         HttpResponse[WebRtcTokensListResponse]
-            Returns a paginated list of active widget tokens.
+            Returns a paginated list of widget tokens.
         """
         _response = self._client_wrapper.httpx_client.request(
             "v2/webrtc/tokens",
             method="GET",
+            params={
+                "page": page,
+                "per_page": per_page,
+            },
             request_options=request_options,
         )
         try:
@@ -111,7 +125,7 @@ class RawTokensClient:
             Arbitrary client-defined data to associate with the token.
 
         ttl : typing.Optional[int]
-            Time to live in seconds. Pass `null` for no expiration.
+            Time to live in seconds. Default `3600`. Pass `null` for no expiration.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -230,6 +244,17 @@ class RawTokensClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),
@@ -403,6 +428,17 @@ class RawTokensClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),
@@ -451,24 +487,38 @@ class AsyncRawTokensClient:
         self._client_wrapper = client_wrapper
 
     async def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
+        self,
+        *,
+        page: typing.Optional[int] = None,
+        per_page: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[WebRtcTokensListResponse]:
         """
-        Returns a paginated list of active Wavix Embeddable widget tokens for the authenticated account.
+        Returns a paginated list of Wavix Embeddable widget tokens for the authenticated account.
 
         Parameters
         ----------
+        page : typing.Optional[int]
+            Page number to retrieve. Default `1`.
+
+        per_page : typing.Optional[int]
+            Number of records to return per page. Default `25`.
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
         AsyncHttpResponse[WebRtcTokensListResponse]
-            Returns a paginated list of active widget tokens.
+            Returns a paginated list of widget tokens.
         """
         _response = await self._client_wrapper.httpx_client.request(
             "v2/webrtc/tokens",
             method="GET",
+            params={
+                "page": page,
+                "per_page": per_page,
+            },
             request_options=request_options,
         )
         try:
@@ -532,7 +582,7 @@ class AsyncRawTokensClient:
             Arbitrary client-defined data to associate with the token.
 
         ttl : typing.Optional[int]
-            Time to live in seconds. Pass `null` for no expiration.
+            Time to live in seconds. Default `3600`. Pass `null` for no expiration.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -653,6 +703,17 @@ class AsyncRawTokensClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),
@@ -826,6 +887,17 @@ class AsyncRawTokensClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),

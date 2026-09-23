@@ -73,7 +73,7 @@ client.api_keys.list(
 </dl>
 </details>
 
-<details><summary><code>client.api_keys.<a href="src/wavix/api_keys/client.py">create</a>(...) -> ApiKey</code></summary>
+<details><summary><code>client.api_keys.<a href="src/wavix/api_keys/client.py">create</a>(...) -> ApiKeyWithSecret</code></summary>
 <dl>
 <dd>
 
@@ -728,7 +728,6 @@ client.sip_trunks.create(
     ip_restrict=False,
     didinfo_enabled=True,
     call_restrict=True,
-    cost_limit=True,
     channels_restrict=False,
     rewrite_enabled=True,
     transcription_enabled=True,
@@ -885,7 +884,6 @@ client.sip_trunks.update(
     ip_restrict=False,
     didinfo_enabled=True,
     call_restrict=True,
-    cost_limit=True,
     channels_restrict=False,
     rewrite_enabled=True,
     transcription_enabled=True,
@@ -1008,7 +1006,7 @@ client.sip_trunks.delete(
 </details>
 
 ## Cart
-<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">get</a>() -> GetCartResponse</code></summary>
+<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">get</a>() -> CartResponse</code></summary>
 <dl>
 <dd>
 
@@ -1071,7 +1069,7 @@ client.cart.get()
 </dl>
 </details>
 
-<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">add</a>(...) -> typing.List[typing.Any]</code></summary>
+<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">add</a>(...) -> typing.List[AvailableNumber]</code></summary>
 <dl>
 <dd>
 
@@ -1147,7 +1145,7 @@ client.cart.add(
 </dl>
 </details>
 
-<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">remove</a>(...) -> RemoveCartResponse</code></summary>
+<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">remove</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -1223,7 +1221,7 @@ client.cart.remove(
 </dl>
 </details>
 
-<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">checkout</a>(...) -> CheckoutCartResponse</code></summary>
+<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">checkout</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -1235,7 +1233,7 @@ client.cart.remove(
 <dl>
 <dd>
 
-Purchases the listed phone numbers from the cart. Activation and monthly fees are deducted from the account balance.
+Purchases the listed phone numbers from the cart. Activation and monthly fees are debited from the account balance immediately, and the purchase cannot be reversed through this API.
 </dd>
 </dl>
 </dd>
@@ -1418,7 +1416,7 @@ client.numbers.list(
 </dl>
 </details>
 
-<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py">delete</a>(...) -> DeleteNumbersResponse</code></summary>
+<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -1923,7 +1921,7 @@ client.cdrs.list(
 <dl>
 <dd>
 
-**disposition:** `typing.Optional[CallDisposition]` — Filters CDRs by call disposition. One of `answered` (the called party answered), `busy` (the called party was busy), `rejected` (the call was declined), `failed` (the call could not be routed), or `all` (no disposition filter).
+**disposition:** `typing.Optional[CallDisposition]` — Filters CDRs by call disposition. One of `answered` (the called party answered), `noanswer` (no answer within the ring timeout), `busy` (the called party was busy), `failed` (the call could not be routed), or `all` (no disposition filter).
     
 </dd>
 </dl>
@@ -2031,8 +2029,6 @@ client.cdrs.search(
     type="placed",
     from_=datetime.date.fromisoformat("2023-08-01"),
     to=datetime.date.fromisoformat("2023-08-31"),
-    page=1,
-    per_page=50,
 )
 
 ```
@@ -2066,22 +2062,6 @@ client.cdrs.search(
 <dd>
 
 **to:** `datetime.date` — End date for call search in `YYYY-MM-DD` format.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**page:** `int` — Page number to retrieve.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**per_page:** `int` — Number of records per page.
     
 </dd>
 </dl>
@@ -2137,12 +2117,28 @@ client.cdrs.search(
 <dl>
 <dd>
 
-**disposition:** `typing.Optional[CdrSearchRequestDisposition]` 
+**disposition:** `typing.Optional[CallDisposition]` 
 
 Call disposition to filter results.  If omitted, returns only answered
- calls. Allowed values: `answered`, `busy`, `rejected`,
+ calls. Allowed values: `answered`, `noanswer`, `busy`,
   `failed`, `all`. Use `all` to return calls
    regardless of their disposition.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**page:** `typing.Optional[int]` — Page number to retrieve.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**per_page:** `typing.Optional[int]` — Number of records per page.
     
 </dd>
 </dl>
@@ -2174,7 +2170,7 @@ Call disposition to filter results.  If omitted, returns only answered
 <dl>
 <dd>
 
-Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result.
+Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result. Billed per minute at the account's call-transcription rate; fails with an insufficient-funds error when the balance cannot cover it.
 </dd>
 </dl>
 </dd>
@@ -2198,7 +2194,7 @@ client = Wavix(
 )
 
 client.cdrs.retranscribe(
-    call_id="bbaa37bf-430a-46da-ade3-c248e407016",
+    call_id="bbaa37bf-430a-46da-ade3-c248e4070160",
 )
 
 ```
@@ -2287,7 +2283,7 @@ client = Wavix(
 )
 
 client.cdrs.transcriptions(
-    call_id="bbaa37bf-430a-46da-ade3-c248e407016",
+    call_id="bbaa37bf-430a-46da-ade3-c248e4070160",
 )
 
 ```
@@ -2492,7 +2488,7 @@ client.cdrs.list_all(
 <dl>
 <dd>
 
-**disposition:** `typing.Optional[CallDisposition]` — Filters CDRs by call disposition. One of `answered` (the called party answered), `busy` (the called party was busy), `rejected` (the call was declined), `failed` (the call could not be routed), or `all` (no disposition filter).
+**disposition:** `typing.Optional[CallDisposition]` — Filters CDRs by call disposition. One of `answered` (the called party answered), `noanswer` (no answer within the ring timeout), `busy` (the called party was busy), `failed` (the call could not be routed), or `all` (no disposition filter).
     
 </dd>
 </dl>
@@ -2855,7 +2851,7 @@ client.call_recording.get(
 <dl>
 <dd>
 
-Deletes the call recording identified by `id`. Deletion is permanent and removes the recording file.
+Deletes the call recording identified by `id`. Deletion is permanent — the audio file is unrecoverable.
 </dd>
 </dl>
 </dd>
@@ -2917,7 +2913,7 @@ client.call_recording.delete(
 </details>
 
 ## Speech Analytics
-<details><summary><code>client.speech_analytics.<a href="src/wavix/speech_analytics/client.py">create</a>(...) -> CreateSpeechAnalyticsResponse</code></summary>
+<details><summary><code>client.speech_analytics.<a href="src/wavix/speech_analytics/client.py">create</a>(...) -> SubmitFileTranscriptionResponse</code></summary>
 <dl>
 <dd>
 
@@ -3020,7 +3016,7 @@ client.speech_analytics.create(
 </dl>
 </details>
 
-<details><summary><code>client.speech_analytics.<a href="src/wavix/speech_analytics/client.py">get</a>(...) -> GetSpeechAnalyticsResponse</code></summary>
+<details><summary><code>client.speech_analytics.<a href="src/wavix/speech_analytics/client.py">get</a>(...) -> FileTranscriptionResponse</code></summary>
 <dl>
 <dd>
 
@@ -3259,7 +3255,7 @@ client.call_webhooks.list()
 <dl>
 <dd>
 
-Registers a callback URL for the `on-call` or `post-call` event. Wavix sends a POST callback to the URL when the event occurs.
+Registers a callback URL for the `on-call` or `post-call` event. Wavix sends a POST callback to the URL when the event occurs. Creates persistent configuration that forwards call metadata to the URL on every matching call until the webhook is deleted.
 </dd>
 </dl>
 </dd>
@@ -3485,7 +3481,7 @@ client.call_control.list()
 <dl>
 <dd>
 
-Places an outbound call. Returns the call with its `uuid` for tracking and control.
+Places a real, billable outbound PSTN call. Returns the call with its `uuid` for tracking and control.
 </dd>
 </dl>
 </dd>
@@ -3681,7 +3677,7 @@ client.call_control.get(
 <dl>
 <dd>
 
-Ends the active call identified by `id` by hanging up.
+Ends the active call identified by `id` by hanging up. Irreversible — the call cannot be resumed once ended.
 </dd>
 </dl>
 </dd>
@@ -3836,7 +3832,7 @@ client.call_control.update(
 <dl>
 <dd>
 
-Answers the inbound call identified by `id`. Optionally starts media streaming on answer.
+Answers the inbound call identified by `id`. Optionally starts recording, post-call transcription, or live media streaming on answer.
 </dd>
 </dl>
 </dd>
@@ -4054,7 +4050,7 @@ Prompt to play before collecting digits.
 </details>
 
 ## NumberValidator
-<details><summary><code>client.number_validator.<a href="src/wavix/number_validator/client.py">get</a>(...) -> GetNumberValidatorResponse</code></summary>
+<details><summary><code>client.number_validator.<a href="src/wavix/number_validator/client.py">get</a>(...) -> PhoneValidationResponse</code></summary>
 <dl>
 <dd>
 
@@ -4066,7 +4062,7 @@ Prompt to play before collecting digits.
 <dl>
 <dd>
 
-Validates a single phone number and returns line type, carrier, portability, and reachability details.
+Validates a single phone number and returns line type, carrier, portability, and reachability details. The response's `error_code` is a per-number result code (`000` success; `013` internal error; `021` invalid format; `041` remote timeout; `042` remote query failed; `091` insufficient funds) — distinct from the HTTP status codes below.
 </dd>
 </dl>
 </dd>
@@ -4177,8 +4173,6 @@ client.number_validator.create_bulk(
         "971504359195"
     ],
     type="format",
-    async_=True,
-    force=True,
 )
 
 ```
@@ -4195,7 +4189,7 @@ client.number_validator.create_bulk(
 <dl>
 <dd>
 
-**phone_numbers:** `typing.List[str]` — List of phone numbers to get detailed information about.
+**phone_numbers:** `typing.List[str]` — List of phone numbers to get detailed information about. Maximum 1000 numbers per request.
     
 </dd>
 </dl>
@@ -4211,7 +4205,7 @@ client.number_validator.create_bulk(
 <dl>
 <dd>
 
-**async:** `bool` — Indicates whether the request should be executed asynchronously. If `true`, the response will include a `request_uuid` that can be used to poll for results. If `false`, the response will include validation results directly.
+**async:** `typing.Optional[bool]` — Indicates whether the request should be executed asynchronously. If `true`, the response will include a `request_uuid` that can be used to poll for results. If `false` (default), the response will include validation results directly.
     
 </dd>
 </dl>
@@ -4219,7 +4213,7 @@ client.number_validator.create_bulk(
 <dl>
 <dd>
 
-**force:** `bool` — Indicates whether to force a fresh validation instead of returning a previously cached result.
+**force:** `typing.Optional[bool]` — Indicates whether to force a fresh validation instead of returning a previously cached result. Defaults to `false`.
     
 </dd>
 </dl>
@@ -4252,7 +4246,7 @@ client.number_validator.create_bulk(
 <dl>
 <dd>
 
-Launches a voice campaign that places an outbound call using a pre-configured scenario. Track progress with the returned voice campaign `id`.
+Launches a voice campaign that places a real outbound call using a pre-configured scenario. Track progress with the returned voice campaign `id`.
 </dd>
 </dl>
 </dd>
@@ -4444,7 +4438,7 @@ client.link_shortener.create(
 <dl>
 <dd>
 
-**link:** `str` — Target URL to shorten.
+**link:** `str` — Target URL to shorten. Must be `https://` — the short link is publicly resolvable and redirects any visitor here, so only pass URLs you trust; this endpoint is a common target for open-redirect and phishing abuse.
     
 </dd>
 </dl>
@@ -4460,7 +4454,7 @@ client.link_shortener.create(
 <dl>
 <dd>
 
-**fallback_url:** `typing.Optional[str]` — Fallback URL for expired or invalid links.
+**fallback_url:** `typing.Optional[str]` — Fallback URL for expired or invalid links. Must be `https://` — same open-redirect/phishing considerations as `link` apply.
     
 </dd>
 </dl>
@@ -4468,7 +4462,7 @@ client.link_shortener.create(
 <dl>
 <dd>
 
-**phone:** `typing.Optional[str]` — Phone number for the short link.
+**phone:** `typing.Optional[str]` — Phone number the short link is associated with, in E.164 format (without the leading `+`). Used to attribute click metrics returned by short link metrics list.
     
 </dd>
 </dl>
@@ -4771,6 +4765,22 @@ client.sub_accounts.list()
 <dl>
 <dd>
 
+**page:** `typing.Optional[int]` — Page number to retrieve. Default `1`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**per_page:** `typing.Optional[int]` — Number of records to return per page. Default `25`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>
@@ -5010,7 +5020,7 @@ client.sub_accounts.update(
 <dl>
 <dd>
 
-**name:** `str` — Sub-account name.
+**name:** `typing.Optional[str]` — Sub-account name.
     
 </dd>
 </dl>
@@ -5047,7 +5057,7 @@ client.sub_accounts.update(
 </details>
 
 ## Billing Transactions
-<details><summary><code>client.billing.transactions.<a href="src/wavix/billing/transactions/client.py">list</a>(...) -> ListTransactionsResponse</code></summary>
+<details><summary><code>client.billing.transactions.<a href="src/wavix/billing/transactions/client.py">list</a>(...) -> BillingTransactionListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5175,7 +5185,7 @@ client.billing.transactions.list(
 </details>
 
 ## Billing Invoices
-<details><summary><code>client.billing.invoices.<a href="src/wavix/billing/invoices/client.py">list</a>(...) -> ListInvoicesResponse</code></summary>
+<details><summary><code>client.billing.invoices.<a href="src/wavix/billing/invoices/client.py">list</a>(...) -> InvoiceListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5331,7 +5341,7 @@ client.billing.invoices.download(
 </details>
 
 ## Buy Countries
-<details><summary><code>client.buy.countries.<a href="src/wavix/buy/countries/client.py">list</a>(...) -> ListCountriesResponse</code></summary>
+<details><summary><code>client.buy.countries.<a href="src/wavix/buy/countries/client.py">list</a>(...) -> CountryListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5403,7 +5413,7 @@ client.buy.countries.list()
 </details>
 
 ## Buy Regions
-<details><summary><code>client.buy.regions.<a href="src/wavix/buy/regions/client.py">list</a>(...) -> ListRegionsResponse</code></summary>
+<details><summary><code>client.buy.regions.<a href="src/wavix/buy/regions/client.py">list</a>(...) -> RegionListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5485,7 +5495,7 @@ client.buy.regions.list(
 </details>
 
 ## Buy Cities
-<details><summary><code>client.buy.cities.<a href="src/wavix/buy/cities/client.py">list</a>(...) -> ListCitiesResponse</code></summary>
+<details><summary><code>client.buy.cities.<a href="src/wavix/buy/cities/client.py">list</a>(...) -> CityListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5568,7 +5578,7 @@ client.buy.cities.list(
 </details>
 
 ## Buy RegionCities
-<details><summary><code>client.buy.region_cities.<a href="src/wavix/buy/region_cities/client.py">list</a>(...) -> ListRegionCitiesResponse</code></summary>
+<details><summary><code>client.buy.region_cities.<a href="src/wavix/buy/region_cities/client.py">list</a>(...) -> CityListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5659,7 +5669,7 @@ client.buy.region_cities.list(
 </details>
 
 ## Buy Numbers
-<details><summary><code>client.buy.numbers.<a href="src/wavix/buy/numbers/client.py">list</a>(...) -> ListNumbersResponse</code></summary>
+<details><summary><code>client.buy.numbers.<a href="src/wavix/buy/numbers/client.py">list</a>(...) -> AvailableNumberListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5778,7 +5788,7 @@ client.buy.numbers.list(
 <dl>
 <dd>
 
-Starts streaming the media of the call identified by `call_id` to the configured destination. Returns the `stream_id`.
+Starts streaming the audio of the call identified by `call_id` to a WebSocket destination you supply, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The destination can be any URL you specify — Wavix does not restrict it. Returns the `stream_id`.
 </dd>
 </dl>
 </dd>
@@ -5961,7 +5971,7 @@ client.call_control.streams.delete(
 <dl>
 <dd>
 
-Plays an audio prompt into the active call identified by `id`.
+Plays an audio prompt into the active call identified by `id`. The audio is audible to the remote party in real time.
 </dd>
 </dl>
 </dd>
@@ -6141,7 +6151,7 @@ client = Wavix(
 )
 
 client.cdrs.transcription.get(
-    call_id="bbaa37bf-430a-46da-ade3-c248e407016",
+    call_id="bbaa37bf-430a-46da-ade3-c248e4070160",
 )
 
 ```
@@ -6416,7 +6426,7 @@ client = Wavix(
 client.numbers.papers.upload(
     doc_attachment="example_doc_attachment",
     did_ids="did_ids",
-    doc_id=1,
+    doc_id="id",
 )
 
 ```
@@ -6449,7 +6459,7 @@ client.numbers.papers.upload(
 <dl>
 <dd>
 
-**doc_id:** `DocumentTypeId` 
+**doc_id:** `DocumentType` 
     
 </dd>
 </dl>
@@ -6470,7 +6480,7 @@ client.numbers.papers.upload(
 </details>
 
 ## Profile Config
-<details><summary><code>client.profile.config.<a href="src/wavix/profile/config/client.py">get</a>() -> GetConfigResponse</code></summary>
+<details><summary><code>client.profile.config.<a href="src/wavix/profile/config/client.py">get</a>() -> ProfileConfigResponse</code></summary>
 <dl>
 <dd>
 
@@ -6609,7 +6619,7 @@ client.sms_and_mms.sender_ids.list()
 <dl>
 <dd>
 
-Creates a Sender ID. Use the 10DLC API to create Sender IDs in the US.
+Creates a Sender ID. Use the 10DLC API to create Sender IDs in the US. Registering a Sender ID incurs a recurring monthly fee, billed to the account balance.
 </dd>
 </dl>
 </dd>
@@ -6788,7 +6798,7 @@ client.sms_and_mms.sender_ids.get(
 </dl>
 </details>
 
-<details><summary><code>client.sms_and_mms.sender_ids.<a href="src/wavix/sms_and_mms/sender_ids/client.py">delete</a>(...) -> DeleteSenderIdsResponse</code></summary>
+<details><summary><code>client.sms_and_mms.sender_ids.<a href="src/wavix/sms_and_mms/sender_ids/client.py">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -6979,7 +6989,7 @@ client.sms_and_mms.opt_outs.list(
 </dl>
 </details>
 
-<details><summary><code>client.sms_and_mms.opt_outs.<a href="src/wavix/sms_and_mms/opt_outs/client.py">create</a>(...) -> CreateOptOutsResponse</code></summary>
+<details><summary><code>client.sms_and_mms.opt_outs.<a href="src/wavix/sms_and_mms/opt_outs/client.py">create</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -7056,7 +7066,7 @@ client.sms_and_mms.opt_outs.create(
 </details>
 
 ## SmsAndMms Messages
-<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py">list</a>(...) -> ListMessagesResponse</code></summary>
+<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py">list</a>(...) -> MessageListResponse</code></summary>
 <dl>
 <dd>
 
@@ -7085,6 +7095,7 @@ Returns a paginated list of SMS and MMS messages for the authenticated account, 
 ```python
 from wavix import Wavix
 from wavix.environment import WavixEnvironment
+import datetime
 
 client = Wavix(
     token="<token>",
@@ -7092,8 +7103,8 @@ client = Wavix(
 )
 
 client.sms_and_mms.messages.list(
-    sent_after="2023-04-10",
-    sent_before="2023-04-13",
+    sent_after=datetime.date.fromisoformat("2023-04-10"),
+    sent_before=datetime.date.fromisoformat("2023-04-13"),
     type="outbound",
     from_="15072429497",
     to="16419252149",
@@ -7124,7 +7135,7 @@ client.sms_and_mms.messages.list(
 <dl>
 <dd>
 
-**sent_after:** `typing.Optional[str]` — Returns messages sent on or after this date, in `YYYY-MM-DD` format.
+**sent_after:** `typing.Optional[datetime.date]` — Returns messages sent on or after this date, in `YYYY-MM-DD` format.
     
 </dd>
 </dl>
@@ -7132,7 +7143,7 @@ client.sms_and_mms.messages.list(
 <dl>
 <dd>
 
-**sent_before:** `typing.Optional[str]` — Returns messages sent on or before this date, in `YYYY-MM-DD` format.
+**sent_before:** `typing.Optional[datetime.date]` — Returns messages sent on or before this date, in `YYYY-MM-DD` format.
     
 </dd>
 </dl>
@@ -7220,8 +7231,7 @@ client.sms_and_mms.messages.list(
 <dl>
 <dd>
 
-Sends an SMS or MMS message. MMS is supported for U.S. numbers only. Track delivery using the returned `message_id` and the message status callback.
-**Rate limit**: 20 messages per phone number in 24 hours.
+Sends an SMS or MMS message. MMS is supported for U.S. numbers only. Track delivery using the returned `message_id` and the message status callback. The recipient must be opted in to receive messages from the account; sending to an opted-out number fails.
 </dd>
 </dl>
 </dd>
@@ -7249,7 +7259,6 @@ client.sms_and_mms.messages.send(
     to="+447537151866",
     message_body=MessageBody(
         text="Hi there, this is a message from Wavix",
-        media=None,
     ),
     callback_url="https://you-site.com/webhook",
     validity=3600,
@@ -7330,7 +7339,7 @@ client.sms_and_mms.messages.send(
 </dl>
 </details>
 
-<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py">get</a>(...) -> GetMessagesResponse</code></summary>
+<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py">get</a>(...) -> MessageResponse</code></summary>
 <dl>
 <dd>
 
@@ -7734,7 +7743,7 @@ client.sub_accounts.transactions.list(
 </details>
 
 ## TenDlc Brands
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">list</a>(...) -> ListBrandsResponse</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">list</a>(...) -> TenDlcBrandListResponse</code></summary>
 <dl>
 <dd>
 
@@ -7906,7 +7915,7 @@ client.ten_dlc.brands.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">create</a>(...) -> CreateBrandsResponse</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">create</a>(...) -> TenDlcBrand</code></summary>
 <dl>
 <dd>
 
@@ -7918,7 +7927,7 @@ client.ten_dlc.brands.list(
 <dl>
 <dd>
 
-Registers a 10DLC Brand. TCR automatically verifies the brand identity. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
+Registers a 10DLC Brand. Submits the company's legal identity data (EIN/Tax ID, legal company name, contact and address) to The Campaign Registry (TCR), which verifies the brand identity. Charges a 10DLC brand registration fee on successful submission; fails with an insufficient-funds error when the balance cannot cover it. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
 </dd>
 </dl>
 </dd>
@@ -7979,7 +7988,7 @@ client.ten_dlc.brands.create(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">get</a>(...) -> GetBrandsResponse</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">get</a>(...) -> TenDlcBrand</code></summary>
 <dl>
 <dd>
 
@@ -8052,7 +8061,7 @@ client.ten_dlc.brands.get(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">update</a>(...) -> UpdateBrandsResponse</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">update</a>(...) -> TenDlcBrand</code></summary>
 <dl>
 <dd>
 
@@ -8289,7 +8298,7 @@ Business segment the Brand operates in. One of:
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">delete</a>(...) -> DeleteBrandsResponse</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -8362,7 +8371,7 @@ client.ten_dlc.brands.delete(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">qualify_usecase</a>(...) -> QualifyUsecaseBrandsResponse</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">qualify_usecase</a>(...) -> TenDlcBrandQualificationResult</code></summary>
 <dl>
 <dd>
 
@@ -8518,7 +8527,7 @@ client.ten_dlc.brand_appeals.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brand_appeals.<a href="src/wavix/ten_dlc/brand_appeals/client.py">create</a>(...) -> CreateBrandAppealsResponse</code></summary>
+<details><summary><code>client.ten_dlc.brand_appeals.<a href="src/wavix/ten_dlc/brand_appeals/client.py">create</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -8533,7 +8542,7 @@ client.ten_dlc.brand_appeals.list(
 Submits an appeal for 10DLC brand identity verification. Provide any additional documentation to support the appeal. Use `appeal_category` to specify the appeal type:
 - `VERIFY_TAX_ID` — Use if the brand is UNVERIFIED due to a tax ID mismatch. Applies to private companies, public companies, non-profits, and government entities.
 - `VERIFY_NON_PROFIT` — Use if a non-profit brand is UNVERIFIED or VERIFIED but missing tax-exempt status.
-- `VERIFY_GOVERNMENT` — Use if a government brand is UNVERIFIED or VERIFIED but missing government entity status.      
+- `VERIFY_GOVERNMENT` — Use if a government brand is UNVERIFIED or VERIFIED but missing government entity status.
 </dd>
 </dl>
 </dd>
@@ -8588,7 +8597,7 @@ client.ten_dlc.brand_appeals.create(
 <dl>
 <dd>
 
-**appeal_categories:** `typing.List[str]` — List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`
+**appeal_categories:** `typing.List[CreateBrandAppealsRequestAppealCategoriesItem]` — List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`
     
 </dd>
 </dl>
@@ -8698,7 +8707,7 @@ client.ten_dlc.brand_evidence.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py">upload</a>(...) -> UploadBrandEvidenceResponse</code></summary>
+<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py">upload</a>(...) -> TenDlcBrandEvidence</code></summary>
 <dl>
 <dd>
 
@@ -8862,7 +8871,7 @@ client.ten_dlc.brand_evidence.get(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py">delete</a>(...) -> DeleteBrandEvidenceResponse</code></summary>
+<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -9030,7 +9039,7 @@ client.ten_dlc.brand_vettings.list(
 <dl>
 <dd>
 
-Requests external vetting for a 10DLC Brand. Supported providers: `AEGIS`, `CV`, `WMC`. Supported classes: `STANDARD`, `ENHANCED`.
+Requests external vetting for a 10DLC Brand. Supported providers: `AEGIS`, `CV`, `WMC`. Supported classes: `STANDARD`, `ENHANCED`. Charges a 10DLC brand vetting fee (Standard or Enhanced); fails with an insufficient-funds error when the balance cannot cover it.
 </dd>
 </dl>
 </dd>
@@ -9283,7 +9292,7 @@ client.ten_dlc.brand_vetting_appeals.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brand_vetting_appeals.<a href="src/wavix/ten_dlc/brand_vetting_appeals/client.py">create</a>(...) -> CreateBrandVettingAppealsResponse</code></summary>
+<details><summary><code>client.ten_dlc.brand_vetting_appeals.<a href="src/wavix/ten_dlc/brand_vetting_appeals/client.py">create</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -9350,7 +9359,7 @@ client.ten_dlc.brand_vetting_appeals.create(
 <dl>
 <dd>
 
-**appeal_categories:** `typing.List[str]` — List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`.
+**appeal_categories:** `typing.List[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem]` — List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`. `LOW_SCORE` is only valid for vetting appeals — brand identity appeals (`ten_dlc_brand_appeals_create`) do not accept it.
     
 </dd>
 </dl>
@@ -9403,7 +9412,7 @@ client.ten_dlc.brand_vetting_appeals.create(
 </details>
 
 ## TenDlc Campaigns
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">list</a>(...) -> ListCampaignsResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">list</a>(...) -> TenDlcCampaignListResponse</code></summary>
 <dl>
 <dd>
 
@@ -9540,7 +9549,7 @@ client.ten_dlc.campaigns.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">list_by_brand</a>(...) -> ListByBrandCampaignsResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">list_by_brand</a>(...) -> TenDlcCampaignListResponse</code></summary>
 <dl>
 <dd>
 
@@ -9686,7 +9695,7 @@ client.ten_dlc.campaigns.list_by_brand(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">create</a>(...) -> CreateCampaignsResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">create</a>(...) -> TenDlcCampaign</code></summary>
 <dl>
 <dd>
 
@@ -10011,7 +10020,7 @@ client.ten_dlc.campaigns.create(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">get</a>(...) -> GetCampaignsResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">get</a>(...) -> TenDlcCampaign</code></summary>
 <dl>
 <dd>
 
@@ -10093,7 +10102,7 @@ client.ten_dlc.campaigns.get(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">update</a>(...) -> UpdateCampaignsResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">update</a>(...) -> TenDlcCampaign</code></summary>
 <dl>
 <dd>
 
@@ -10383,7 +10392,7 @@ client.ten_dlc.campaigns.update(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">delete</a>(...) -> DeleteCampaignsResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -10636,7 +10645,7 @@ client.ten_dlc.subscriptions.list()
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.subscriptions.<a href="src/wavix/ten_dlc/subscriptions/client.py">create</a>(...) -> CreateSubscriptionsResponse</code></summary>
+<details><summary><code>client.ten_dlc.subscriptions.<a href="src/wavix/ten_dlc/subscriptions/client.py">create</a>(...) -> TenDlcEventSubscription</code></summary>
 <dl>
 <dd>
 
@@ -10710,7 +10719,7 @@ client.ten_dlc.subscriptions.create(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.subscriptions.<a href="src/wavix/ten_dlc/subscriptions/client.py">delete</a>(...) -> DeleteSubscriptionsResponse</code></summary>
+<details><summary><code>client.ten_dlc.subscriptions.<a href="src/wavix/ten_dlc/subscriptions/client.py">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -10784,7 +10793,7 @@ client.ten_dlc.subscriptions.delete(
 </details>
 
 ## TenDlc CampaignNumbers
-<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py">link</a>(...) -> LinkCampaignNumbersResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py">link</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -10875,7 +10884,7 @@ client.ten_dlc.campaign_numbers.link(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py">unlink</a>(...) -> UnlinkCampaignNumbersResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py">unlink</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -10966,7 +10975,7 @@ client.ten_dlc.campaign_numbers.unlink(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py">list</a>(...) -> ListCampaignNumbersResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py">list</a>(...) -> TenDlcCampaignNumberListResponse</code></summary>
 <dl>
 <dd>
 
@@ -11049,7 +11058,7 @@ client.ten_dlc.campaign_numbers.list(
 </details>
 
 ## TwoFa Verification
-<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py">create</a>(...) -> CreateVerificationResponse</code></summary>
+<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py">create</a>(...) -> TwoFactorVerificationResponse</code></summary>
 <dl>
 <dd>
 
@@ -11061,7 +11070,7 @@ client.ten_dlc.campaign_numbers.list(
 <dl>
 <dd>
 
-Creates a 2FA verification and sends a one-time password (OTP) to the destination phone number over the selected channel. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
+Creates a 2FA verification and sends a real one-time password (OTP) to the destination phone number over the selected channel; this bills the account per OTP sent. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
 
 The verification proceeds through three steps:
 1. Create a verification to generate and send an OTP.
@@ -11145,7 +11154,7 @@ client.two_fa.verification.create(
 </dl>
 </details>
 
-<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py">resend</a>(...) -> ResendVerificationResponse</code></summary>
+<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py">resend</a>(...) -> TwoFactorVerificationResendResponse</code></summary>
 <dl>
 <dd>
 
@@ -11227,7 +11236,7 @@ client.two_fa.verification.resend(
 </dl>
 </details>
 
-<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py">check</a>(...) -> CheckVerificationResponse</code></summary>
+<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py">check</a>(...) -> TwoFactorVerificationCheckResponse</code></summary>
 <dl>
 <dd>
 
@@ -11239,7 +11248,7 @@ client.two_fa.verification.resend(
 <dl>
 <dd>
 
-Validates the OTP submitted by the end user against the verification identified by `session_id`.
+Validates the OTP submitted by the end user against the verification identified by `session_id`. Non-idempotent — each call consumes one of a limited number of attempts tracked server-side; once exhausted, the verification returns `429` until a new verification is created.
 </dd>
 </dl>
 </dd>
@@ -11550,7 +11559,7 @@ client.two_fa.events.list(
 </details>
 
 ## Webrtc Tokens
-<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py">list</a>() -> WebRtcTokensListResponse</code></summary>
+<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py">list</a>(...) -> WebRtcTokensListResponse</code></summary>
 <dl>
 <dd>
 
@@ -11562,7 +11571,7 @@ client.two_fa.events.list(
 <dl>
 <dd>
 
-Returns a paginated list of active Wavix Embeddable widget tokens for the authenticated account.
+Returns a paginated list of Wavix Embeddable widget tokens for the authenticated account.
 </dd>
 </dl>
 </dd>
@@ -11597,6 +11606,22 @@ client.webrtc.tokens.list()
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**page:** `typing.Optional[int]` — Page number to retrieve. Default `1`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**per_page:** `typing.Optional[int]` — Number of records to return per page. Default `25`.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -11686,7 +11711,7 @@ client.webrtc.tokens.create(
 <dl>
 <dd>
 
-**ttl:** `typing.Optional[int]` — Time to live in seconds. Pass `null` for no expiration.
+**ttl:** `typing.Optional[int]` — Time to live in seconds. Default `3600`. Pass `null` for no expiration.
     
 </dd>
 </dl>

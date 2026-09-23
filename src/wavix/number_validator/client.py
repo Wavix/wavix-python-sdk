@@ -8,8 +8,8 @@ from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.number_validator_create_bulk_response import NumberValidatorCreateBulkResponse
 from ..types.phone_number_validation_type import PhoneNumberValidationType
+from ..types.phone_validation_response import PhoneValidationResponse
 from .raw_client import AsyncRawNumberValidatorClient, RawNumberValidatorClient
-from .types.get_number_validator_response import GetNumberValidatorResponse
 
 if typing.TYPE_CHECKING:
     from .results.client import AsyncResultsClient, ResultsClient
@@ -40,9 +40,9 @@ class NumberValidatorClient:
         phone_number: str,
         type: PhoneNumberValidationType,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> GetNumberValidatorResponse:
+    ) -> PhoneValidationResponse:
         """
-        Validates a single phone number and returns line type, carrier, portability, and reachability details.
+        Validates a single phone number and returns line type, carrier, portability, and reachability details. The response's `error_code` is a per-number result code (`000` success; `013` internal error; `021` invalid format; `041` remote timeout; `042` remote query failed; `091` insufficient funds) — distinct from the HTTP status codes below.
 
         Parameters
         ----------
@@ -57,7 +57,7 @@ class NumberValidatorClient:
 
         Returns
         -------
-        GetNumberValidatorResponse
+        PhoneValidationResponse
             Returns the phone number validation details.
 
         Examples
@@ -80,8 +80,8 @@ class NumberValidatorClient:
         *,
         phone_numbers: typing.Sequence[str],
         type: PhoneNumberValidationType,
-        async_: bool,
-        force: bool,
+        async_: typing.Optional[bool] = OMIT,
+        force: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> NumberValidatorCreateBulkResponse:
         """
@@ -90,15 +90,15 @@ class NumberValidatorClient:
         Parameters
         ----------
         phone_numbers : typing.Sequence[str]
-            List of phone numbers to get detailed information about.
+            List of phone numbers to get detailed information about. Maximum 1000 numbers per request.
 
         type : PhoneNumberValidationType
 
-        async_ : bool
-            Indicates whether the request should be executed asynchronously. If `true`, the response will include a `request_uuid` that can be used to poll for results. If `false`, the response will include validation results directly.
+        async_ : typing.Optional[bool]
+            Indicates whether the request should be executed asynchronously. If `true`, the response will include a `request_uuid` that can be used to poll for results. If `false` (default), the response will include validation results directly.
 
-        force : bool
-            Indicates whether to force a fresh validation instead of returning a previously cached result.
+        force : typing.Optional[bool]
+            Indicates whether to force a fresh validation instead of returning a previously cached result. Defaults to `false`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -118,8 +118,6 @@ class NumberValidatorClient:
         client.number_validator.create_bulk(
             phone_numbers=["971501390098", "971504359195"],
             type="format",
-            async_=True,
-            force=True,
         )
         """
         _response = self._raw_client.create_bulk(
@@ -159,9 +157,9 @@ class AsyncNumberValidatorClient:
         phone_number: str,
         type: PhoneNumberValidationType,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> GetNumberValidatorResponse:
+    ) -> PhoneValidationResponse:
         """
-        Validates a single phone number and returns line type, carrier, portability, and reachability details.
+        Validates a single phone number and returns line type, carrier, portability, and reachability details. The response's `error_code` is a per-number result code (`000` success; `013` internal error; `021` invalid format; `041` remote timeout; `042` remote query failed; `091` insufficient funds) — distinct from the HTTP status codes below.
 
         Parameters
         ----------
@@ -176,7 +174,7 @@ class AsyncNumberValidatorClient:
 
         Returns
         -------
-        GetNumberValidatorResponse
+        PhoneValidationResponse
             Returns the phone number validation details.
 
         Examples
@@ -207,8 +205,8 @@ class AsyncNumberValidatorClient:
         *,
         phone_numbers: typing.Sequence[str],
         type: PhoneNumberValidationType,
-        async_: bool,
-        force: bool,
+        async_: typing.Optional[bool] = OMIT,
+        force: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> NumberValidatorCreateBulkResponse:
         """
@@ -217,15 +215,15 @@ class AsyncNumberValidatorClient:
         Parameters
         ----------
         phone_numbers : typing.Sequence[str]
-            List of phone numbers to get detailed information about.
+            List of phone numbers to get detailed information about. Maximum 1000 numbers per request.
 
         type : PhoneNumberValidationType
 
-        async_ : bool
-            Indicates whether the request should be executed asynchronously. If `true`, the response will include a `request_uuid` that can be used to poll for results. If `false`, the response will include validation results directly.
+        async_ : typing.Optional[bool]
+            Indicates whether the request should be executed asynchronously. If `true`, the response will include a `request_uuid` that can be used to poll for results. If `false` (default), the response will include validation results directly.
 
-        force : bool
-            Indicates whether to force a fresh validation instead of returning a previously cached result.
+        force : typing.Optional[bool]
+            Indicates whether to force a fresh validation instead of returning a previously cached result. Defaults to `false`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -250,8 +248,6 @@ class AsyncNumberValidatorClient:
             await client.number_validator.create_bulk(
                 phone_numbers=["971501390098", "971504359195"],
                 type="format",
-                async_=True,
-                force=True,
             )
 
 

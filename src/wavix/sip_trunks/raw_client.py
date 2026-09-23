@@ -117,7 +117,6 @@ class RawSipTrunksClient:
         ip_restrict: bool,
         didinfo_enabled: bool,
         call_restrict: bool,
-        cost_limit: bool,
         channels_restrict: bool,
         rewrite_enabled: bool,
         transcription_enabled: bool,
@@ -126,6 +125,7 @@ class RawSipTrunksClient:
         multiple_numbers: typing.Optional[bool] = OMIT,
         allowed_ips: typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]] = OMIT,
         call_limit: typing.Optional[int] = OMIT,
+        cost_limit: typing.Optional[bool] = OMIT,
         max_call_cost: typing.Optional[float] = OMIT,
         max_channels: typing.Optional[int] = OMIT,
         rewrite_prefix: typing.Optional[str] = OMIT,
@@ -158,9 +158,6 @@ class RawSipTrunksClient:
         call_restrict : bool
             Indicates whether a maximum call duration limit is enforced for the SIP trunk
 
-        cost_limit : bool
-            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
-
         channels_restrict : bool
             Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
 
@@ -186,6 +183,9 @@ class RawSipTrunksClient:
 
         call_limit : typing.Optional[int]
             Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
+
+        cost_limit : typing.Optional[bool]
+            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
 
         max_call_cost : typing.Optional[float]
             Maximum cost for an outbound call, in USD
@@ -353,6 +353,28 @@ class RawSipTrunksClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -394,7 +416,6 @@ class RawSipTrunksClient:
         ip_restrict: bool,
         didinfo_enabled: bool,
         call_restrict: bool,
-        cost_limit: bool,
         channels_restrict: bool,
         rewrite_enabled: bool,
         transcription_enabled: bool,
@@ -403,6 +424,7 @@ class RawSipTrunksClient:
         multiple_numbers: typing.Optional[bool] = OMIT,
         allowed_ips: typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]] = OMIT,
         call_limit: typing.Optional[int] = OMIT,
+        cost_limit: typing.Optional[bool] = OMIT,
         max_call_cost: typing.Optional[float] = OMIT,
         max_channels: typing.Optional[int] = OMIT,
         rewrite_prefix: typing.Optional[str] = OMIT,
@@ -438,9 +460,6 @@ class RawSipTrunksClient:
         call_restrict : bool
             Indicates whether a maximum call duration limit is enforced for the SIP trunk
 
-        cost_limit : bool
-            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
-
         channels_restrict : bool
             Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
 
@@ -466,6 +485,9 @@ class RawSipTrunksClient:
 
         call_limit : typing.Optional[int]
             Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
+
+        cost_limit : typing.Optional[bool]
+            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
 
         max_call_cost : typing.Optional[float]
             Maximum cost for an outbound call, in USD
@@ -633,6 +655,17 @@ class RawSipTrunksClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),
@@ -765,7 +798,6 @@ class AsyncRawSipTrunksClient:
         ip_restrict: bool,
         didinfo_enabled: bool,
         call_restrict: bool,
-        cost_limit: bool,
         channels_restrict: bool,
         rewrite_enabled: bool,
         transcription_enabled: bool,
@@ -774,6 +806,7 @@ class AsyncRawSipTrunksClient:
         multiple_numbers: typing.Optional[bool] = OMIT,
         allowed_ips: typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]] = OMIT,
         call_limit: typing.Optional[int] = OMIT,
+        cost_limit: typing.Optional[bool] = OMIT,
         max_call_cost: typing.Optional[float] = OMIT,
         max_channels: typing.Optional[int] = OMIT,
         rewrite_prefix: typing.Optional[str] = OMIT,
@@ -806,9 +839,6 @@ class AsyncRawSipTrunksClient:
         call_restrict : bool
             Indicates whether a maximum call duration limit is enforced for the SIP trunk
 
-        cost_limit : bool
-            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
-
         channels_restrict : bool
             Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
 
@@ -834,6 +864,9 @@ class AsyncRawSipTrunksClient:
 
         call_limit : typing.Optional[int]
             Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
+
+        cost_limit : typing.Optional[bool]
+            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
 
         max_call_cost : typing.Optional[float]
             Maximum cost for an outbound call, in USD
@@ -1001,6 +1034,28 @@ class AsyncRawSipTrunksClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        UnauthorizedErrorResponse,
+                        parse_obj_as(
+                            type_=UnauthorizedErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -1042,7 +1097,6 @@ class AsyncRawSipTrunksClient:
         ip_restrict: bool,
         didinfo_enabled: bool,
         call_restrict: bool,
-        cost_limit: bool,
         channels_restrict: bool,
         rewrite_enabled: bool,
         transcription_enabled: bool,
@@ -1051,6 +1105,7 @@ class AsyncRawSipTrunksClient:
         multiple_numbers: typing.Optional[bool] = OMIT,
         allowed_ips: typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]] = OMIT,
         call_limit: typing.Optional[int] = OMIT,
+        cost_limit: typing.Optional[bool] = OMIT,
         max_call_cost: typing.Optional[float] = OMIT,
         max_channels: typing.Optional[int] = OMIT,
         rewrite_prefix: typing.Optional[str] = OMIT,
@@ -1086,9 +1141,6 @@ class AsyncRawSipTrunksClient:
         call_restrict : bool
             Indicates whether a maximum call duration limit is enforced for the SIP trunk
 
-        cost_limit : bool
-            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
-
         channels_restrict : bool
             Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
 
@@ -1114,6 +1166,9 @@ class AsyncRawSipTrunksClient:
 
         call_limit : typing.Optional[int]
             Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
+
+        cost_limit : typing.Optional[bool]
+            Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
 
         max_call_cost : typing.Optional[float]
             Maximum cost for an outbound call, in USD
@@ -1281,6 +1336,17 @@ class AsyncRawSipTrunksClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),

@@ -59,7 +59,7 @@ class SipTrunkCreateRequest(UniversalBaseModel):
     Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
     """
 
-    cost_limit: bool = pydantic.Field()
+    cost_limit: typing.Optional[bool] = pydantic.Field(default=None)
     """
     Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
     """
