@@ -1,0 +1,73 @@
+name: release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Tag after green CI, release after publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          PUBLISH: "true"
+        run: |
+          set -euo pipefail
+          version=$(jq -r .sdkVersion .fern/metadata.json); version=${version#v}
+          tag="v$version"
+          if gh release view "$tag" >/dev/null 2>&1; then echo "release: $tag exists"; exit 0; fi
+          [ -n "$RELEASE_TOKEN" ] || { echo "::error::RELEASE_TOKEN secret is not set"; exit 1; }
+
+          le() { [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | head -1)" = "$1" ]; }
+          previous=$(git tag -l 'v*' | sed 's/^v//' | grep -vxF "$version" | sort -V | tail -1 || true)
+          spec_versions=$(gh api --paginate repos/Wavix/wavix-openapi/releases --jq '.[].tag_name' | sed 's/^v//' | sort -V -r)
+          {
+            echo "Generated from Wavix OpenAPI $tag."
+            for t in $spec_versions; do
+              le "$t" "$version" || continue
+              if [ -n "$previous" ] && le "$t" "$previous"; then continue; fi
+              printf '\n## v%s\n\n' "$t"
+              gh release view "v$t" -R Wavix/wavix-openapi --json body --jq .body
+            done
+          } > notes.md
+
+          wait_ci() {  # $1 branch, $2 commit → id of the finished ci run
+            for _ in $(seq 60); do
+              id=$(gh run list --workflow ci.yml --branch "$1" --commit "$2" --event push --limit 1 \
+                --json databaseId,status --jq '.[0] | select(.status == "completed") | .databaseId')
+              if [ -n "$id" ]; then echo "$id"; return 0; fi
+              sleep 30
+            done
+            echo "::error::no finished ci run for $1 at $2" >&2
+            return 1
+          }
+
+          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+            sha=$(git rev-list -n 1 "$tag")
+          else
+            sha=$GITHUB_SHA
+            id=$(wait_ci main "$sha")
+            [ "$(gh run view "$id" --json conclusion --jq .conclusion)" = success ] \
+              || { echo "::error::ci on main is not green"; exit 1; }
+            git tag "$tag" "$sha"
+            git push "https://x-access-token:${RELEASE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$tag"
+          fi
+
+          if [ "$PUBLISH" = true ]; then
+            id=$(wait_ci "$tag" "$sha")
+            [ "$(gh run view "$id" --json jobs --jq '[.jobs[] | select(.name | test("^publish"; "i")) | .conclusion] | first')" = success ] \
+              || { echo "::error::publish of $tag did not succeed"; exit 1; }
+          fi
+
+          gh release create "$tag" --verify-tag --title "$tag" --notes-file notes.md
