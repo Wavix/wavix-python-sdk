@@ -1,0 +1,60 @@
+name: release
+
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  tag:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - env:
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          set -euo pipefail
+          version=$(jq -r .sdkVersion .fern/metadata.json)
+          tag="v${version#v}"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null; then
+            echo "tag: $tag exists"; exit 0
+          fi
+          git tag "$tag"
+          git push "https://x-access-token:${RELEASE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$tag"
+
+  release:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      startsWith(github.event.workflow_run.head_branch, 'v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          set -euo pipefail
+          export VERSION=${TAG#v}
+          PREVIOUS=$(git tag -l 'v*' | sed 's/^v//' | grep -vxF "$VERSION" | sort -V | tail -1 || true)
+          export PREVIOUS
+          spec_notes=$(gh api --paginate repos/Wavix/wavix-openapi/releases --jq '
+            def v: ltrimstr("v") | split(".") | map(tonumber);
+            .[] | select((.tag_name | v) <= (env.VERSION | v) and (env.PREVIOUS == "" or (.tag_name | v) > (env.PREVIOUS | v)))
+            | "\n## \(.tag_name)\n\n\(.body)"')
+          printf 'Generated from Wavix OpenAPI %s.\n%s\n' "$TAG" "$spec_notes" > notes.md
+          gh release create "$TAG" --verify-tag --title "$TAG" --notes-file notes.md

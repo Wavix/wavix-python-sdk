@@ -6,3 +6,4 @@ SECURITY.md
 .fern/replay.lock
 .fern/replay.yml
 .gitattributes
+.github/workflows/release.yml
