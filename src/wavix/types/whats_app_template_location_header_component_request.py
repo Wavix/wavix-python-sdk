@@ -4,13 +4,19 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .whats_app_template import WhatsAppTemplate
+from .whats_app_template_location_header_component_request_type import (
+    WhatsAppTemplateLocationHeaderComponentRequestType,
+)
 
 
-class WhatsAppTemplateListResponse(UniversalBaseModel):
-    templates: typing.List[WhatsAppTemplate] = pydantic.Field()
+class WhatsAppTemplateLocationHeaderComponentRequest(UniversalBaseModel):
     """
-    Templates registered for the sender.
+    Location header of a new WhatsApp template. Takes neither `text` nor `example`. Consumed by `whatsapp_templates_create`.
+    """
+
+    type: WhatsAppTemplateLocationHeaderComponentRequestType = pydantic.Field()
+    """
+    Component type.
     """
 
     if IS_PYDANTIC_V2:

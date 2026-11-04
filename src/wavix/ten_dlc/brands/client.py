@@ -290,7 +290,7 @@ class BrandsClient:
             The city name
 
         state_or_province : typing.Optional[str]
-            State or province. For the United States, use 2 character codes.
+            State or province. For the United States, it is a 2-character code.
 
         zip : typing.Optional[str]
             The business zip or postal code
@@ -714,7 +714,7 @@ class AsyncBrandsClient:
             The city name
 
         state_or_province : typing.Optional[str]
-            State or province. For the United States, use 2 character codes.
+            State or province. For the United States, it is a 2-character code.
 
         zip : typing.Optional[str]
             The business zip or postal code

@@ -122,9 +122,6 @@ if typing.TYPE_CHECKING:
     from .short_link_metrics_item import ShortLinkMetricsItem
     from .short_link_metrics_response import ShortLinkMetricsResponse
     from .short_link_response import ShortLinkResponse
-    from .sip_trunk_create_request import SipTrunkCreateRequest
-    from .sip_trunk_create_request_allowed_ips_item import SipTrunkCreateRequestAllowedIpsItem
-    from .sip_trunk_create_request_host_request import SipTrunkCreateRequestHostRequest
     from .sip_trunk_list_response import SipTrunkListResponse
     from .sip_trunk_response import SipTrunkResponse
     from .sip_trunk_summary import SipTrunkSummary
@@ -207,6 +204,9 @@ if typing.TYPE_CHECKING:
     from .web_rtc_token import WebRtcToken
     from .web_rtc_token_response import WebRtcTokenResponse
     from .web_rtc_tokens_list_response import WebRtcTokensListResponse
+    from .webhook_in_use_error_response import WebhookInUseErrorResponse
+    from .whats_app_business_account import WhatsAppBusinessAccount
+    from .whats_app_business_account_messaging_limit import WhatsAppBusinessAccountMessagingLimit
     from .whats_app_message import WhatsAppMessage
     from .whats_app_message_get_response import WhatsAppMessageGetResponse
     from .whats_app_message_list_item import WhatsAppMessageListItem
@@ -214,33 +214,76 @@ if typing.TYPE_CHECKING:
     from .whats_app_message_list_item_status import WhatsAppMessageListItemStatus
     from .whats_app_message_list_response import WhatsAppMessageListResponse
     from .whats_app_message_send_request import WhatsAppMessageSendRequest
-    from .whats_app_message_send_request_template import WhatsAppMessageSendRequestTemplate
-    from .whats_app_message_send_request_template_buttons_item import WhatsAppMessageSendRequestTemplateButtonsItem
-    from .whats_app_message_send_request_template_buttons_item_type import (
-        WhatsAppMessageSendRequestTemplateButtonsItemType,
-    )
-    from .whats_app_message_send_request_template_header import WhatsAppMessageSendRequestTemplateHeader
-    from .whats_app_message_send_request_template_header_type import WhatsAppMessageSendRequestTemplateHeaderType
     from .whats_app_message_send_response import WhatsAppMessageSendResponse
     from .whats_app_message_status import WhatsAppMessageStatus
     from .whats_app_message_template import WhatsAppMessageTemplate
     from .whats_app_problem import WhatsAppProblem
     from .whats_app_problem_error_class import WhatsAppProblemErrorClass
+    from .whats_app_send_template import WhatsAppSendTemplate
+    from .whats_app_send_template_button import WhatsAppSendTemplateButton
+    from .whats_app_send_template_button_type import WhatsAppSendTemplateButtonType
+    from .whats_app_send_template_header import WhatsAppSendTemplateHeader
+    from .whats_app_send_template_header_type import WhatsAppSendTemplateHeaderType
     from .whats_app_sender import WhatsAppSender
-    from .whats_app_sender_message_tier import WhatsAppSenderMessageTier
+    from .whats_app_sender_list_response import WhatsAppSenderListResponse
     from .whats_app_sender_quality_rating import WhatsAppSenderQualityRating
     from .whats_app_sender_status import WhatsAppSenderStatus
     from .whats_app_template import WhatsAppTemplate
+    from .whats_app_template_body_component_request import WhatsAppTemplateBodyComponentRequest
+    from .whats_app_template_body_component_request_example import WhatsAppTemplateBodyComponentRequestExample
+    from .whats_app_template_button_request import (
+        WhatsAppTemplateButtonRequest,
+        WhatsAppTemplateButtonRequest_CopyCode,
+        WhatsAppTemplateButtonRequest_PhoneNumber,
+        WhatsAppTemplateButtonRequest_QuickReply,
+        WhatsAppTemplateButtonRequest_Url,
+    )
+    from .whats_app_template_buttons_component_request import WhatsAppTemplateButtonsComponentRequest
     from .whats_app_template_category import WhatsAppTemplateCategory
-    from .whats_app_template_component import WhatsAppTemplateComponent
-    from .whats_app_template_component_format import WhatsAppTemplateComponentFormat
-    from .whats_app_template_component_type import WhatsAppTemplateComponentType
+    from .whats_app_template_component_request import (
+        WhatsAppTemplateComponentRequest,
+        WhatsAppTemplateComponentRequest_Body,
+        WhatsAppTemplateComponentRequest_Buttons,
+        WhatsAppTemplateComponentRequest_Footer,
+        WhatsAppTemplateComponentRequest_Header,
+    )
+    from .whats_app_template_copy_code_button_request import WhatsAppTemplateCopyCodeButtonRequest
     from .whats_app_template_create_request import WhatsAppTemplateCreateRequest
     from .whats_app_template_create_request_category import WhatsAppTemplateCreateRequestCategory
-    from .whats_app_template_list_response import WhatsAppTemplateListResponse
+    from .whats_app_template_footer_component_request import WhatsAppTemplateFooterComponentRequest
+    from .whats_app_template_header_component_request import (
+        WhatsAppTemplateHeaderComponentRequest,
+        WhatsAppTemplateHeaderComponentRequest_Document,
+        WhatsAppTemplateHeaderComponentRequest_Image,
+        WhatsAppTemplateHeaderComponentRequest_Location,
+        WhatsAppTemplateHeaderComponentRequest_Text,
+        WhatsAppTemplateHeaderComponentRequest_Video,
+    )
+    from .whats_app_template_location_header_component_request import WhatsAppTemplateLocationHeaderComponentRequest
+    from .whats_app_template_location_header_component_request_type import (
+        WhatsAppTemplateLocationHeaderComponentRequestType,
+    )
+    from .whats_app_template_media_header_component_request import WhatsAppTemplateMediaHeaderComponentRequest
+    from .whats_app_template_media_header_component_request_example import (
+        WhatsAppTemplateMediaHeaderComponentRequestExample,
+    )
+    from .whats_app_template_media_header_component_request_type import WhatsAppTemplateMediaHeaderComponentRequestType
+    from .whats_app_template_page_response import WhatsAppTemplatePageResponse
+    from .whats_app_template_phone_number_button_request import WhatsAppTemplatePhoneNumberButtonRequest
     from .whats_app_template_quality_rating import WhatsAppTemplateQualityRating
+    from .whats_app_template_quick_reply_button_request import WhatsAppTemplateQuickReplyButtonRequest
     from .whats_app_template_response import WhatsAppTemplateResponse
+    from .whats_app_template_response_component import WhatsAppTemplateResponseComponent
+    from .whats_app_template_response_component_format import WhatsAppTemplateResponseComponentFormat
     from .whats_app_template_status import WhatsAppTemplateStatus
+    from .whats_app_template_text_header_component_request import WhatsAppTemplateTextHeaderComponentRequest
+    from .whats_app_template_text_header_component_request_example import (
+        WhatsAppTemplateTextHeaderComponentRequestExample,
+    )
+    from .whats_app_template_text_header_component_request_type import WhatsAppTemplateTextHeaderComponentRequestType
+    from .whats_app_template_url_button_request import WhatsAppTemplateUrlButtonRequest
+    from .whats_app_waba import WhatsAppWaba
+    from .whats_app_waba_list_response import WhatsAppWabaListResponse
 _dynamic_imports: typing.Dict[str, str] = {
     "AccountErrorResponse": ".account_error_response",
     "AccountLimits": ".account_limits",
@@ -358,9 +401,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ShortLinkMetricsItem": ".short_link_metrics_item",
     "ShortLinkMetricsResponse": ".short_link_metrics_response",
     "ShortLinkResponse": ".short_link_response",
-    "SipTrunkCreateRequest": ".sip_trunk_create_request",
-    "SipTrunkCreateRequestAllowedIpsItem": ".sip_trunk_create_request_allowed_ips_item",
-    "SipTrunkCreateRequestHostRequest": ".sip_trunk_create_request_host_request",
     "SipTrunkListResponse": ".sip_trunk_list_response",
     "SipTrunkResponse": ".sip_trunk_response",
     "SipTrunkSummary": ".sip_trunk_summary",
@@ -439,6 +479,9 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WebRtcToken": ".web_rtc_token",
     "WebRtcTokenResponse": ".web_rtc_token_response",
     "WebRtcTokensListResponse": ".web_rtc_tokens_list_response",
+    "WebhookInUseErrorResponse": ".webhook_in_use_error_response",
+    "WhatsAppBusinessAccount": ".whats_app_business_account",
+    "WhatsAppBusinessAccountMessagingLimit": ".whats_app_business_account_messaging_limit",
     "WhatsAppMessage": ".whats_app_message",
     "WhatsAppMessageGetResponse": ".whats_app_message_get_response",
     "WhatsAppMessageListItem": ".whats_app_message_list_item",
@@ -446,31 +489,64 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WhatsAppMessageListItemStatus": ".whats_app_message_list_item_status",
     "WhatsAppMessageListResponse": ".whats_app_message_list_response",
     "WhatsAppMessageSendRequest": ".whats_app_message_send_request",
-    "WhatsAppMessageSendRequestTemplate": ".whats_app_message_send_request_template",
-    "WhatsAppMessageSendRequestTemplateButtonsItem": ".whats_app_message_send_request_template_buttons_item",
-    "WhatsAppMessageSendRequestTemplateButtonsItemType": ".whats_app_message_send_request_template_buttons_item_type",
-    "WhatsAppMessageSendRequestTemplateHeader": ".whats_app_message_send_request_template_header",
-    "WhatsAppMessageSendRequestTemplateHeaderType": ".whats_app_message_send_request_template_header_type",
     "WhatsAppMessageSendResponse": ".whats_app_message_send_response",
     "WhatsAppMessageStatus": ".whats_app_message_status",
     "WhatsAppMessageTemplate": ".whats_app_message_template",
     "WhatsAppProblem": ".whats_app_problem",
     "WhatsAppProblemErrorClass": ".whats_app_problem_error_class",
+    "WhatsAppSendTemplate": ".whats_app_send_template",
+    "WhatsAppSendTemplateButton": ".whats_app_send_template_button",
+    "WhatsAppSendTemplateButtonType": ".whats_app_send_template_button_type",
+    "WhatsAppSendTemplateHeader": ".whats_app_send_template_header",
+    "WhatsAppSendTemplateHeaderType": ".whats_app_send_template_header_type",
     "WhatsAppSender": ".whats_app_sender",
-    "WhatsAppSenderMessageTier": ".whats_app_sender_message_tier",
+    "WhatsAppSenderListResponse": ".whats_app_sender_list_response",
     "WhatsAppSenderQualityRating": ".whats_app_sender_quality_rating",
     "WhatsAppSenderStatus": ".whats_app_sender_status",
     "WhatsAppTemplate": ".whats_app_template",
+    "WhatsAppTemplateBodyComponentRequest": ".whats_app_template_body_component_request",
+    "WhatsAppTemplateBodyComponentRequestExample": ".whats_app_template_body_component_request_example",
+    "WhatsAppTemplateButtonRequest": ".whats_app_template_button_request",
+    "WhatsAppTemplateButtonRequest_CopyCode": ".whats_app_template_button_request",
+    "WhatsAppTemplateButtonRequest_PhoneNumber": ".whats_app_template_button_request",
+    "WhatsAppTemplateButtonRequest_QuickReply": ".whats_app_template_button_request",
+    "WhatsAppTemplateButtonRequest_Url": ".whats_app_template_button_request",
+    "WhatsAppTemplateButtonsComponentRequest": ".whats_app_template_buttons_component_request",
     "WhatsAppTemplateCategory": ".whats_app_template_category",
-    "WhatsAppTemplateComponent": ".whats_app_template_component",
-    "WhatsAppTemplateComponentFormat": ".whats_app_template_component_format",
-    "WhatsAppTemplateComponentType": ".whats_app_template_component_type",
+    "WhatsAppTemplateComponentRequest": ".whats_app_template_component_request",
+    "WhatsAppTemplateComponentRequest_Body": ".whats_app_template_component_request",
+    "WhatsAppTemplateComponentRequest_Buttons": ".whats_app_template_component_request",
+    "WhatsAppTemplateComponentRequest_Footer": ".whats_app_template_component_request",
+    "WhatsAppTemplateComponentRequest_Header": ".whats_app_template_component_request",
+    "WhatsAppTemplateCopyCodeButtonRequest": ".whats_app_template_copy_code_button_request",
     "WhatsAppTemplateCreateRequest": ".whats_app_template_create_request",
     "WhatsAppTemplateCreateRequestCategory": ".whats_app_template_create_request_category",
-    "WhatsAppTemplateListResponse": ".whats_app_template_list_response",
+    "WhatsAppTemplateFooterComponentRequest": ".whats_app_template_footer_component_request",
+    "WhatsAppTemplateHeaderComponentRequest": ".whats_app_template_header_component_request",
+    "WhatsAppTemplateHeaderComponentRequest_Document": ".whats_app_template_header_component_request",
+    "WhatsAppTemplateHeaderComponentRequest_Image": ".whats_app_template_header_component_request",
+    "WhatsAppTemplateHeaderComponentRequest_Location": ".whats_app_template_header_component_request",
+    "WhatsAppTemplateHeaderComponentRequest_Text": ".whats_app_template_header_component_request",
+    "WhatsAppTemplateHeaderComponentRequest_Video": ".whats_app_template_header_component_request",
+    "WhatsAppTemplateLocationHeaderComponentRequest": ".whats_app_template_location_header_component_request",
+    "WhatsAppTemplateLocationHeaderComponentRequestType": ".whats_app_template_location_header_component_request_type",
+    "WhatsAppTemplateMediaHeaderComponentRequest": ".whats_app_template_media_header_component_request",
+    "WhatsAppTemplateMediaHeaderComponentRequestExample": ".whats_app_template_media_header_component_request_example",
+    "WhatsAppTemplateMediaHeaderComponentRequestType": ".whats_app_template_media_header_component_request_type",
+    "WhatsAppTemplatePageResponse": ".whats_app_template_page_response",
+    "WhatsAppTemplatePhoneNumberButtonRequest": ".whats_app_template_phone_number_button_request",
     "WhatsAppTemplateQualityRating": ".whats_app_template_quality_rating",
+    "WhatsAppTemplateQuickReplyButtonRequest": ".whats_app_template_quick_reply_button_request",
     "WhatsAppTemplateResponse": ".whats_app_template_response",
+    "WhatsAppTemplateResponseComponent": ".whats_app_template_response_component",
+    "WhatsAppTemplateResponseComponentFormat": ".whats_app_template_response_component_format",
     "WhatsAppTemplateStatus": ".whats_app_template_status",
+    "WhatsAppTemplateTextHeaderComponentRequest": ".whats_app_template_text_header_component_request",
+    "WhatsAppTemplateTextHeaderComponentRequestExample": ".whats_app_template_text_header_component_request_example",
+    "WhatsAppTemplateTextHeaderComponentRequestType": ".whats_app_template_text_header_component_request_type",
+    "WhatsAppTemplateUrlButtonRequest": ".whats_app_template_url_button_request",
+    "WhatsAppWaba": ".whats_app_waba",
+    "WhatsAppWabaListResponse": ".whats_app_waba_list_response",
 }
 
 
@@ -612,9 +688,6 @@ __all__ = [
     "ShortLinkMetricsItem",
     "ShortLinkMetricsResponse",
     "ShortLinkResponse",
-    "SipTrunkCreateRequest",
-    "SipTrunkCreateRequestAllowedIpsItem",
-    "SipTrunkCreateRequestHostRequest",
     "SipTrunkListResponse",
     "SipTrunkResponse",
     "SipTrunkSummary",
@@ -693,6 +766,9 @@ __all__ = [
     "WebRtcToken",
     "WebRtcTokenResponse",
     "WebRtcTokensListResponse",
+    "WebhookInUseErrorResponse",
+    "WhatsAppBusinessAccount",
+    "WhatsAppBusinessAccountMessagingLimit",
     "WhatsAppMessage",
     "WhatsAppMessageGetResponse",
     "WhatsAppMessageListItem",
@@ -700,29 +776,62 @@ __all__ = [
     "WhatsAppMessageListItemStatus",
     "WhatsAppMessageListResponse",
     "WhatsAppMessageSendRequest",
-    "WhatsAppMessageSendRequestTemplate",
-    "WhatsAppMessageSendRequestTemplateButtonsItem",
-    "WhatsAppMessageSendRequestTemplateButtonsItemType",
-    "WhatsAppMessageSendRequestTemplateHeader",
-    "WhatsAppMessageSendRequestTemplateHeaderType",
     "WhatsAppMessageSendResponse",
     "WhatsAppMessageStatus",
     "WhatsAppMessageTemplate",
     "WhatsAppProblem",
     "WhatsAppProblemErrorClass",
+    "WhatsAppSendTemplate",
+    "WhatsAppSendTemplateButton",
+    "WhatsAppSendTemplateButtonType",
+    "WhatsAppSendTemplateHeader",
+    "WhatsAppSendTemplateHeaderType",
     "WhatsAppSender",
-    "WhatsAppSenderMessageTier",
+    "WhatsAppSenderListResponse",
     "WhatsAppSenderQualityRating",
     "WhatsAppSenderStatus",
     "WhatsAppTemplate",
+    "WhatsAppTemplateBodyComponentRequest",
+    "WhatsAppTemplateBodyComponentRequestExample",
+    "WhatsAppTemplateButtonRequest",
+    "WhatsAppTemplateButtonRequest_CopyCode",
+    "WhatsAppTemplateButtonRequest_PhoneNumber",
+    "WhatsAppTemplateButtonRequest_QuickReply",
+    "WhatsAppTemplateButtonRequest_Url",
+    "WhatsAppTemplateButtonsComponentRequest",
     "WhatsAppTemplateCategory",
-    "WhatsAppTemplateComponent",
-    "WhatsAppTemplateComponentFormat",
-    "WhatsAppTemplateComponentType",
+    "WhatsAppTemplateComponentRequest",
+    "WhatsAppTemplateComponentRequest_Body",
+    "WhatsAppTemplateComponentRequest_Buttons",
+    "WhatsAppTemplateComponentRequest_Footer",
+    "WhatsAppTemplateComponentRequest_Header",
+    "WhatsAppTemplateCopyCodeButtonRequest",
     "WhatsAppTemplateCreateRequest",
     "WhatsAppTemplateCreateRequestCategory",
-    "WhatsAppTemplateListResponse",
+    "WhatsAppTemplateFooterComponentRequest",
+    "WhatsAppTemplateHeaderComponentRequest",
+    "WhatsAppTemplateHeaderComponentRequest_Document",
+    "WhatsAppTemplateHeaderComponentRequest_Image",
+    "WhatsAppTemplateHeaderComponentRequest_Location",
+    "WhatsAppTemplateHeaderComponentRequest_Text",
+    "WhatsAppTemplateHeaderComponentRequest_Video",
+    "WhatsAppTemplateLocationHeaderComponentRequest",
+    "WhatsAppTemplateLocationHeaderComponentRequestType",
+    "WhatsAppTemplateMediaHeaderComponentRequest",
+    "WhatsAppTemplateMediaHeaderComponentRequestExample",
+    "WhatsAppTemplateMediaHeaderComponentRequestType",
+    "WhatsAppTemplatePageResponse",
+    "WhatsAppTemplatePhoneNumberButtonRequest",
     "WhatsAppTemplateQualityRating",
+    "WhatsAppTemplateQuickReplyButtonRequest",
     "WhatsAppTemplateResponse",
+    "WhatsAppTemplateResponseComponent",
+    "WhatsAppTemplateResponseComponentFormat",
     "WhatsAppTemplateStatus",
+    "WhatsAppTemplateTextHeaderComponentRequest",
+    "WhatsAppTemplateTextHeaderComponentRequestExample",
+    "WhatsAppTemplateTextHeaderComponentRequestType",
+    "WhatsAppTemplateUrlButtonRequest",
+    "WhatsAppWaba",
+    "WhatsAppWabaListResponse",
 ]

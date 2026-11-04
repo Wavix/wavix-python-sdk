@@ -317,7 +317,7 @@ class RawSubAccountsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[SubOrganizationResponse]:
         """
-        Replaces the configuration of the sub-account identified by `id`. Omitted fields revert to their defaults.
+        Updates the sub-account identified by `id`. Only the provided fields are changed.
 
         Parameters
         ----------
@@ -722,7 +722,7 @@ class AsyncRawSubAccountsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[SubOrganizationResponse]:
         """
-        Replaces the configuration of the sub-account identified by `id`. Omitted fields revert to their defaults.
+        Updates the sub-account identified by `id`. Only the provided fields are changed.
 
         Parameters
         ----------

@@ -13,6 +13,10 @@ class CdrTranscriptionCompletedWebhook(UniversalBaseModel):
     uuid_: typing_extensions.Annotated[
         str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="Call UUID")
     ]
+    """
+    Call UUID
+    """
+
     status: CdrTranscriptionCompletedWebhookStatus = pydantic.Field()
     """
     Outcome of the transcription. One of `completed` (the transcript was produced) or `failed` (the transcription could not be produced).

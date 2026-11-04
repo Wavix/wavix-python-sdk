@@ -4,17 +4,21 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from .pagination import Pagination
+from .whats_app_template import WhatsAppTemplate
 
 
-class SipTrunkCreateRequestHostRequest(UniversalBaseModel):
+class WhatsAppTemplatePageResponse(UniversalBaseModel):
     """
-    For SIP trunks with IP authentication, includes the SIP endpoint public static IP address and the status of the authentication request. Wavix authenticates all SIP traffic originating from this IP address.
+    Returned by `whatsapp_templates_list`.
     """
 
-    host: str = pydantic.Field()
+    templates: typing.List[WhatsAppTemplate] = pydantic.Field()
     """
-    SIP endpoint public static IP address
+    Templates that match the request.
     """
+
+    pagination: Pagination
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

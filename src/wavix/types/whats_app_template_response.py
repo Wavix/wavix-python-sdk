@@ -8,6 +8,10 @@ from .whats_app_template import WhatsAppTemplate
 
 
 class WhatsAppTemplateResponse(UniversalBaseModel):
+    """
+    Returned by `whatsapp_templates_get` and `whatsapp_templates_create`.
+    """
+
     template: WhatsAppTemplate
 
     if IS_PYDANTIC_V2:

@@ -19,6 +19,10 @@ class WebRtcTokenResponse(UniversalBaseModel):
         FieldMetadata(alias="uuid"),
         pydantic.Field(alias="uuid", description="Unique identifier of the WebRTC token."),
     ]
+    """
+    Unique identifier of the WebRTC token.
+    """
+
     sip_trunk: str = pydantic.Field()
     """
     Name of the SIP trunk the token authenticates against.

@@ -8,6 +8,10 @@ from .whats_app_message import WhatsAppMessage
 
 
 class WhatsAppMessageSendResponse(UniversalBaseModel):
+    """
+    Returned by `whatsapp_messages_send`.
+    """
+
     message: WhatsAppMessage
 
     if IS_PYDANTIC_V2:

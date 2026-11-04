@@ -39,6 +39,10 @@ class SendMessagesResponse(UniversalBaseModel):
     from_: typing_extensions.Annotated[
         typing.Optional[str], FieldMetadata(alias="from"), pydantic.Field(alias="from", description="Sender ID.")
     ] = None
+    """
+    Sender ID.
+    """
+
     mcc: typing.Optional[str] = pydantic.Field(default=None)
     """
     Mobile country code.

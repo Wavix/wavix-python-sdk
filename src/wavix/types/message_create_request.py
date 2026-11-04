@@ -15,6 +15,10 @@ class MessageCreateRequest(UniversalBaseModel):
         FieldMetadata(alias="from"),
         pydantic.Field(alias="from", description="Sender ID. Numeric or alphanumeric."),
     ]
+    """
+    Sender ID. Numeric or alphanumeric.
+    """
+
     to: str = pydantic.Field()
     """
     Recipient phone number.

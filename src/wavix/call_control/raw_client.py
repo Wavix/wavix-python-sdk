@@ -537,7 +537,7 @@ class RawCallControlClient:
             Indicates whether the call should be transcribed after it ends.
 
         stream_url : typing.Optional[str]
-            WebSocket URL to stream the call.
+            WebSocket URL (`ws://` or `wss://`) that receives the call's audio, which can include the caller's voice.
 
         stream_type : typing.Optional[CallStreamType]
             Direction of audio streamed to `stream_url`.
@@ -1269,7 +1269,7 @@ class AsyncRawCallControlClient:
             Indicates whether the call should be transcribed after it ends.
 
         stream_url : typing.Optional[str]
-            WebSocket URL to stream the call.
+            WebSocket URL (`ws://` or `wss://`) that receives the call's audio, which can include the caller's voice.
 
         stream_type : typing.Optional[CallStreamType]
             Direction of audio streamed to `stream_url`.

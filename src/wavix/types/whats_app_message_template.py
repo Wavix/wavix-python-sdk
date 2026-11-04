@@ -8,15 +8,15 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 class WhatsAppMessageTemplate(UniversalBaseModel):
     """
-    Template used to send the message.
+    The template that a WhatsApp message was sent with. Returned in `template` by `whatsapp_messages_send`.
     """
 
-    name: typing.Optional[str] = pydantic.Field(default=None)
+    name: str = pydantic.Field()
     """
     Template name.
     """
 
-    language: typing.Optional[str] = pydantic.Field(default=None)
+    language: str = pydantic.Field()
     """
     Template language code.
     """

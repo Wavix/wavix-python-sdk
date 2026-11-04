@@ -8,6 +8,10 @@ from .whats_app_message_list_item import WhatsAppMessageListItem
 
 
 class WhatsAppMessageGetResponse(UniversalBaseModel):
+    """
+    Returned by `whatsapp_messages_get`.
+    """
+
     message: WhatsAppMessageListItem
 
     if IS_PYDANTIC_V2:

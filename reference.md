@@ -1,6 +1,6 @@
 # Reference
 ## API Keys
-<details><summary><code>client.api_keys.<a href="src/wavix/api_keys/client.py">list</a>(...) -> typing.List[ApiKey]</code></summary>
+<details><summary><code>client.api_keys.<a href="src/wavix/api_keys/client.py#L33-L64">list</a>(...) -> typing.List[ApiKey]</code></summary>
 <dl>
 <dd>
 
@@ -73,7 +73,7 @@ client.api_keys.list(
 </dl>
 </details>
 
-<details><summary><code>client.api_keys.<a href="src/wavix/api_keys/client.py">create</a>(...) -> ApiKeyWithSecret</code></summary>
+<details><summary><code>client.api_keys.<a href="src/wavix/api_keys/client.py#L66-L209">create</a>(...) -> ApiKeyWithSecret</code></summary>
 <dl>
 <dd>
 
@@ -308,7 +308,7 @@ so with `scopes_enabled: true` and no scopes set the key has no access.
 </dl>
 </details>
 
-<details><summary><code>client.api_keys.<a href="src/wavix/api_keys/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.api_keys.<a href="src/wavix/api_keys/client.py#L211-L240">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -381,7 +381,7 @@ client.api_keys.delete(
 </dl>
 </details>
 
-<details><summary><code>client.api_keys.<a href="src/wavix/api_keys/client.py">update</a>(...) -> ApiKey</code></summary>
+<details><summary><code>client.api_keys.<a href="src/wavix/api_keys/client.py#L242-L374">update</a>(...) -> ApiKey</code></summary>
 <dl>
 <dd>
 
@@ -607,7 +607,7 @@ client.api_keys.update(
 </details>
 
 ## SIP trunks
-<details><summary><code>client.sip_trunks.<a href="src/wavix/sip_trunks/client.py">list</a>(...) -> SipTrunkListResponse</code></summary>
+<details><summary><code>client.sip_trunks.<a href="src/wavix/sip_trunks/client.py#L35-L71">list</a>(...) -> SipTrunkListResponse</code></summary>
 <dl>
 <dd>
 
@@ -686,7 +686,7 @@ client.sip_trunks.list()
 </dl>
 </details>
 
-<details><summary><code>client.sip_trunks.<a href="src/wavix/sip_trunks/client.py">create</a>(...) -> SipTrunkResponse</code></summary>
+<details><summary><code>client.sip_trunks.<a href="src/wavix/sip_trunks/client.py#L73-L227">create</a>(...) -> SipTrunkResponse</code></summary>
 <dl>
 <dd>
 
@@ -748,7 +748,184 @@ client.sip_trunks.create(
 <dl>
 <dd>
 
-**request:** `SipTrunkCreateRequest` 
+**label:** `str` — User-defined name of the SIP trunk
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**password:** `str` — Password set for the SIP trunk. A strong password helps keep the trunk secure.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**callerid:** `str` — Caller ID associated with the SIP trunk. Must be an active or verified number on the account.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**ip_restrict:** `bool` — Indicates whether SIP trunk registration is allowed from only specific public static IP addresses. When set to `true`, the `allowed_ips` parameter must be provided.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**didinfo_enabled:** `bool` — Indicates whether inbound calls include dialed number information in the `To` header of SIP INVITE requests
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**call_restrict:** `bool` — Indicates whether a maximum call duration limit is enforced for the SIP trunk
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**channels_restrict:** `bool` — Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**rewrite_enabled:** `bool` — Indicates whether a custom dial plan is activated for the SIP trunk
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**transcription_enabled:** `bool` 
+
+Indicates whether automatic call transcription is enabled for the SIP trunk.
+Available for `Flex Pro` customers only.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**transcription_threshold:** `int` 
+
+Transcriptions will be generated for calls that meet or exceed the specified minimal call duration threshold, in seconds.
+Available for `Flex Pro` customers only.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**host_request:** `typing.Optional[SipTrunkCreateRequestHostRequest]` — For SIP trunks with IP authentication, includes the SIP endpoint public static IP address and the status of the authentication request. Wavix authenticates all SIP traffic originating from this IP address.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**multiple_numbers:** `typing.Optional[bool]` — Indicates whether any active or verified phone number on the account can be used as the Caller ID for the SIP trunk.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**allowed_ips:** `typing.Optional[typing.List[SipTrunkCreateRequestAllowedIpsItem]]` — A list of public static IP addresses allowed to register with the SIP trunk
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**call_limit:** `typing.Optional[int]` — Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cost_limit:** `typing.Optional[bool]` — Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**max_call_cost:** `typing.Optional[float]` — Maximum cost for an outbound call, in USD
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**max_channels:** `typing.Optional[int]` — Maximum number of concurrent outbound calls for the SIP trunk. Must not exceed the outbound channel capacity set for the account. Ignored when `channels_restrict` is `false`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**rewrite_prefix:** `typing.Optional[str]` — Digits to automatically prepend to each dialed phone number
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**rewrite_cond:** `typing.Optional[str]` — Number of leading digits to automatically remove from each dialed phone number
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**call_recording_enabled:** `typing.Optional[bool]` — Indicates whether outbound call recording is enabled for the SIP trunk
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**machine_detection_enabled:** `typing.Optional[bool]` 
+
+Indicates whether automatic voicemail detection is enabled for the SIP trunk.
+Available for `Flex Pro` customers only.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**encrypted_media:** `typing.Optional[bool]` — Indicates whether SRTP media encryption is enabled for the SIP trunk.
     
 </dd>
 </dl>
@@ -768,7 +945,7 @@ client.sip_trunks.create(
 </dl>
 </details>
 
-<details><summary><code>client.sip_trunks.<a href="src/wavix/sip_trunks/client.py">get</a>(...) -> SipTrunkResponse</code></summary>
+<details><summary><code>client.sip_trunks.<a href="src/wavix/sip_trunks/client.py#L229-L258">get</a>(...) -> SipTrunkResponse</code></summary>
 <dl>
 <dd>
 
@@ -841,7 +1018,7 @@ client.sip_trunks.get(
 </dl>
 </details>
 
-<details><summary><code>client.sip_trunks.<a href="src/wavix/sip_trunks/client.py">update</a>(...) -> SipTrunkResponse</code></summary>
+<details><summary><code>client.sip_trunks.<a href="src/wavix/sip_trunks/client.py#L260-L410">update</a>(...) -> SipTrunkResponse</code></summary>
 <dl>
 <dd>
 
@@ -853,7 +1030,7 @@ client.sip_trunks.get(
 <dl>
 <dd>
 
-Replaces the configuration of the SIP trunk identified by `id`. Omitted fields revert to their defaults.
+Updates the SIP trunk identified by `id`. Only the provided fields are changed. On trial accounts, every update also applies the trial limits: a `call_limit` of at most 300 seconds (300 when omitted) and one concurrent call.
 </dd>
 </dl>
 </dd>
@@ -878,16 +1055,6 @@ client = Wavix(
 
 client.sip_trunks.update(
     id=3107,
-    label="My trunk",
-    password="4r=h;EaCB85QNtr2",
-    callerid="13132847320",
-    ip_restrict=False,
-    didinfo_enabled=True,
-    call_restrict=True,
-    channels_restrict=False,
-    rewrite_enabled=True,
-    transcription_enabled=True,
-    transcription_threshold=10,
 )
 
 ```
@@ -912,7 +1079,184 @@ client.sip_trunks.update(
 <dl>
 <dd>
 
-**request:** `SipTrunkCreateRequest` 
+**label:** `typing.Optional[str]` — User-defined name of the SIP trunk
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**password:** `typing.Optional[str]` — Password set for the SIP trunk. A strong password helps keep the trunk secure.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**host_request:** `typing.Optional[SipTrunkUpdateRequestHostRequest]` — For SIP trunks with IP authentication, the SIP endpoint public static IP address. Wavix authenticates all SIP traffic originating from this IP address. Ignored when the trunk already has a host request that is pending or approved. Not supported on trial accounts.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**callerid:** `typing.Optional[str]` — Caller ID associated with the SIP trunk. Must be an active or verified number on the account.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**multiple_numbers:** `typing.Optional[bool]` — Indicates whether any active or verified phone number on the account can be used as the Caller ID for the SIP trunk. Setting it to `true` clears the trunk's `callerid`; on a trunk with Caller ID passthrough (`passthrough`) enabled, `true` is ignored.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**ip_restrict:** `typing.Optional[bool]` — Indicates whether SIP trunk registration is allowed from only specific public static IP addresses. It can be `true` only when the trunk has at least one allowed IP address, either already stored or sent in `allowed_ips`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**allowed_ips:** `typing.Optional[typing.List[SipTrunkUpdateRequestAllowedIpsItem]]` — Public static IP addresses to add to the list allowed to register with the SIP trunk. Addresses already on the list are kept.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**didinfo_enabled:** `typing.Optional[bool]` — Indicates whether inbound calls include dialed number information in the `To` header of SIP INVITE requests
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**call_restrict:** `typing.Optional[bool]` — Indicates whether a maximum call duration limit is enforced for the SIP trunk
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**call_limit:** `typing.Optional[int]` — Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cost_limit:** `typing.Optional[bool]` — Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**max_call_cost:** `typing.Optional[float]` — Maximum cost for an outbound call, in USD
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**channels_restrict:** `typing.Optional[bool]` — Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**max_channels:** `typing.Optional[int]` — Maximum number of concurrent outbound calls for the SIP trunk. Must not exceed the outbound channel capacity set for the account. Ignored when `channels_restrict` is `false`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**rewrite_enabled:** `typing.Optional[bool]` — Indicates whether a custom dial plan is activated for the SIP trunk
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**rewrite_prefix:** `typing.Optional[str]` — Digits to automatically prepend to each dialed phone number
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**rewrite_cond:** `typing.Optional[str]` — Number of leading digits to automatically remove from each dialed phone number
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**call_recording_enabled:** `typing.Optional[bool]` — Indicates whether outbound call recording is enabled for the SIP trunk
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**transcription_enabled:** `typing.Optional[bool]` 
+
+Indicates whether automatic call transcription is enabled for the SIP trunk.
+Available for `Flex Pro` customers only.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**transcription_threshold:** `typing.Optional[int]` 
+
+Transcriptions will be generated for calls that meet or exceed the specified minimal call duration threshold, in seconds.
+Available for `Flex Pro` customers only.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**machine_detection_enabled:** `typing.Optional[bool]` 
+
+Indicates whether automatic voicemail detection is enabled for the SIP trunk.
+Available for `Flex Pro` customers only.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**encrypted_media:** `typing.Optional[bool]` — Indicates whether SRTP media encryption is enabled for the SIP trunk.
     
 </dd>
 </dl>
@@ -932,7 +1276,7 @@ client.sip_trunks.update(
 </dl>
 </details>
 
-<details><summary><code>client.sip_trunks.<a href="src/wavix/sip_trunks/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.sip_trunks.<a href="src/wavix/sip_trunks/client.py#L412-L441">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -1006,7 +1350,7 @@ client.sip_trunks.delete(
 </details>
 
 ## Cart
-<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">get</a>() -> CartResponse</code></summary>
+<details><summary><code>client.cart.<a href="src/wavix/cart/client.py#L31-L55">get</a>() -> CartResponse</code></summary>
 <dl>
 <dd>
 
@@ -1069,7 +1413,7 @@ client.cart.get()
 </dl>
 </details>
 
-<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">add</a>(...) -> typing.List[AvailableNumber]</code></summary>
+<details><summary><code>client.cart.<a href="src/wavix/cart/client.py#L57-L88">add</a>(...) -> typing.List[AvailableNumber]</code></summary>
 <dl>
 <dd>
 
@@ -1145,7 +1489,7 @@ client.cart.add(
 </dl>
 </details>
 
-<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">remove</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.cart.<a href="src/wavix/cart/client.py#L90-L121">remove</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -1221,7 +1565,7 @@ client.cart.remove(
 </dl>
 </details>
 
-<details><summary><code>client.cart.<a href="src/wavix/cart/client.py">checkout</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.cart.<a href="src/wavix/cart/client.py#L123-L154">checkout</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -1298,7 +1642,7 @@ client.cart.checkout(
 </details>
 
 ## Numbers
-<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py">list</a>(...) -> NumberListResponse</code></summary>
+<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py#L39-L106">list</a>(...) -> NumberListResponse</code></summary>
 <dl>
 <dd>
 
@@ -1416,7 +1760,7 @@ client.numbers.list(
 </dl>
 </details>
 
-<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py#L108-L146">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -1497,7 +1841,7 @@ client.numbers.delete(
 </dl>
 </details>
 
-<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py">bulk_update</a>(...) -> BulkUpdateNumbersResponse</code></summary>
+<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py#L148-L221">bulk_update</a>(...) -> BulkUpdateNumbersResponse</code></summary>
 <dl>
 <dd>
 
@@ -1632,7 +1976,7 @@ applied to every listed number.
 </dl>
 </details>
 
-<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py">get</a>(...) -> Number</code></summary>
+<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py#L223-L252">get</a>(...) -> Number</code></summary>
 <dl>
 <dd>
 
@@ -1705,7 +2049,7 @@ client.numbers.get(
 </dl>
 </details>
 
-<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py">update</a>(...) -> Number</code></summary>
+<details><summary><code>client.numbers.<a href="src/wavix/numbers/client.py#L254-L333">update</a>(...) -> Number</code></summary>
 <dl>
 <dd>
 
@@ -1718,6 +2062,8 @@ client.numbers.get(
 <dd>
 
 Updates the phone number identified by `id`. Only the provided fields are changed.
+
+**Behavior:** With `expected_sms_relay_url`, the `sms_relay_url` change is applied only while the number currently has that URL; an empty string matches a number with no `sms_relay_url`. Otherwise the call returns `409` and no field in the request is changed. Setting the URL the number already has succeeds. To clear `sms_relay_url`, send `null`, not an empty string. If the call returns a `Something went wrong` error, you can retry the request; repeating the `sms_relay_url` change is a no-op, so it is safe even if the first attempt already applied it.
 </dd>
 </dl>
 </dd>
@@ -1782,7 +2128,15 @@ client.numbers.update(
 <dl>
 <dd>
 
-**sms_relay_url:** `typing.Optional[str]` — Callback URL for inbound messages.
+**sms_relay_url:** `typing.Optional[str]` — Callback URL for inbound messages. Pass `null` to clear it.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**expected_sms_relay_url:** `typing.Optional[str]` — Applies the `sms_relay_url` change only if the number currently has this URL. Pass an empty string to set it only while it is unset, or your own URL to clear or replace it. Requires `sms_relay_url`.
     
 </dd>
 </dl>
@@ -1835,7 +2189,7 @@ client.numbers.update(
 </details>
 
 ## CDRs
-<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py">list</a>(...) -> CdrListResponse</code></summary>
+<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py#L44-L140">list</a>(...) -> CdrListResponse</code></summary>
 <dl>
 <dd>
 
@@ -1989,7 +2343,7 @@ client.cdrs.list(
 </dl>
 </details>
 
-<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py">search</a>(...) -> CdrTranscriptionSearchResponse</code></summary>
+<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py#L142-L244">search</a>(...) -> CdrTranscriptionSearchResponse</code></summary>
 <dl>
 <dd>
 
@@ -2158,7 +2512,7 @@ Call disposition to filter results.  If omitted, returns only answered
 </dl>
 </details>
 
-<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py">retranscribe</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py#L246-L289">retranscribe</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -2170,7 +2524,7 @@ Call disposition to filter results.  If omitted, returns only answered
 <dl>
 <dd>
 
-Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result. Billed per minute at the account's call-transcription rate; fails with an insufficient-funds error when the balance cannot cover it.
+Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result. When it completes, the new transcription replaces any earlier one that the transcription endpoints return. Billed per minute at the account's call-transcription rate; fails with an insufficient-funds error when the balance cannot cover it.
 </dd>
 </dl>
 </dd>
@@ -2247,7 +2601,7 @@ client.cdrs.retranscribe(
 </dl>
 </details>
 
-<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py">transcriptions</a>(...) -> CdrTranscriptionResponse</code></summary>
+<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py#L291-L322">transcriptions</a>(...) -> CdrTranscriptionResponse</code></summary>
 <dl>
 <dd>
 
@@ -2320,7 +2674,7 @@ client.cdrs.transcriptions(
 </dl>
 </details>
 
-<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py">get</a>(...) -> CdrResponse</code></summary>
+<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py#L324-L365">get</a>(...) -> CdrResponse</code></summary>
 <dl>
 <dd>
 
@@ -2402,7 +2756,7 @@ client.cdrs.get(
 </dl>
 </details>
 
-<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py">list_all</a>(...) -> str</code></summary>
+<details><summary><code>client.cdrs.<a href="src/wavix/cdrs/client.py#L367-L463">list_all</a>(...) -> str</code></summary>
 <dl>
 <dd>
 
@@ -2557,7 +2911,7 @@ client.cdrs.list_all(
 </details>
 
 ## Call recording
-<details><summary><code>client.call_recording.<a href="src/wavix/call_recording/client.py">list</a>(...) -> CallRecordingListResponse</code></summary>
+<details><summary><code>client.call_recording.<a href="src/wavix/call_recording/client.py#L29-L113">list</a>(...) -> CallRecordingListResponse</code></summary>
 <dl>
 <dd>
 
@@ -2693,7 +3047,7 @@ client.call_recording.list(
 </dl>
 </details>
 
-<details><summary><code>client.call_recording.<a href="src/wavix/call_recording/client.py">get_by_call</a>(...)</code></summary>
+<details><summary><code>client.call_recording.<a href="src/wavix/call_recording/client.py#L115-L143">get_by_call</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -2766,7 +3120,7 @@ client.call_recording.get_by_call(
 </dl>
 </details>
 
-<details><summary><code>client.call_recording.<a href="src/wavix/call_recording/client.py">get</a>(...) -> Recording</code></summary>
+<details><summary><code>client.call_recording.<a href="src/wavix/call_recording/client.py#L145-L174">get</a>(...) -> Recording</code></summary>
 <dl>
 <dd>
 
@@ -2839,7 +3193,7 @@ client.call_recording.get(
 </dl>
 </details>
 
-<details><summary><code>client.call_recording.<a href="src/wavix/call_recording/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.call_recording.<a href="src/wavix/call_recording/client.py#L176-L205">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -2913,7 +3267,7 @@ client.call_recording.delete(
 </details>
 
 ## Speech Analytics
-<details><summary><code>client.speech_analytics.<a href="src/wavix/speech_analytics/client.py">create</a>(...) -> SubmitFileTranscriptionResponse</code></summary>
+<details><summary><code>client.speech_analytics.<a href="src/wavix/speech_analytics/client.py#L38-L95">create</a>(...) -> SubmitFileTranscriptionResponse</code></summary>
 <dl>
 <dd>
 
@@ -3016,7 +3370,7 @@ client.speech_analytics.create(
 </dl>
 </details>
 
-<details><summary><code>client.speech_analytics.<a href="src/wavix/speech_analytics/client.py">get</a>(...) -> FileTranscriptionResponse</code></summary>
+<details><summary><code>client.speech_analytics.<a href="src/wavix/speech_analytics/client.py#L97-L128">get</a>(...) -> FileTranscriptionResponse</code></summary>
 <dl>
 <dd>
 
@@ -3089,7 +3443,7 @@ client.speech_analytics.get(
 </dl>
 </details>
 
-<details><summary><code>client.speech_analytics.<a href="src/wavix/speech_analytics/client.py">retranscribe</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.speech_analytics.<a href="src/wavix/speech_analytics/client.py#L130-L175">retranscribe</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -3180,7 +3534,7 @@ client.speech_analytics.retranscribe(
 </details>
 
 ## Call webhooks
-<details><summary><code>client.call_webhooks.<a href="src/wavix/call_webhooks/client.py">list</a>() -> CallWebhookListResponse</code></summary>
+<details><summary><code>client.call_webhooks.<a href="src/wavix/call_webhooks/client.py#L33-L57">list</a>() -> CallWebhookListResponse</code></summary>
 <dl>
 <dd>
 
@@ -3243,7 +3597,7 @@ client.call_webhooks.list()
 </dl>
 </details>
 
-<details><summary><code>client.call_webhooks.<a href="src/wavix/call_webhooks/client.py">create</a>(...) -> CallWebhook</code></summary>
+<details><summary><code>client.call_webhooks.<a href="src/wavix/call_webhooks/client.py#L59-L111">create</a>(...) -> CallWebhook</code></summary>
 <dl>
 <dd>
 
@@ -3256,6 +3610,8 @@ client.call_webhooks.list()
 <dd>
 
 Registers a callback URL for the `on-call` or `post-call` event. Wavix sends a POST callback to the URL when the event occurs. Creates persistent configuration that forwards call metadata to the URL on every matching call until the webhook is deleted.
+
+**Behavior:** Without `expected_url`, the webhook is set to `url` whatever it was before. With `expected_url`, the webhook is set only while it currently has that URL; an empty string matches an unset webhook. Otherwise the call returns `409` and the webhook is unchanged. Setting the URL the webhook already has succeeds. If the call returns a `Something went wrong` error, the webhook is unchanged and you can retry the request.
 </dd>
 </dl>
 </dd>
@@ -3320,6 +3676,14 @@ Allowed values: `on-call`, `post-call`.
 <dl>
 <dd>
 
+**expected_url:** `typing.Optional[str]` — Applies the change only if the webhook currently has this URL. Pass an empty string to set the webhook only while it is unset, or your own URL to replace your webhook. Setting the URL the webhook already has always succeeds.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>
@@ -3332,7 +3696,7 @@ Allowed values: `on-call`, `post-call`.
 </dl>
 </details>
 
-<details><summary><code>client.call_webhooks.<a href="src/wavix/call_webhooks/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.call_webhooks.<a href="src/wavix/call_webhooks/client.py#L113-L156">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -3345,6 +3709,8 @@ Allowed values: `on-call`, `post-call`.
 <dd>
 
 Removes the call webhook for the given event type. Wavix stops sending callbacks for that event.
+
+**Behavior:** Without `expected_url`, the webhook is cleared whatever URL it has. With `expected_url`, the webhook is cleared only while it currently has that URL; an empty value matches an unset webhook. Otherwise the call returns `409` and the webhook is unchanged. Clearing an unset webhook succeeds. Percent-encode the `expected_url` value in the query string. If the call returns a `Something went wrong` error, the webhook is unchanged and you can retry the request.
 </dd>
 </dl>
 </dd>
@@ -3369,6 +3735,7 @@ client = Wavix(
 
 client.call_webhooks.delete(
     event_type="post-call",
+    expected_url="https://your-site.com/webhook",
 )
 
 ```
@@ -3393,6 +3760,14 @@ client.call_webhooks.delete(
 <dl>
 <dd>
 
+**expected_url:** `typing.Optional[str]` — Clears the webhook only if it currently has this URL. Percent-encode the value. An empty value clears only an unset webhook.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>
@@ -3406,7 +3781,7 @@ client.call_webhooks.delete(
 </details>
 
 ## Call control
-<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py">list</a>() -> CallListResponse</code></summary>
+<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py#L43-L67">list</a>() -> CallListResponse</code></summary>
 <dl>
 <dd>
 
@@ -3469,7 +3844,7 @@ client.call_control.list()
 </dl>
 </details>
 
-<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py">create</a>(...) -> CallCreateResponse</code></summary>
+<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py#L69-L138">create</a>(...) -> CallCreateResponse</code></summary>
 <dl>
 <dd>
 
@@ -3592,7 +3967,7 @@ client.call_control.create(
 </dl>
 </details>
 
-<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py">get</a>(...) -> CallResponse</code></summary>
+<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py#L140-L169">get</a>(...) -> CallResponse</code></summary>
 <dl>
 <dd>
 
@@ -3665,7 +4040,7 @@ client.call_control.get(
 </dl>
 </details>
 
-<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py#L171-L200">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -3738,7 +4113,7 @@ client.call_control.delete(
 </dl>
 </details>
 
-<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py">update</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py#L202-L235">update</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -3820,7 +4195,7 @@ client.call_control.update(
 </dl>
 </details>
 
-<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py">answer</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py#L237-L299">answer</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -3897,7 +4272,7 @@ client.call_control.answer(
 <dl>
 <dd>
 
-**stream_url:** `typing.Optional[str]` — WebSocket URL to stream the call.
+**stream_url:** `typing.Optional[str]` — WebSocket URL (`ws://` or `wss://`) that receives the call's audio, which can include the caller's voice.
     
 </dd>
 </dl>
@@ -3933,7 +4308,7 @@ client.call_control.answer(
 </dl>
 </details>
 
-<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py">collect</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.call_control.<a href="src/wavix/call_control/client.py#L301-L364">collect</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -4050,7 +4425,7 @@ Prompt to play before collecting digits.
 </details>
 
 ## NumberValidator
-<details><summary><code>client.number_validator.<a href="src/wavix/number_validator/client.py">get</a>(...) -> PhoneValidationResponse</code></summary>
+<details><summary><code>client.number_validator.<a href="src/wavix/number_validator/client.py#L37-L76">get</a>(...) -> PhoneValidationResponse</code></summary>
 <dl>
 <dd>
 
@@ -4132,7 +4507,7 @@ client.number_validator.get(
 </dl>
 </details>
 
-<details><summary><code>client.number_validator.<a href="src/wavix/number_validator/client.py">create_bulk</a>(...) -> NumberValidatorCreateBulkResponse</code></summary>
+<details><summary><code>client.number_validator.<a href="src/wavix/number_validator/client.py#L78-L126">create_bulk</a>(...) -> NumberValidatorCreateBulkResponse</code></summary>
 <dl>
 <dd>
 
@@ -4234,7 +4609,7 @@ client.number_validator.create_bulk(
 </details>
 
 ## Voice campaigns
-<details><summary><code>client.voice_campaigns.<a href="src/wavix/voice_campaigns/client.py">create</a>(...) -> VoiceCampaignsCreateResponse</code></summary>
+<details><summary><code>client.voice_campaigns.<a href="src/wavix/voice_campaigns/client.py#L31-L65">create</a>(...) -> VoiceCampaignsCreateResponse</code></summary>
 <dl>
 <dd>
 
@@ -4311,7 +4686,7 @@ client.voice_campaigns.create(
 </dl>
 </details>
 
-<details><summary><code>client.voice_campaigns.<a href="src/wavix/voice_campaigns/client.py">get</a>(...) -> VoiceCampaignsGetResponse</code></summary>
+<details><summary><code>client.voice_campaigns.<a href="src/wavix/voice_campaigns/client.py#L67-L96">get</a>(...) -> VoiceCampaignsGetResponse</code></summary>
 <dl>
 <dd>
 
@@ -4385,7 +4760,7 @@ client.voice_campaigns.get(
 </details>
 
 ## Link shortener
-<details><summary><code>client.link_shortener.<a href="src/wavix/link_shortener/client.py">create</a>(...) -> ShortLinkResponse</code></summary>
+<details><summary><code>client.link_shortener.<a href="src/wavix/link_shortener/client.py#L36-L93">create</a>(...) -> ShortLinkResponse</code></summary>
 <dl>
 <dd>
 
@@ -4491,7 +4866,7 @@ client.link_shortener.create(
 </details>
 
 ## Profile
-<details><summary><code>client.profile.<a href="src/wavix/profile/client.py">get</a>() -> ProfileResponse</code></summary>
+<details><summary><code>client.profile.<a href="src/wavix/profile/client.py#L36-L60">get</a>() -> ProfileResponse</code></summary>
 <dl>
 <dd>
 
@@ -4554,7 +4929,7 @@ client.profile.get()
 </dl>
 </details>
 
-<details><summary><code>client.profile.<a href="src/wavix/profile/client.py">update</a>(...) -> ProfileResponse</code></summary>
+<details><summary><code>client.profile.<a href="src/wavix/profile/client.py#L62-L146">update</a>(...) -> ProfileResponse</code></summary>
 <dl>
 <dd>
 
@@ -4706,7 +5081,7 @@ client.profile.update()
 </details>
 
 ## SubAccounts
-<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py">list</a>(...) -> SubAccountsListResponse</code></summary>
+<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L40-L80">list</a>(...) -> SubAccountsListResponse</code></summary>
 <dl>
 <dd>
 
@@ -4793,7 +5168,7 @@ client.sub_accounts.list()
 </dl>
 </details>
 
-<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py">create</a>(...) -> SubOrganizationResponse</code></summary>
+<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L82-L127">create</a>(...) -> SubOrganizationResponse</code></summary>
 <dl>
 <dd>
 
@@ -4879,7 +5254,7 @@ client.sub_accounts.create(
 </dl>
 </details>
 
-<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py">get</a>(...) -> SubOrganizationResponse</code></summary>
+<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L129-L158">get</a>(...) -> SubOrganizationResponse</code></summary>
 <dl>
 <dd>
 
@@ -4952,7 +5327,7 @@ client.sub_accounts.get(
 </dl>
 </details>
 
-<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py">update</a>(...) -> SubOrganizationResponse</code></summary>
+<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L160-L215">update</a>(...) -> SubOrganizationResponse</code></summary>
 <dl>
 <dd>
 
@@ -4964,7 +5339,7 @@ client.sub_accounts.get(
 <dl>
 <dd>
 
-Replaces the configuration of the sub-account identified by `id`. Omitted fields revert to their defaults.
+Updates the sub-account identified by `id`. Only the provided fields are changed.
 </dd>
 </dl>
 </dd>
@@ -5057,7 +5432,7 @@ client.sub_accounts.update(
 </details>
 
 ## Billing Transactions
-<details><summary><code>client.billing.transactions.<a href="src/wavix/billing/transactions/client.py">list</a>(...) -> BillingTransactionListResponse</code></summary>
+<details><summary><code>client.billing.transactions.<a href="src/wavix/billing/transactions/client.py#L28-L106">list</a>(...) -> BillingTransactionListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5185,7 +5560,7 @@ client.billing.transactions.list(
 </details>
 
 ## Billing Invoices
-<details><summary><code>client.billing.invoices.<a href="src/wavix/billing/invoices/client.py">list</a>(...) -> InvoiceListResponse</code></summary>
+<details><summary><code>client.billing.invoices.<a href="src/wavix/billing/invoices/client.py#L26-L65">list</a>(...) -> InvoiceListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5267,7 +5642,7 @@ client.billing.invoices.list(
 </dl>
 </details>
 
-<details><summary><code>client.billing.invoices.<a href="src/wavix/billing/invoices/client.py">download</a>(...) -> typing.Iterator[bytes]</code></summary>
+<details><summary><code>client.billing.invoices.<a href="src/wavix/billing/invoices/client.py#L67-L96">download</a>(...) -> typing.Iterator[bytes]</code></summary>
 <dl>
 <dd>
 
@@ -5341,7 +5716,7 @@ client.billing.invoices.download(
 </details>
 
 ## Buy Countries
-<details><summary><code>client.buy.countries.<a href="src/wavix/buy/countries/client.py">list</a>(...) -> CountryListResponse</code></summary>
+<details><summary><code>client.buy.countries.<a href="src/wavix/buy/countries/client.py#L26-L58">list</a>(...) -> CountryListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5413,7 +5788,7 @@ client.buy.countries.list()
 </details>
 
 ## Buy Regions
-<details><summary><code>client.buy.regions.<a href="src/wavix/buy/regions/client.py">list</a>(...) -> RegionListResponse</code></summary>
+<details><summary><code>client.buy.regions.<a href="src/wavix/buy/regions/client.py#L26-L66">list</a>(...) -> RegionListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5495,7 +5870,7 @@ client.buy.regions.list(
 </details>
 
 ## Buy Cities
-<details><summary><code>client.buy.cities.<a href="src/wavix/buy/cities/client.py">list</a>(...) -> CityListResponse</code></summary>
+<details><summary><code>client.buy.cities.<a href="src/wavix/buy/cities/client.py#L26-L67">list</a>(...) -> CityListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5578,7 +5953,7 @@ client.buy.cities.list(
 </details>
 
 ## Buy RegionCities
-<details><summary><code>client.buy.region_cities.<a href="src/wavix/buy/region_cities/client.py">list</a>(...) -> CityListResponse</code></summary>
+<details><summary><code>client.buy.region_cities.<a href="src/wavix/buy/region_cities/client.py#L26-L71">list</a>(...) -> CityListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5669,7 +6044,7 @@ client.buy.region_cities.list(
 </details>
 
 ## Buy Numbers
-<details><summary><code>client.buy.numbers.<a href="src/wavix/buy/numbers/client.py">list</a>(...) -> AvailableNumberListResponse</code></summary>
+<details><summary><code>client.buy.numbers.<a href="src/wavix/buy/numbers/client.py#L26-L84">list</a>(...) -> AvailableNumberListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5776,7 +6151,7 @@ client.buy.numbers.list(
 </details>
 
 ## CallControl Streams
-<details><summary><code>client.call_control.streams.<a href="src/wavix/call_control/streams/client.py">create</a>(...) -> CallStreamResponse</code></summary>
+<details><summary><code>client.call_control.streams.<a href="src/wavix/call_control/streams/client.py#L32-L87">create</a>(...) -> CallStreamResponse</code></summary>
 <dl>
 <dd>
 
@@ -5788,7 +6163,7 @@ client.buy.numbers.list(
 <dl>
 <dd>
 
-Starts streaming the audio of the call identified by `call_id` to a WebSocket destination you supply, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The destination can be any URL you specify — Wavix does not restrict it. Returns the `stream_id`.
+Starts streaming the audio of the call identified by `call_id` to the WebSocket destination in `stream_url`, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The streamed audio can include the remote party's voice.
 </dd>
 </dl>
 </dd>
@@ -5840,7 +6215,7 @@ client.call_control.streams.create(
 <dl>
 <dd>
 
-**stream_url:** `str` — WebSocket URL for call streaming
+**stream_url:** `str` — WebSocket URL (`ws://` or `wss://`) that receives the call's audio.
     
 </dd>
 </dl>
@@ -5876,7 +6251,7 @@ client.call_control.streams.create(
 </dl>
 </details>
 
-<details><summary><code>client.call_control.streams.<a href="src/wavix/call_control/streams/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.call_control.streams.<a href="src/wavix/call_control/streams/client.py#L89-L124">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -5959,7 +6334,7 @@ client.call_control.streams.delete(
 </details>
 
 ## CallControl Audio
-<details><summary><code>client.call_control.audio.<a href="src/wavix/call_control/audio/client.py">play</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.call_control.audio.<a href="src/wavix/call_control/audio/client.py#L29-L64">play</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -6041,7 +6416,7 @@ client.call_control.audio.play(
 </dl>
 </details>
 
-<details><summary><code>client.call_control.audio.<a href="src/wavix/call_control/audio/client.py">stop</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.call_control.audio.<a href="src/wavix/call_control/audio/client.py#L66-L95">stop</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -6115,7 +6490,7 @@ client.call_control.audio.stop(
 </details>
 
 ## Cdrs Transcription
-<details><summary><code>client.cdrs.transcription.<a href="src/wavix/cdrs/transcription/client.py">get</a>(...) -> CdrTranscriptionResponse</code></summary>
+<details><summary><code>client.cdrs.transcription.<a href="src/wavix/cdrs/transcription/client.py#L26-L55">get</a>(...) -> CdrTranscriptionResponse</code></summary>
 <dl>
 <dd>
 
@@ -6189,7 +6564,7 @@ client.cdrs.transcription.get(
 </details>
 
 ## LinkShortener Metrics
-<details><summary><code>client.link_shortener.metrics.<a href="src/wavix/link_shortener/metrics/client.py">list</a>(...) -> ShortLinkMetricsResponse</code></summary>
+<details><summary><code>client.link_shortener.metrics.<a href="src/wavix/link_shortener/metrics/client.py#L27-L100">list</a>(...) -> ShortLinkMetricsResponse</code></summary>
 <dl>
 <dd>
 
@@ -6309,7 +6684,7 @@ client.link_shortener.metrics.list(
 </details>
 
 ## NumberValidator Results
-<details><summary><code>client.number_validator.results.<a href="src/wavix/number_validator/results/client.py">get</a>(...) -> PhoneValidationBatchResultResponse</code></summary>
+<details><summary><code>client.number_validator.results.<a href="src/wavix/number_validator/results/client.py#L26-L57">get</a>(...) -> PhoneValidationBatchResultResponse</code></summary>
 <dl>
 <dd>
 
@@ -6383,7 +6758,7 @@ client.number_validator.results.get(
 </details>
 
 ## Numbers Papers
-<details><summary><code>client.numbers.papers.<a href="src/wavix/numbers/papers/client.py">upload</a>(...) -> typing.List[NumberDocument]</code></summary>
+<details><summary><code>client.numbers.papers.<a href="src/wavix/numbers/papers/client.py#L31-L80">upload</a>(...) -> typing.List[NumberDocument]</code></summary>
 <dl>
 <dd>
 
@@ -6480,7 +6855,7 @@ client.numbers.papers.upload(
 </details>
 
 ## Profile Config
-<details><summary><code>client.profile.config.<a href="src/wavix/profile/config/client.py">get</a>() -> ProfileConfigResponse</code></summary>
+<details><summary><code>client.profile.config.<a href="src/wavix/profile/config/client.py#L26-L50">get</a>() -> ProfileConfigResponse</code></summary>
 <dl>
 <dd>
 
@@ -6544,7 +6919,7 @@ client.profile.config.get()
 </details>
 
 ## SmsAndMms SenderIds
-<details><summary><code>client.sms_and_mms.sender_ids.<a href="src/wavix/sms_and_mms/sender_ids/client.py">list</a>() -> SenderIdListResponse</code></summary>
+<details><summary><code>client.sms_and_mms.sender_ids.<a href="src/wavix/sms_and_mms/sender_ids/client.py#L35-L59">list</a>() -> SenderIdListResponse</code></summary>
 <dl>
 <dd>
 
@@ -6607,7 +6982,7 @@ client.sms_and_mms.sender_ids.list()
 </dl>
 </details>
 
-<details><summary><code>client.sms_and_mms.sender_ids.<a href="src/wavix/sms_and_mms/sender_ids/client.py">create</a>(...) -> SenderIdDetails</code></summary>
+<details><summary><code>client.sms_and_mms.sender_ids.<a href="src/wavix/sms_and_mms/sender_ids/client.py#L61-L125">create</a>(...) -> SenderIdDetails</code></summary>
 <dl>
 <dd>
 
@@ -6725,7 +7100,7 @@ client.sms_and_mms.sender_ids.create(
 </dl>
 </details>
 
-<details><summary><code>client.sms_and_mms.sender_ids.<a href="src/wavix/sms_and_mms/sender_ids/client.py">get</a>(...) -> SenderIdResponse</code></summary>
+<details><summary><code>client.sms_and_mms.sender_ids.<a href="src/wavix/sms_and_mms/sender_ids/client.py#L127-L156">get</a>(...) -> SenderIdResponse</code></summary>
 <dl>
 <dd>
 
@@ -6798,7 +7173,7 @@ client.sms_and_mms.sender_ids.get(
 </dl>
 </details>
 
-<details><summary><code>client.sms_and_mms.sender_ids.<a href="src/wavix/sms_and_mms/sender_ids/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.sms_and_mms.sender_ids.<a href="src/wavix/sms_and_mms/sender_ids/client.py#L158-L187">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -6872,7 +7247,7 @@ client.sms_and_mms.sender_ids.delete(
 </details>
 
 ## SmsAndMms OptOuts
-<details><summary><code>client.sms_and_mms.opt_outs.<a href="src/wavix/sms_and_mms/opt_outs/client.py">list</a>(...) -> OptOutsListResponse</code></summary>
+<details><summary><code>client.sms_and_mms.opt_outs.<a href="src/wavix/sms_and_mms/opt_outs/client.py#L32-L103">list</a>(...) -> OptOutsListResponse</code></summary>
 <dl>
 <dd>
 
@@ -6989,7 +7364,7 @@ client.sms_and_mms.opt_outs.list(
 </dl>
 </details>
 
-<details><summary><code>client.sms_and_mms.opt_outs.<a href="src/wavix/sms_and_mms/opt_outs/client.py">create</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.sms_and_mms.opt_outs.<a href="src/wavix/sms_and_mms/opt_outs/client.py#L105-L136">create</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -7066,7 +7441,7 @@ client.sms_and_mms.opt_outs.create(
 </details>
 
 ## SmsAndMms Messages
-<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py">list</a>(...) -> MessageListResponse</code></summary>
+<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py#L36-L131">list</a>(...) -> MessageListResponse</code></summary>
 <dl>
 <dd>
 
@@ -7219,7 +7594,7 @@ client.sms_and_mms.messages.list(
 </dl>
 </details>
 
-<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py">send</a>(...) -> SendMessagesResponse</code></summary>
+<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py#L133-L201">send</a>(...) -> SendMessagesResponse</code></summary>
 <dl>
 <dd>
 
@@ -7339,7 +7714,7 @@ client.sms_and_mms.messages.send(
 </dl>
 </details>
 
-<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py">get</a>(...) -> MessageResponse</code></summary>
+<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py#L203-L232">get</a>(...) -> MessageResponse</code></summary>
 <dl>
 <dd>
 
@@ -7412,7 +7787,7 @@ client.sms_and_mms.messages.get(
 </dl>
 </details>
 
-<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py">list_all</a>(...) -> str</code></summary>
+<details><summary><code>client.sms_and_mms.messages.<a href="src/wavix/sms_and_mms/messages/client.py#L234-L311">list_all</a>(...) -> str</code></summary>
 <dl>
 <dd>
 
@@ -7547,7 +7922,7 @@ client.sms_and_mms.messages.list_all(
 </details>
 
 ## SpeechAnalytics File
-<details><summary><code>client.speech_analytics.file.<a href="src/wavix/speech_analytics/file/client.py">get</a>(...) -> typing.Iterator[bytes]</code></summary>
+<details><summary><code>client.speech_analytics.file.<a href="src/wavix/speech_analytics/file/client.py#L25-L56">get</a>(...) -> typing.Iterator[bytes]</code></summary>
 <dl>
 <dd>
 
@@ -7621,7 +7996,7 @@ client.speech_analytics.file.get(
 </details>
 
 ## SubAccounts Transactions
-<details><summary><code>client.sub_accounts.transactions.<a href="src/wavix/sub_accounts/transactions/client.py">list</a>(...) -> SubAccountsTransactionsListResponse</code></summary>
+<details><summary><code>client.sub_accounts.transactions.<a href="src/wavix/sub_accounts/transactions/client.py#L27-L100">list</a>(...) -> SubAccountsTransactionsListResponse</code></summary>
 <dl>
 <dd>
 
@@ -7743,7 +8118,7 @@ client.sub_accounts.transactions.list(
 </details>
 
 ## TenDlc Brands
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">list</a>(...) -> TenDlcBrandListResponse</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py#L36-L139">list</a>(...) -> TenDlcBrandListResponse</code></summary>
 <dl>
 <dd>
 
@@ -7915,7 +8290,7 @@ client.ten_dlc.brands.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">create</a>(...) -> TenDlcBrand</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py#L141-L171">create</a>(...) -> TenDlcBrand</code></summary>
 <dl>
 <dd>
 
@@ -7988,7 +8363,7 @@ client.ten_dlc.brands.create(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">get</a>(...) -> TenDlcBrand</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py#L173-L202">get</a>(...) -> TenDlcBrand</code></summary>
 <dl>
 <dd>
 
@@ -8061,7 +8436,7 @@ client.ten_dlc.brands.get(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">update</a>(...) -> TenDlcBrand</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py#L204-L346">update</a>(...) -> TenDlcBrand</code></summary>
 <dl>
 <dd>
 
@@ -8254,7 +8629,7 @@ Business segment the Brand operates in. One of:
 <dl>
 <dd>
 
-**state_or_province:** `typing.Optional[str]` — State or province. For the United States, use 2 character codes.
+**state_or_province:** `typing.Optional[str]` — State or province. For the United States, it is a 2-character code.
     
 </dd>
 </dl>
@@ -8298,7 +8673,7 @@ Business segment the Brand operates in. One of:
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py#L348-L377">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -8371,7 +8746,7 @@ client.ten_dlc.brands.delete(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py">qualify_usecase</a>(...) -> TenDlcBrandQualificationResult</code></summary>
+<details><summary><code>client.ten_dlc.brands.<a href="src/wavix/ten_dlc/brands/client.py#L379-L418">qualify_usecase</a>(...) -> TenDlcBrandQualificationResult</code></summary>
 <dl>
 <dd>
 
@@ -8454,7 +8829,7 @@ client.ten_dlc.brands.qualify_usecase(
 </details>
 
 ## TenDlc BrandAppeals
-<details><summary><code>client.ten_dlc.brand_appeals.<a href="src/wavix/ten_dlc/brand_appeals/client.py">list</a>(...) -> typing.List[TenDlcBrandAppeal]</code></summary>
+<details><summary><code>client.ten_dlc.brand_appeals.<a href="src/wavix/ten_dlc/brand_appeals/client.py#L31-L62">list</a>(...) -> typing.List[TenDlcBrandAppeal]</code></summary>
 <dl>
 <dd>
 
@@ -8527,7 +8902,7 @@ client.ten_dlc.brand_appeals.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brand_appeals.<a href="src/wavix/ten_dlc/brand_appeals/client.py">create</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.ten_dlc.brand_appeals.<a href="src/wavix/ten_dlc/brand_appeals/client.py#L64-L121">create</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -8634,7 +9009,7 @@ client.ten_dlc.brand_appeals.create(
 </details>
 
 ## TenDlc BrandEvidence
-<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py">list</a>(...) -> ListBrandEvidenceResponse</code></summary>
+<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py#L32-L63">list</a>(...) -> ListBrandEvidenceResponse</code></summary>
 <dl>
 <dd>
 
@@ -8707,7 +9082,7 @@ client.ten_dlc.brand_evidence.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py">upload</a>(...) -> TenDlcBrandEvidence</code></summary>
+<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py#L65-L99">upload</a>(...) -> TenDlcBrandEvidence</code></summary>
 <dl>
 <dd>
 
@@ -8789,7 +9164,7 @@ client.ten_dlc.brand_evidence.upload(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py">get</a>(...) -> typing.Iterator[bytes]</code></summary>
+<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py#L101-L136">get</a>(...) -> typing.Iterator[bytes]</code></summary>
 <dl>
 <dd>
 
@@ -8871,7 +9246,7 @@ client.ten_dlc.brand_evidence.get(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.ten_dlc.brand_evidence.<a href="src/wavix/ten_dlc/brand_evidence/client.py#L138-L173">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -8954,7 +9329,7 @@ client.ten_dlc.brand_evidence.delete(
 </details>
 
 ## TenDlc BrandVettings
-<details><summary><code>client.ten_dlc.brand_vettings.<a href="src/wavix/ten_dlc/brand_vettings/client.py">list</a>(...) -> typing.List[TenDlcBrandVetting]</code></summary>
+<details><summary><code>client.ten_dlc.brand_vettings.<a href="src/wavix/ten_dlc/brand_vettings/client.py#L29-L60">list</a>(...) -> typing.List[TenDlcBrandVetting]</code></summary>
 <dl>
 <dd>
 
@@ -9027,7 +9402,7 @@ client.ten_dlc.brand_vettings.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brand_vettings.<a href="src/wavix/ten_dlc/brand_vettings/client.py">create</a>(...) -> TenDlcBrandVetting</code></summary>
+<details><summary><code>client.ten_dlc.brand_vettings.<a href="src/wavix/ten_dlc/brand_vettings/client.py#L62-L103">create</a>(...) -> TenDlcBrandVetting</code></summary>
 <dl>
 <dd>
 
@@ -9219,7 +9594,7 @@ client.ten_dlc.brand_vettings.import_(
 </details>
 
 ## TenDlc BrandVettingAppeals
-<details><summary><code>client.ten_dlc.brand_vetting_appeals.<a href="src/wavix/ten_dlc/brand_vetting_appeals/client.py">list</a>(...) -> typing.List[TenDlcBrandVettingAppeal]</code></summary>
+<details><summary><code>client.ten_dlc.brand_vetting_appeals.<a href="src/wavix/ten_dlc/brand_vetting_appeals/client.py#L33-L64">list</a>(...) -> typing.List[TenDlcBrandVettingAppeal]</code></summary>
 <dl>
 <dd>
 
@@ -9292,7 +9667,7 @@ client.ten_dlc.brand_vetting_appeals.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brand_vetting_appeals.<a href="src/wavix/ten_dlc/brand_vetting_appeals/client.py">create</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.ten_dlc.brand_vetting_appeals.<a href="src/wavix/ten_dlc/brand_vetting_appeals/client.py#L66-L130">create</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -9412,7 +9787,7 @@ client.ten_dlc.brand_vetting_appeals.create(
 </details>
 
 ## TenDlc Campaigns
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">list</a>(...) -> TenDlcCampaignListResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py#L33-L118">list</a>(...) -> TenDlcCampaignListResponse</code></summary>
 <dl>
 <dd>
 
@@ -9549,7 +9924,7 @@ client.ten_dlc.campaigns.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">list_by_brand</a>(...) -> TenDlcCampaignListResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py#L120-L211">list_by_brand</a>(...) -> TenDlcCampaignListResponse</code></summary>
 <dl>
 <dd>
 
@@ -9695,7 +10070,7 @@ client.ten_dlc.campaigns.list_by_brand(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">create</a>(...) -> TenDlcCampaign</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py#L213-L418">create</a>(...) -> TenDlcCampaign</code></summary>
 <dl>
 <dd>
 
@@ -10020,7 +10395,7 @@ client.ten_dlc.campaigns.create(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">get</a>(...) -> TenDlcCampaign</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py#L420-L455">get</a>(...) -> TenDlcCampaign</code></summary>
 <dl>
 <dd>
 
@@ -10102,7 +10477,7 @@ client.ten_dlc.campaigns.get(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">update</a>(...) -> TenDlcCampaign</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py#L457-L630">update</a>(...) -> TenDlcCampaign</code></summary>
 <dl>
 <dd>
 
@@ -10392,7 +10767,7 @@ client.ten_dlc.campaigns.update(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py#L632-L667">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -10474,7 +10849,7 @@ client.ten_dlc.campaigns.delete(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py">nudge</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaigns.<a href="src/wavix/ten_dlc/campaigns/client.py#L669-L724">nudge</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -10550,10 +10925,7 @@ client.ten_dlc.campaigns.nudge(
 <dl>
 <dd>
 
-**nudge_intent:** `str` 
-
-Nudge intent. Allowed values: `REVIEW`, `APPEAL_REJECTION`. 
-Use `nudge_intent` to specify the action: - `REVIEW`: Request review for a pending Campaign. - `APPEAL_REJECTION`: Appeal a rejected Campaign.
+**nudge_intent:** `str` — Action the nudge requests: `REVIEW` requests review of a pending Campaign, and `APPEAL_REJECTION` appeals a rejected Campaign.
     
 </dd>
 </dl>
@@ -10582,7 +10954,7 @@ Use `nudge_intent` to specify the action: - `REVIEW`: Request review for a pendi
 </details>
 
 ## TenDlc Subscriptions
-<details><summary><code>client.ten_dlc.subscriptions.<a href="src/wavix/ten_dlc/subscriptions/client.py">list</a>() -> typing.List[TenDlcEventSubscription]</code></summary>
+<details><summary><code>client.ten_dlc.subscriptions.<a href="src/wavix/ten_dlc/subscriptions/client.py#L30-L54">list</a>() -> typing.List[TenDlcEventSubscription]</code></summary>
 <dl>
 <dd>
 
@@ -10645,7 +11017,7 @@ client.ten_dlc.subscriptions.list()
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.subscriptions.<a href="src/wavix/ten_dlc/subscriptions/client.py">create</a>(...) -> TenDlcEventSubscription</code></summary>
+<details><summary><code>client.ten_dlc.subscriptions.<a href="src/wavix/ten_dlc/subscriptions/client.py#L56-L93">create</a>(...) -> TenDlcEventSubscription</code></summary>
 <dl>
 <dd>
 
@@ -10719,7 +11091,7 @@ client.ten_dlc.subscriptions.create(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.subscriptions.<a href="src/wavix/ten_dlc/subscriptions/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.ten_dlc.subscriptions.<a href="src/wavix/ten_dlc/subscriptions/client.py#L95-L128">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -10793,7 +11165,7 @@ client.ten_dlc.subscriptions.delete(
 </details>
 
 ## TenDlc CampaignNumbers
-<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py">link</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py#L27-L66">link</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -10884,7 +11256,7 @@ client.ten_dlc.campaign_numbers.link(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py">unlink</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py#L68-L107">unlink</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -10975,7 +11347,7 @@ client.ten_dlc.campaign_numbers.unlink(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py">list</a>(...) -> TenDlcCampaignNumberListResponse</code></summary>
+<details><summary><code>client.ten_dlc.campaign_numbers.<a href="src/wavix/ten_dlc/campaign_numbers/client.py#L109-L144">list</a>(...) -> TenDlcCampaignNumberListResponse</code></summary>
 <dl>
 <dd>
 
@@ -11058,7 +11430,7 @@ client.ten_dlc.campaign_numbers.list(
 </details>
 
 ## TwoFa Verification
-<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py">create</a>(...) -> TwoFactorVerificationResponse</code></summary>
+<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py#L33-L79">create</a>(...) -> TwoFactorVerificationResponse</code></summary>
 <dl>
 <dd>
 
@@ -11154,7 +11526,7 @@ client.two_fa.verification.create(
 </dl>
 </details>
 
-<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py">resend</a>(...) -> TwoFactorVerificationResendResponse</code></summary>
+<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py#L81-L120">resend</a>(...) -> TwoFactorVerificationResendResponse</code></summary>
 <dl>
 <dd>
 
@@ -11236,7 +11608,7 @@ client.two_fa.verification.resend(
 </dl>
 </details>
 
-<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py">check</a>(...) -> TwoFactorVerificationCheckResponse</code></summary>
+<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py#L122-L157">check</a>(...) -> TwoFactorVerificationCheckResponse</code></summary>
 <dl>
 <dd>
 
@@ -11318,7 +11690,7 @@ client.two_fa.verification.check(
 </dl>
 </details>
 
-<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py">cancel</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.two_fa.verification.<a href="src/wavix/two_fa/verification/client.py#L159-L188">cancel</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -11392,7 +11764,7 @@ client.two_fa.verification.cancel(
 </details>
 
 ## TwoFa Sessions
-<details><summary><code>client.two_fa.sessions.<a href="src/wavix/two_fa/sessions/client.py">list</a>(...) -> typing.List[ListSessionsResponseItem]</code></summary>
+<details><summary><code>client.two_fa.sessions.<a href="src/wavix/two_fa/sessions/client.py#L27-L72">list</a>(...) -> typing.List[ListSessionsResponseItem]</code></summary>
 <dl>
 <dd>
 
@@ -11485,7 +11857,7 @@ client.two_fa.sessions.list(
 </details>
 
 ## TwoFa Events
-<details><summary><code>client.two_fa.events.<a href="src/wavix/two_fa/events/client.py">list</a>(...) -> typing.List[TwoFactorVerificationEvent]</code></summary>
+<details><summary><code>client.two_fa.events.<a href="src/wavix/two_fa/events/client.py#L26-L57">list</a>(...) -> typing.List[TwoFactorVerificationEvent]</code></summary>
 <dl>
 <dd>
 
@@ -11559,7 +11931,7 @@ client.two_fa.events.list(
 </details>
 
 ## Webrtc Tokens
-<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py">list</a>(...) -> WebRtcTokensListResponse</code></summary>
+<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py#L32-L68">list</a>(...) -> WebRtcTokensListResponse</code></summary>
 <dl>
 <dd>
 
@@ -11638,7 +12010,7 @@ client.webrtc.tokens.list()
 </dl>
 </details>
 
-<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py">create</a>(...) -> WebRtcTokenResponse</code></summary>
+<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py#L70-L116">create</a>(...) -> WebRtcTokenResponse</code></summary>
 <dl>
 <dd>
 
@@ -11711,7 +12083,7 @@ client.webrtc.tokens.create(
 <dl>
 <dd>
 
-**ttl:** `typing.Optional[int]` — Time to live in seconds. Default `3600`. Pass `null` for no expiration.
+**ttl:** `typing.Optional[int]` — Time to live in seconds. Default `3600`; `null` means no expiration.
     
 </dd>
 </dl>
@@ -11731,7 +12103,7 @@ client.webrtc.tokens.create(
 </dl>
 </details>
 
-<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py">get</a>(...) -> WebRtcToken</code></summary>
+<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py#L118-L147">get</a>(...) -> WebRtcToken</code></summary>
 <dl>
 <dd>
 
@@ -11804,7 +12176,7 @@ client.webrtc.tokens.get(
 </dl>
 </details>
 
-<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py">update</a>(...) -> WebRtcToken</code></summary>
+<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py#L149-L184">update</a>(...) -> WebRtcToken</code></summary>
 <dl>
 <dd>
 
@@ -11888,7 +12260,7 @@ client.webrtc.tokens.update(
 </dl>
 </details>
 
-<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py">delete</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.webrtc.tokens.<a href="src/wavix/webrtc/tokens/client.py#L186-L215">delete</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 

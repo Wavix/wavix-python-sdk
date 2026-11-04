@@ -12,6 +12,7 @@ from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.bad_request_error import BadRequestError
+from ..errors.conflict_error import ConflictError
 from ..errors.forbidden_error import ForbiddenError
 from ..errors.not_found_error import NotFoundError
 from ..errors.unauthorized_error import UnauthorizedError
@@ -21,6 +22,7 @@ from ..types.number_destination import NumberDestination
 from ..types.number_list_response import NumberListResponse
 from ..types.success_response import SuccessResponse
 from ..types.unauthorized_error_response import UnauthorizedErrorResponse
+from ..types.webhook_in_use_error_response import WebhookInUseErrorResponse
 from .types.bulk_update_numbers_response import BulkUpdateNumbersResponse
 from pydantic import ValidationError
 
@@ -464,6 +466,7 @@ class RawNumbersClient:
         sms_enabled: typing.Optional[bool] = OMIT,
         destinations: typing.Optional[typing.Sequence[NumberDestination]] = OMIT,
         sms_relay_url: typing.Optional[str] = OMIT,
+        expected_sms_relay_url: typing.Optional[str] = OMIT,
         call_recording_enabled: typing.Optional[bool] = OMIT,
         transcription_enabled: typing.Optional[bool] = OMIT,
         transcription_threshold: typing.Optional[int] = OMIT,
@@ -472,6 +475,8 @@ class RawNumbersClient:
     ) -> HttpResponse[Number]:
         """
         Updates the phone number identified by `id`. Only the provided fields are changed.
+
+        **Behavior:** With `expected_sms_relay_url`, the `sms_relay_url` change is applied only while the number currently has that URL; an empty string matches a number with no `sms_relay_url`. Otherwise the call returns `409` and no field in the request is changed. Setting the URL the number already has succeeds. To clear `sms_relay_url`, send `null`, not an empty string. If the call returns a `Something went wrong` error, you can retry the request; repeating the `sms_relay_url` change is a no-op, so it is safe even if the first attempt already applied it.
 
         Parameters
         ----------
@@ -485,7 +490,10 @@ class RawNumbersClient:
             Inbound call routing destinations for the phone number.
 
         sms_relay_url : typing.Optional[str]
-            Callback URL for inbound messages.
+            Callback URL for inbound messages. Pass `null` to clear it.
+
+        expected_sms_relay_url : typing.Optional[str]
+            Applies the `sms_relay_url` change only if the number currently has this URL. Pass an empty string to set it only while it is unset, or your own URL to clear or replace it. Requires `sms_relay_url`.
 
         call_recording_enabled : typing.Optional[bool]
             Indicates whether call recording is enabled.
@@ -516,6 +524,7 @@ class RawNumbersClient:
                     object_=destinations, annotation=typing.Sequence[NumberDestination], direction="write"
                 ),
                 "sms_relay_url": sms_relay_url,
+                "expected_sms_relay_url": expected_sms_relay_url,
                 "call_recording_enabled": call_recording_enabled,
                 "transcription_enabled": transcription_enabled,
                 "transcription_threshold": transcription_threshold,
@@ -572,6 +581,28 @@ class RawNumbersClient:
                 )
             if _response.status_code == 404:
                 raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 409:
+                raise ConflictError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        WebhookInUseErrorResponse,
+                        parse_obj_as(
+                            type_=WebhookInUseErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -1029,6 +1060,7 @@ class AsyncRawNumbersClient:
         sms_enabled: typing.Optional[bool] = OMIT,
         destinations: typing.Optional[typing.Sequence[NumberDestination]] = OMIT,
         sms_relay_url: typing.Optional[str] = OMIT,
+        expected_sms_relay_url: typing.Optional[str] = OMIT,
         call_recording_enabled: typing.Optional[bool] = OMIT,
         transcription_enabled: typing.Optional[bool] = OMIT,
         transcription_threshold: typing.Optional[int] = OMIT,
@@ -1037,6 +1069,8 @@ class AsyncRawNumbersClient:
     ) -> AsyncHttpResponse[Number]:
         """
         Updates the phone number identified by `id`. Only the provided fields are changed.
+
+        **Behavior:** With `expected_sms_relay_url`, the `sms_relay_url` change is applied only while the number currently has that URL; an empty string matches a number with no `sms_relay_url`. Otherwise the call returns `409` and no field in the request is changed. Setting the URL the number already has succeeds. To clear `sms_relay_url`, send `null`, not an empty string. If the call returns a `Something went wrong` error, you can retry the request; repeating the `sms_relay_url` change is a no-op, so it is safe even if the first attempt already applied it.
 
         Parameters
         ----------
@@ -1050,7 +1084,10 @@ class AsyncRawNumbersClient:
             Inbound call routing destinations for the phone number.
 
         sms_relay_url : typing.Optional[str]
-            Callback URL for inbound messages.
+            Callback URL for inbound messages. Pass `null` to clear it.
+
+        expected_sms_relay_url : typing.Optional[str]
+            Applies the `sms_relay_url` change only if the number currently has this URL. Pass an empty string to set it only while it is unset, or your own URL to clear or replace it. Requires `sms_relay_url`.
 
         call_recording_enabled : typing.Optional[bool]
             Indicates whether call recording is enabled.
@@ -1081,6 +1118,7 @@ class AsyncRawNumbersClient:
                     object_=destinations, annotation=typing.Sequence[NumberDestination], direction="write"
                 ),
                 "sms_relay_url": sms_relay_url,
+                "expected_sms_relay_url": expected_sms_relay_url,
                 "call_recording_enabled": call_recording_enabled,
                 "transcription_enabled": transcription_enabled,
                 "transcription_threshold": transcription_threshold,
@@ -1137,6 +1175,28 @@ class AsyncRawNumbersClient:
                 )
             if _response.status_code == 404:
                 raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 409:
+                raise ConflictError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        WebhookInUseErrorResponse,
+                        parse_obj_as(
+                            type_=WebhookInUseErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,

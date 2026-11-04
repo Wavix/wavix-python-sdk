@@ -6,10 +6,14 @@ import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
-class SipTrunkCreateRequestAllowedIpsItem(UniversalBaseModel):
-    ip: str = pydantic.Field()
+class WhatsAppTemplateCopyCodeButtonRequest(UniversalBaseModel):
     """
-    Public static IP address allowed to register with the SIP trunk.
+    Button that copies a code to the clipboard. Consumed by `whatsapp_templates_create`.
+    """
+
+    example: str = pydantic.Field()
+    """
+    Sample code.
     """
 
     if IS_PYDANTIC_V2:

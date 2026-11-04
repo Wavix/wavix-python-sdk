@@ -14,6 +14,10 @@ class TranscriptionReference(UniversalBaseModel):
         FieldMetadata(alias="uuid"),
         pydantic.Field(alias="uuid", description="Unique identifier of the call transcription."),
     ]
+    """
+    Unique identifier of the call transcription.
+    """
+
     url: str = pydantic.Field()
     """
     URL for retrieving the full call transcription.

@@ -27,6 +27,9 @@ class TenDlcBrandEvidence(UniversalBaseModel):
     uuid_: typing_extensions.Annotated[
         str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="The evidence UUID")
     ]
+    """
+    The evidence UUID
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

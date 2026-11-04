@@ -33,6 +33,10 @@ class PhoneValidationResultResponse(UniversalBaseModel):
         FieldMetadata(alias="e164_format"),
         pydantic.Field(alias="e164_format", description="Phone number in international E.164 format."),
     ]
+    """
+    Phone number in international E.164 format.
+    """
+
     national_format: str = pydantic.Field()
     """
     Phone number in the national format of the identified country.
