@@ -87,7 +87,7 @@ class TokensClient:
             Arbitrary client-defined data to associate with the token.
 
         ttl : typing.Optional[int]
-            Time to live in seconds. Default `3600`. Pass `null` for no expiration.
+            Time to live in seconds. Default `3600`; `null` means no expiration.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -296,7 +296,7 @@ class AsyncTokensClient:
             Arbitrary client-defined data to associate with the token.
 
         ttl : typing.Optional[int]
-            Time to live in seconds. Default `3600`. Pass `null` for no expiration.
+            Time to live in seconds. Default `3600`; `null` means no expiration.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.

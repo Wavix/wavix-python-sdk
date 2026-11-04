@@ -29,6 +29,10 @@ class CdrWithTranscription(UniversalBaseModel):
     from_: typing_extensions.Annotated[
         str, FieldMetadata(alias="from"), pydantic.Field(alias="from", description="ANI/From attribute of the call")
     ]
+    """
+    ANI/From attribute of the call
+    """
+
     to: str = pydantic.Field()
     """
     DNIS/To attribute of the call
@@ -70,6 +74,10 @@ class CdrWithTranscription(UniversalBaseModel):
         FieldMetadata(alias="uuid"),
         pydantic.Field(alias="uuid", description="Call ID. Deprecated — use `call_id` instead."),
     ]
+    """
+    Call ID. Deprecated — use `call_id` instead.
+    """
+
     call_id: str = pydantic.Field()
     """
     Call ID. Alias of `uuid`.

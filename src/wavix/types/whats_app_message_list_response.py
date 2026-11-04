@@ -9,6 +9,10 @@ from .whats_app_message_list_item import WhatsAppMessageListItem
 
 
 class WhatsAppMessageListResponse(UniversalBaseModel):
+    """
+    Returned by `whatsapp_messages_list`.
+    """
+
     messages: typing.List[WhatsAppMessageListItem] = pydantic.Field()
     """
     Messages that match the request.

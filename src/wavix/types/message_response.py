@@ -24,6 +24,10 @@ class MessageResponse(UniversalBaseModel):
     from_: typing_extensions.Annotated[
         str, FieldMetadata(alias="from"), pydantic.Field(alias="from", description="Sender ID.")
     ]
+    """
+    Sender ID.
+    """
+
     to: str = pydantic.Field()
     """
     Recipient phone number.

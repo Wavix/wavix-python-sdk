@@ -13,8 +13,7 @@ class TenDlcCampaignNudgeRequest(UniversalBaseModel):
 
     nudge_intent: str = pydantic.Field()
     """
-    Nudge intent. Allowed values: `REVIEW`, `APPEAL_REJECTION`. 
-    Use `nudge_intent` to specify the action: - `REVIEW`: Request review for a pending Campaign. - `APPEAL_REJECTION`: Appeal a rejected Campaign.
+    Action the nudge requests: `REVIEW` requests review of a pending Campaign, and `APPEAL_REJECTION` appeals a rejected Campaign.
     """
 
     description: str = pydantic.Field()

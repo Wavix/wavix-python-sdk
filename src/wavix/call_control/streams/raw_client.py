@@ -40,7 +40,7 @@ class RawStreamsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[CallStreamResponse]:
         """
-        Starts streaming the audio of the call identified by `call_id` to a WebSocket destination you supply, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The destination can be any URL you specify — Wavix does not restrict it. Returns the `stream_id`.
+        Starts streaming the audio of the call identified by `call_id` to the WebSocket destination in `stream_url`, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The streamed audio can include the remote party's voice.
 
         Parameters
         ----------
@@ -48,7 +48,7 @@ class RawStreamsClient:
             The `uuid` of the call.
 
         stream_url : str
-            WebSocket URL for call streaming
+            WebSocket URL (`ws://` or `wss://`) that receives the call's audio.
 
         stream_type : CallStreamType
             Direction of audio streamed to `stream_url`.
@@ -257,7 +257,7 @@ class AsyncRawStreamsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[CallStreamResponse]:
         """
-        Starts streaming the audio of the call identified by `call_id` to a WebSocket destination you supply, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The destination can be any URL you specify — Wavix does not restrict it. Returns the `stream_id`.
+        Starts streaming the audio of the call identified by `call_id` to the WebSocket destination in `stream_url`, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The streamed audio can include the remote party's voice.
 
         Parameters
         ----------
@@ -265,7 +265,7 @@ class AsyncRawStreamsClient:
             The `uuid` of the call.
 
         stream_url : str
-            WebSocket URL for call streaming
+            WebSocket URL (`ws://` or `wss://`) that receives the call's audio.
 
         stream_type : CallStreamType
             Direction of audio streamed to `stream_url`.

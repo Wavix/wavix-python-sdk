@@ -985,8 +985,7 @@ class RawCampaignsClient:
             The unique ID of the 10DLC Campaign.
 
         nudge_intent : str
-            Nudge intent. Allowed values: `REVIEW`, `APPEAL_REJECTION`.
-            Use `nudge_intent` to specify the action: - `REVIEW`: Request review for a pending Campaign. - `APPEAL_REJECTION`: Appeal a rejected Campaign.
+            Action the nudge requests: `REVIEW` requests review of a pending Campaign, and `APPEAL_REJECTION` appeals a rejected Campaign.
 
         description : str
             Description of the nudge request.
@@ -2044,8 +2043,7 @@ class AsyncRawCampaignsClient:
             The unique ID of the 10DLC Campaign.
 
         nudge_intent : str
-            Nudge intent. Allowed values: `REVIEW`, `APPEAL_REJECTION`.
-            Use `nudge_intent` to specify the action: - `REVIEW`: Request review for a pending Campaign. - `APPEAL_REJECTION`: Appeal a rejected Campaign.
+            Action the nudge requests: `REVIEW` requests review of a pending Campaign, and `APPEAL_REJECTION` appeals a rejected Campaign.
 
         description : str
             Description of the nudge request.

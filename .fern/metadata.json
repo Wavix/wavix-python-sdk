@@ -1,13 +1,13 @@
 {
   "cliVersion": "5.45.3",
   "generatorName": "fernapi/fern-python-sdk",
-  "generatorVersion": "5.14.18",
+  "generatorVersion": "5.41.17",
   "generatorConfig": {
     "client_class_name": "Wavix"
   },
-  "originGitCommit": "d29c16cfdf89e832f7792c0c920d6935e231f140",
-  "originGitCommitIsDirty": false,
+  "originGitCommit": "e0d4d73c3ae45a88f9edafbfa9bf22d469aaf8c3",
+  "originGitCommitIsDirty": true,
   "invokedBy": "manual",
-  "requestedVersion": "1.1.1",
-  "sdkVersion": "1.1.1"
+  "requestedVersion": "1.4.0",
+  "sdkVersion": "1.4.0"
 }

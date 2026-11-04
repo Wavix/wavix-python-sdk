@@ -3,12 +3,14 @@
 import typing
 
 import pydantic
-from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .whats_app_message_send_request_template_buttons_item_type import WhatsAppMessageSendRequestTemplateButtonsItemType
+from ...core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
-class WhatsAppMessageSendRequestTemplateButtonsItem(UniversalBaseModel):
-    type: WhatsAppMessageSendRequestTemplateButtonsItemType
+class SipTrunkUpdateRequestAllowedIpsItem(UniversalBaseModel):
+    ip: str = pydantic.Field()
+    """
+    Public static IP address allowed to register with the SIP trunk.
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

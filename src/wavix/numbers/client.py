@@ -258,6 +258,7 @@ class NumbersClient:
         sms_enabled: typing.Optional[bool] = OMIT,
         destinations: typing.Optional[typing.Sequence[NumberDestination]] = OMIT,
         sms_relay_url: typing.Optional[str] = OMIT,
+        expected_sms_relay_url: typing.Optional[str] = OMIT,
         call_recording_enabled: typing.Optional[bool] = OMIT,
         transcription_enabled: typing.Optional[bool] = OMIT,
         transcription_threshold: typing.Optional[int] = OMIT,
@@ -266,6 +267,8 @@ class NumbersClient:
     ) -> Number:
         """
         Updates the phone number identified by `id`. Only the provided fields are changed.
+
+        **Behavior:** With `expected_sms_relay_url`, the `sms_relay_url` change is applied only while the number currently has that URL; an empty string matches a number with no `sms_relay_url`. Otherwise the call returns `409` and no field in the request is changed. Setting the URL the number already has succeeds. To clear `sms_relay_url`, send `null`, not an empty string. If the call returns a `Something went wrong` error, you can retry the request; repeating the `sms_relay_url` change is a no-op, so it is safe even if the first attempt already applied it.
 
         Parameters
         ----------
@@ -279,7 +282,10 @@ class NumbersClient:
             Inbound call routing destinations for the phone number.
 
         sms_relay_url : typing.Optional[str]
-            Callback URL for inbound messages.
+            Callback URL for inbound messages. Pass `null` to clear it.
+
+        expected_sms_relay_url : typing.Optional[str]
+            Applies the `sms_relay_url` change only if the number currently has this URL. Pass an empty string to set it only while it is unset, or your own URL to clear or replace it. Requires `sms_relay_url`.
 
         call_recording_enabled : typing.Optional[bool]
             Indicates whether call recording is enabled.
@@ -317,6 +323,7 @@ class NumbersClient:
             sms_enabled=sms_enabled,
             destinations=destinations,
             sms_relay_url=sms_relay_url,
+            expected_sms_relay_url=expected_sms_relay_url,
             call_recording_enabled=call_recording_enabled,
             transcription_enabled=transcription_enabled,
             transcription_threshold=transcription_threshold,
@@ -605,6 +612,7 @@ class AsyncNumbersClient:
         sms_enabled: typing.Optional[bool] = OMIT,
         destinations: typing.Optional[typing.Sequence[NumberDestination]] = OMIT,
         sms_relay_url: typing.Optional[str] = OMIT,
+        expected_sms_relay_url: typing.Optional[str] = OMIT,
         call_recording_enabled: typing.Optional[bool] = OMIT,
         transcription_enabled: typing.Optional[bool] = OMIT,
         transcription_threshold: typing.Optional[int] = OMIT,
@@ -613,6 +621,8 @@ class AsyncNumbersClient:
     ) -> Number:
         """
         Updates the phone number identified by `id`. Only the provided fields are changed.
+
+        **Behavior:** With `expected_sms_relay_url`, the `sms_relay_url` change is applied only while the number currently has that URL; an empty string matches a number with no `sms_relay_url`. Otherwise the call returns `409` and no field in the request is changed. Setting the URL the number already has succeeds. To clear `sms_relay_url`, send `null`, not an empty string. If the call returns a `Something went wrong` error, you can retry the request; repeating the `sms_relay_url` change is a no-op, so it is safe even if the first attempt already applied it.
 
         Parameters
         ----------
@@ -626,7 +636,10 @@ class AsyncNumbersClient:
             Inbound call routing destinations for the phone number.
 
         sms_relay_url : typing.Optional[str]
-            Callback URL for inbound messages.
+            Callback URL for inbound messages. Pass `null` to clear it.
+
+        expected_sms_relay_url : typing.Optional[str]
+            Applies the `sms_relay_url` change only if the number currently has this URL. Pass an empty string to set it only while it is unset, or your own URL to clear or replace it. Requires `sms_relay_url`.
 
         call_recording_enabled : typing.Optional[bool]
             Indicates whether call recording is enabled.
@@ -672,6 +685,7 @@ class AsyncNumbersClient:
             sms_enabled=sms_enabled,
             destinations=destinations,
             sms_relay_url=sms_relay_url,
+            expected_sms_relay_url=expected_sms_relay_url,
             call_recording_enabled=call_recording_enabled,
             transcription_enabled=transcription_enabled,
             transcription_threshold=transcription_threshold,

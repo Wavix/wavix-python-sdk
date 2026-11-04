@@ -4,12 +4,16 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .whats_app_sender_message_tier import WhatsAppSenderMessageTier
 from .whats_app_sender_quality_rating import WhatsAppSenderQualityRating
 from .whats_app_sender_status import WhatsAppSenderStatus
+from .whats_app_waba import WhatsAppWaba
 
 
 class WhatsAppSender(UniversalBaseModel):
+    """
+    A WhatsApp sender, which is a phone number registered with WhatsApp in one of your account's WhatsApp Business Accounts. Returned by `whatsapp_senders_list` and `whatsapp_senders_get`.
+    """
+
     phone_number: str = pydantic.Field()
     """
     Sender's phone number in E.164 format.
@@ -22,18 +26,32 @@ class WhatsAppSender(UniversalBaseModel):
 
     status: WhatsAppSenderStatus = pydantic.Field()
     """
-    Sender registration status with the provider.
+    Sender registration status with the provider. Possible values:
+    
+    - `banned` — The provider banned the sender.
+    - `connected` — The sender can send messages within its messaging limit.
+    - `deleted` — The sender was deleted.
+    - `disconnected` — The sender is disconnected from the provider.
+    - `flagged` — The sender's quality rating dropped to low. The status returns to `connected` if the rating returns to medium or high within seven days.
+    - `migrated` — The sender was migrated.
+    - `pending` — Registration with the provider is in progress.
+    - `rate_limited` — The provider is rate limiting the sender.
+    - `restricted` — The sender reached its messaging limit. It can't start new conversations until the 24-hour window resets, but it can still reply to customers who messaged it.
+    - `unknown` — The provider hasn't reported a status.
+    - `unverified` — The sender isn't verified.
     """
 
     quality_rating: typing.Optional[WhatsAppSenderQualityRating] = pydantic.Field(default=None)
     """
-    Sender's messaging quality rating.
+    Sender's messaging quality rating. Meta rates quality from customer feedback over the past seven days, such as blocks and reports. Possible values:
+    
+    - `high` — High quality.
+    - `medium` — Medium quality.
+    - `low` — Low quality.
+    - `unknown` — Not rated yet.
     """
 
-    message_tier: typing.Optional[WhatsAppSenderMessageTier] = pydantic.Field(default=None)
-    """
-    Sender's 24-hour outbound messaging limit tier.
-    """
+    waba: WhatsAppWaba
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

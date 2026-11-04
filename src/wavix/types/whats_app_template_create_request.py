@@ -4,29 +4,47 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .whats_app_template_component import WhatsAppTemplateComponent
+from .whats_app_template_component_request import WhatsAppTemplateComponentRequest
 from .whats_app_template_create_request_category import WhatsAppTemplateCreateRequestCategory
 
 
 class WhatsAppTemplateCreateRequest(UniversalBaseModel):
+    """
+    Attributes of a new WhatsApp template. Consumed by `whatsapp_templates_create`.
+    """
+
     name: str = pydantic.Field()
     """
-    Template name.
+    Template name, made of lowercase letters, digits, and underscores, up to 512 characters.
     """
 
     language: str = pydantic.Field()
     """
-    Template language code.
+    Template language code, such as `en` or `en_US`.
     """
 
     category: WhatsAppTemplateCreateRequestCategory = pydantic.Field()
     """
-    Template category.
+    Template category. Possible values:
+    
+    - `marketing` — Promotions, offers, and other marketing content.
+    - `authentication` — One-time passcodes for verifying a user.
+    - `utility` — Transactional updates about an order or an account.
     """
 
-    components: typing.List[WhatsAppTemplateComponent] = pydantic.Field()
+    components: typing.List[WhatsAppTemplateComponentRequest] = pydantic.Field()
     """
-    Structural components of the template. Must include a `BODY` component.
+    Structural components of the template. Each component type can appear once, exactly one `body` component is required, and `type` and `format` values must be lowercase.
+    """
+
+    waba_id: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    ID of the WhatsApp Business Account that owns the template, as returned in `waba.id` by `whatsapp_senders_list`. Required when your account has more than one, unless `sender` is set. When both are set, `sender` must belong to this WhatsApp Business Account.
+    """
+
+    sender: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    Phone number of a connected sender whose WhatsApp Business Account owns the template, as an alternative to `waba_id`. When both are set, the sender must belong to `waba_id`. The leading `+` is optional.
     """
 
     if IS_PYDANTIC_V2:

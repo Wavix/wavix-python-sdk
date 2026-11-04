@@ -24,6 +24,10 @@ class CallStatusWebhook(UniversalBaseModel):
     uuid_: typing_extensions.Annotated[
         str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="Call ID")
     ]
+    """
+    Call ID
+    """
+
     destination: typing.Optional[str] = pydantic.Field(default=None)
     """
     Destination of the call. For outbound calls, it contains the country name and, optionally, a mobile carrier or city name. For inbound calls, the destination includes the user-defined SIP trunk name, SIP URI, or PSTN number that the call is forwarded to.
@@ -50,6 +54,10 @@ class CallStatusWebhook(UniversalBaseModel):
         FieldMetadata(alias="from"),
         pydantic.Field(alias="from", description="ANI/From attribute of the call"),
     ] = None
+    """
+    ANI/From attribute of the call
+    """
+
     to: typing.Optional[str] = pydantic.Field(default=None)
     """
     DNIS/To attribute of the call

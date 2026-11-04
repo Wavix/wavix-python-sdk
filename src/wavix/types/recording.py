@@ -32,6 +32,10 @@ class Recording(UniversalBaseModel):
     from_: typing_extensions.Annotated[
         str, FieldMetadata(alias="from"), pydantic.Field(alias="from", description="Originating phone number.")
     ]
+    """
+    Originating phone number.
+    """
+
     to: str = pydantic.Field()
     """
     Destination phone number.

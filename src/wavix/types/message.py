@@ -30,6 +30,10 @@ class Message(UniversalBaseModel):
         FieldMetadata(alias="from"),
         pydantic.Field(alias="from", description="Sender ID. Can be numeric or alphanumeric."),
     ]
+    """
+    Sender ID. Can be numeric or alphanumeric.
+    """
+
     to: str = pydantic.Field()
     """
     Recipient phone number.

@@ -18,6 +18,10 @@ class Call(UniversalBaseModel):
         FieldMetadata(alias="uuid"),
         pydantic.Field(alias="uuid", description="Call ID. Deprecated — use `id` instead."),
     ]
+    """
+    Call ID. Deprecated — use `id` instead.
+    """
+
     id: str = pydantic.Field()
     """
     Call ID. Alias of `uuid`.
@@ -52,6 +56,10 @@ class Call(UniversalBaseModel):
     from_: typing_extensions.Annotated[
         str, FieldMetadata(alias="from"), pydantic.Field(alias="from", description="Caller ID.")
     ]
+    """
+    Caller ID.
+    """
+
     to: str = pydantic.Field()
     """
     Destination number.

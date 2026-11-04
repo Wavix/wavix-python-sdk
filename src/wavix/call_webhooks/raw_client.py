@@ -10,6 +10,7 @@ from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..errors.bad_request_error import BadRequestError
+from ..errors.conflict_error import ConflictError
 from ..errors.forbidden_error import ForbiddenError
 from ..errors.unauthorized_error import UnauthorizedError
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
@@ -17,6 +18,7 @@ from ..types.call_webhook import CallWebhook
 from ..types.call_webhook_list_response import CallWebhookListResponse
 from ..types.success_response import SuccessResponse
 from ..types.unauthorized_error_response import UnauthorizedErrorResponse
+from ..types.webhook_in_use_error_response import WebhookInUseErrorResponse
 from .types.call_webhooks_create_request_event_type import CallWebhooksCreateRequestEventType
 from .types.delete_call_webhooks_request_event_type import DeleteCallWebhooksRequestEventType
 from pydantic import ValidationError
@@ -105,10 +107,13 @@ class RawCallWebhooksClient:
         *,
         url: str,
         event_type: CallWebhooksCreateRequestEventType,
+        expected_url: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[CallWebhook]:
         """
         Registers a callback URL for the `on-call` or `post-call` event. Wavix sends a POST callback to the URL when the event occurs. Creates persistent configuration that forwards call metadata to the URL on every matching call until the webhook is deleted.
+
+        **Behavior:** Without `expected_url`, the webhook is set to `url` whatever it was before. With `expected_url`, the webhook is set only while it currently has that URL; an empty string matches an unset webhook. Otherwise the call returns `409` and the webhook is unchanged. Setting the URL the webhook already has succeeds. If the call returns a `Something went wrong` error, the webhook is unchanged and you can retry the request.
 
         Parameters
         ----------
@@ -122,6 +127,9 @@ class RawCallWebhooksClient:
 
              - `post-call`: Sends a callback after the call ends
               with disposition, duration, and cost.
+
+        expected_url : typing.Optional[str]
+            Applies the change only if the webhook currently has this URL. Pass an empty string to set the webhook only while it is unset, or your own URL to replace your webhook. Setting the URL the webhook already has always succeeds.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -137,6 +145,7 @@ class RawCallWebhooksClient:
             json={
                 "url": url,
                 "event_type": event_type,
+                "expected_url": expected_url,
             },
             headers={
                 "content-type": "application/json",
@@ -187,6 +196,17 @@ class RawCallWebhooksClient:
                         ),
                     ),
                 )
+            if _response.status_code == 409:
+                raise ConflictError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        WebhookInUseErrorResponse,
+                        parse_obj_as(
+                            type_=WebhookInUseErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 422:
                 raise UnprocessableEntityError(
                     headers=dict(_response.headers),
@@ -208,15 +228,24 @@ class RawCallWebhooksClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     def delete(
-        self, *, event_type: DeleteCallWebhooksRequestEventType, request_options: typing.Optional[RequestOptions] = None
+        self,
+        *,
+        event_type: DeleteCallWebhooksRequestEventType,
+        expected_url: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[SuccessResponse]:
         """
         Removes the call webhook for the given event type. Wavix stops sending callbacks for that event.
+
+        **Behavior:** Without `expected_url`, the webhook is cleared whatever URL it has. With `expected_url`, the webhook is cleared only while it currently has that URL; an empty value matches an unset webhook. Otherwise the call returns `409` and the webhook is unchanged. Clearing an unset webhook succeeds. Percent-encode the `expected_url` value in the query string. If the call returns a `Something went wrong` error, the webhook is unchanged and you can retry the request.
 
         Parameters
         ----------
         event_type : DeleteCallWebhooksRequestEventType
             Event type of the webhook to delete. One of `post-call` (callbacks sent after a call ends) or `on-call` (real-time call status callbacks during a call).
+
+        expected_url : typing.Optional[str]
+            Clears the webhook only if it currently has this URL. Percent-encode the value. An empty value clears only an unset webhook.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -231,6 +260,7 @@ class RawCallWebhooksClient:
             method="DELETE",
             params={
                 "event_type": event_type,
+                "expected_url": expected_url,
             },
             request_options=request_options,
         )
@@ -273,6 +303,17 @@ class RawCallWebhooksClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 409:
+                raise ConflictError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        WebhookInUseErrorResponse,
+                        parse_obj_as(
+                            type_=WebhookInUseErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -380,10 +421,13 @@ class AsyncRawCallWebhooksClient:
         *,
         url: str,
         event_type: CallWebhooksCreateRequestEventType,
+        expected_url: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[CallWebhook]:
         """
         Registers a callback URL for the `on-call` or `post-call` event. Wavix sends a POST callback to the URL when the event occurs. Creates persistent configuration that forwards call metadata to the URL on every matching call until the webhook is deleted.
+
+        **Behavior:** Without `expected_url`, the webhook is set to `url` whatever it was before. With `expected_url`, the webhook is set only while it currently has that URL; an empty string matches an unset webhook. Otherwise the call returns `409` and the webhook is unchanged. Setting the URL the webhook already has succeeds. If the call returns a `Something went wrong` error, the webhook is unchanged and you can retry the request.
 
         Parameters
         ----------
@@ -397,6 +441,9 @@ class AsyncRawCallWebhooksClient:
 
              - `post-call`: Sends a callback after the call ends
               with disposition, duration, and cost.
+
+        expected_url : typing.Optional[str]
+            Applies the change only if the webhook currently has this URL. Pass an empty string to set the webhook only while it is unset, or your own URL to replace your webhook. Setting the URL the webhook already has always succeeds.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -412,6 +459,7 @@ class AsyncRawCallWebhooksClient:
             json={
                 "url": url,
                 "event_type": event_type,
+                "expected_url": expected_url,
             },
             headers={
                 "content-type": "application/json",
@@ -462,6 +510,17 @@ class AsyncRawCallWebhooksClient:
                         ),
                     ),
                 )
+            if _response.status_code == 409:
+                raise ConflictError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        WebhookInUseErrorResponse,
+                        parse_obj_as(
+                            type_=WebhookInUseErrorResponse,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
             if _response.status_code == 422:
                 raise UnprocessableEntityError(
                     headers=dict(_response.headers),
@@ -483,15 +542,24 @@ class AsyncRawCallWebhooksClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def delete(
-        self, *, event_type: DeleteCallWebhooksRequestEventType, request_options: typing.Optional[RequestOptions] = None
+        self,
+        *,
+        event_type: DeleteCallWebhooksRequestEventType,
+        expected_url: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[SuccessResponse]:
         """
         Removes the call webhook for the given event type. Wavix stops sending callbacks for that event.
+
+        **Behavior:** Without `expected_url`, the webhook is cleared whatever URL it has. With `expected_url`, the webhook is cleared only while it currently has that URL; an empty value matches an unset webhook. Otherwise the call returns `409` and the webhook is unchanged. Clearing an unset webhook succeeds. Percent-encode the `expected_url` value in the query string. If the call returns a `Something went wrong` error, the webhook is unchanged and you can retry the request.
 
         Parameters
         ----------
         event_type : DeleteCallWebhooksRequestEventType
             Event type of the webhook to delete. One of `post-call` (callbacks sent after a call ends) or `on-call` (real-time call status callbacks during a call).
+
+        expected_url : typing.Optional[str]
+            Clears the webhook only if it currently has this URL. Percent-encode the value. An empty value clears only an unset webhook.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -506,6 +574,7 @@ class AsyncRawCallWebhooksClient:
             method="DELETE",
             params={
                 "event_type": event_type,
+                "expected_url": expected_url,
             },
             request_options=request_options,
         )
@@ -548,6 +617,17 @@ class AsyncRawCallWebhooksClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 409:
+                raise ConflictError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        WebhookInUseErrorResponse,
+                        parse_obj_as(
+                            type_=WebhookInUseErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),

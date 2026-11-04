@@ -25,6 +25,10 @@ class InboundMessage(UniversalBaseModel):
         FieldMetadata(alias="from"),
         pydantic.Field(alias="from", description="Sender ID used to send the message. Can be numeric or alphanumeric."),
     ]
+    """
+    Sender ID used to send the message. Can be numeric or alphanumeric.
+    """
+
     to: str = pydantic.Field()
     """
     Phone number on the account that received the message.

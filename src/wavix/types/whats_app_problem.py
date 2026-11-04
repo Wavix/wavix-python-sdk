@@ -9,12 +9,12 @@ from .whats_app_problem_error_class import WhatsAppProblemErrorClass
 
 class WhatsAppProblem(UniversalBaseModel):
     """
-    RFC 9457 problem document returned by WhatsApp endpoints as `application/problem+json`.
+    An RFC 9457 problem document that describes an error from the WhatsApp API. Returned with the `application/problem+json` content type.
     """
 
     type: str = pydantic.Field()
     """
-    URI identifying the problem type.
+    URI that identifies the problem type.
     """
 
     title: str = pydantic.Field()
@@ -24,27 +24,32 @@ class WhatsAppProblem(UniversalBaseModel):
 
     status: int = pydantic.Field()
     """
-    HTTP status code.
+    HTTP status code of the response.
     """
 
     detail: str = pydantic.Field()
     """
-    Human-readable explanation specific to this occurrence of the problem.
+    Human-readable explanation of this occurrence of the problem.
     """
 
     instance: str = pydantic.Field()
     """
-    URI identifying this specific occurrence of the problem, such as the request ID.
+    Request ID of this occurrence of the problem.
     """
 
     error_class: typing.Optional[WhatsAppProblemErrorClass] = pydantic.Field(default=None)
     """
-    Machine-readable classification of the error.
+    Machine-readable classification of the error. Possible values:
+    
+    - `permanent` — The request can't succeed as sent. Retrying doesn't help.
+    - `retriable` — The failure is temporary. Retrying can succeed.
+    - `rate_limited` — The request was rate limited. Retry later.
+    - `invalid_template` — The template content is invalid.
     """
 
     error_code: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Stable machine-readable error code, derived from the problem slug.
+    Stable machine-readable error code. It's the problem type slug in upper case with the `WAVIX_` prefix.
     """
 
     if IS_PYDANTIC_V2:

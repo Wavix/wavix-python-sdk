@@ -4,12 +4,14 @@ import typing
 
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
-from ..types.sip_trunk_create_request_allowed_ips_item import SipTrunkCreateRequestAllowedIpsItem
-from ..types.sip_trunk_create_request_host_request import SipTrunkCreateRequestHostRequest
 from ..types.sip_trunk_list_response import SipTrunkListResponse
 from ..types.sip_trunk_response import SipTrunkResponse
 from ..types.success_response import SuccessResponse
 from .raw_client import AsyncRawSipTrunksClient, RawSipTrunksClient
+from .types.sip_trunk_create_request_allowed_ips_item import SipTrunkCreateRequestAllowedIpsItem
+from .types.sip_trunk_create_request_host_request import SipTrunkCreateRequestHostRequest
+from .types.sip_trunk_update_request_allowed_ips_item import SipTrunkUpdateRequestAllowedIpsItem
+from .types.sip_trunk_update_request_host_request import SipTrunkUpdateRequestHostRequest
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -259,78 +261,64 @@ class SipTrunksClient:
         self,
         id: int,
         *,
-        label: str,
-        password: str,
-        callerid: str,
-        ip_restrict: bool,
-        didinfo_enabled: bool,
-        call_restrict: bool,
-        channels_restrict: bool,
-        rewrite_enabled: bool,
-        transcription_enabled: bool,
-        transcription_threshold: int,
-        host_request: typing.Optional[SipTrunkCreateRequestHostRequest] = OMIT,
+        label: typing.Optional[str] = OMIT,
+        password: typing.Optional[str] = OMIT,
+        host_request: typing.Optional[SipTrunkUpdateRequestHostRequest] = OMIT,
+        callerid: typing.Optional[str] = OMIT,
         multiple_numbers: typing.Optional[bool] = OMIT,
-        allowed_ips: typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]] = OMIT,
+        ip_restrict: typing.Optional[bool] = OMIT,
+        allowed_ips: typing.Optional[typing.Sequence[SipTrunkUpdateRequestAllowedIpsItem]] = OMIT,
+        didinfo_enabled: typing.Optional[bool] = OMIT,
+        call_restrict: typing.Optional[bool] = OMIT,
         call_limit: typing.Optional[int] = OMIT,
         cost_limit: typing.Optional[bool] = OMIT,
         max_call_cost: typing.Optional[float] = OMIT,
+        channels_restrict: typing.Optional[bool] = OMIT,
         max_channels: typing.Optional[int] = OMIT,
+        rewrite_enabled: typing.Optional[bool] = OMIT,
         rewrite_prefix: typing.Optional[str] = OMIT,
         rewrite_cond: typing.Optional[str] = OMIT,
         call_recording_enabled: typing.Optional[bool] = OMIT,
+        transcription_enabled: typing.Optional[bool] = OMIT,
+        transcription_threshold: typing.Optional[int] = OMIT,
         machine_detection_enabled: typing.Optional[bool] = OMIT,
         encrypted_media: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SipTrunkResponse:
         """
-        Replaces the configuration of the SIP trunk identified by `id`. Omitted fields revert to their defaults.
+        Updates the SIP trunk identified by `id`. Only the provided fields are changed. On trial accounts, every update also applies the trial limits: a `call_limit` of at most 300 seconds (300 when omitted) and one concurrent call.
 
         Parameters
         ----------
         id : int
             The unique ID of the SIP trunk.
 
-        label : str
+        label : typing.Optional[str]
             User-defined name of the SIP trunk
 
-        password : str
+        password : typing.Optional[str]
             Password set for the SIP trunk. A strong password helps keep the trunk secure.
 
-        callerid : str
+        host_request : typing.Optional[SipTrunkUpdateRequestHostRequest]
+            For SIP trunks with IP authentication, the SIP endpoint public static IP address. Wavix authenticates all SIP traffic originating from this IP address. Ignored when the trunk already has a host request that is pending or approved. Not supported on trial accounts.
+
+        callerid : typing.Optional[str]
             Caller ID associated with the SIP trunk. Must be an active or verified number on the account.
 
-        ip_restrict : bool
-            Indicates whether SIP trunk registration is allowed from only specific public static IP addresses. When set to `true`, the `allowed_ips` parameter must be provided.
+        multiple_numbers : typing.Optional[bool]
+            Indicates whether any active or verified phone number on the account can be used as the Caller ID for the SIP trunk. Setting it to `true` clears the trunk's `callerid`; on a trunk with Caller ID passthrough (`passthrough`) enabled, `true` is ignored.
 
-        didinfo_enabled : bool
+        ip_restrict : typing.Optional[bool]
+            Indicates whether SIP trunk registration is allowed from only specific public static IP addresses. It can be `true` only when the trunk has at least one allowed IP address, either already stored or sent in `allowed_ips`.
+
+        allowed_ips : typing.Optional[typing.Sequence[SipTrunkUpdateRequestAllowedIpsItem]]
+            Public static IP addresses to add to the list allowed to register with the SIP trunk. Addresses already on the list are kept.
+
+        didinfo_enabled : typing.Optional[bool]
             Indicates whether inbound calls include dialed number information in the `To` header of SIP INVITE requests
 
-        call_restrict : bool
+        call_restrict : typing.Optional[bool]
             Indicates whether a maximum call duration limit is enforced for the SIP trunk
-
-        channels_restrict : bool
-            Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
-
-        rewrite_enabled : bool
-            Indicates whether a custom dial plan is activated for the SIP trunk
-
-        transcription_enabled : bool
-            Indicates whether automatic call transcription is enabled for the SIP trunk.
-            Available for `Flex Pro` customers only.
-
-        transcription_threshold : int
-            Transcriptions will be generated for calls that meet or exceed the specified minimal call duration threshold, in seconds.
-            Available for `Flex Pro` customers only.
-
-        host_request : typing.Optional[SipTrunkCreateRequestHostRequest]
-            For SIP trunks with IP authentication, includes the SIP endpoint public static IP address and the status of the authentication request. Wavix authenticates all SIP traffic originating from this IP address.
-
-        multiple_numbers : typing.Optional[bool]
-            Indicates whether any active or verified phone number on the account can be used as the Caller ID for the SIP trunk.
-
-        allowed_ips : typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]]
-            A list of public static IP addresses allowed to register with the SIP trunk
 
         call_limit : typing.Optional[int]
             Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
@@ -341,8 +329,14 @@ class SipTrunksClient:
         max_call_cost : typing.Optional[float]
             Maximum cost for an outbound call, in USD
 
+        channels_restrict : typing.Optional[bool]
+            Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
+
         max_channels : typing.Optional[int]
             Maximum number of concurrent outbound calls for the SIP trunk. Must not exceed the outbound channel capacity set for the account. Ignored when `channels_restrict` is `false`.
+
+        rewrite_enabled : typing.Optional[bool]
+            Indicates whether a custom dial plan is activated for the SIP trunk
 
         rewrite_prefix : typing.Optional[str]
             Digits to automatically prepend to each dialed phone number
@@ -352,6 +346,14 @@ class SipTrunksClient:
 
         call_recording_enabled : typing.Optional[bool]
             Indicates whether outbound call recording is enabled for the SIP trunk
+
+        transcription_enabled : typing.Optional[bool]
+            Indicates whether automatic call transcription is enabled for the SIP trunk.
+            Available for `Flex Pro` customers only.
+
+        transcription_threshold : typing.Optional[int]
+            Transcriptions will be generated for calls that meet or exceed the specified minimal call duration threshold, in seconds.
+            Available for `Flex Pro` customers only.
 
         machine_detection_enabled : typing.Optional[bool]
             Indicates whether automatic voicemail detection is enabled for the SIP trunk.
@@ -377,40 +379,30 @@ class SipTrunksClient:
         )
         client.sip_trunks.update(
             id=3107,
-            label="My trunk",
-            password="4r=h;EaCB85QNtr2",
-            callerid="13132847320",
-            ip_restrict=False,
-            didinfo_enabled=True,
-            call_restrict=True,
-            channels_restrict=False,
-            rewrite_enabled=True,
-            transcription_enabled=True,
-            transcription_threshold=10,
         )
         """
         _response = self._raw_client.update(
             id,
             label=label,
             password=password,
+            host_request=host_request,
             callerid=callerid,
+            multiple_numbers=multiple_numbers,
             ip_restrict=ip_restrict,
+            allowed_ips=allowed_ips,
             didinfo_enabled=didinfo_enabled,
             call_restrict=call_restrict,
-            channels_restrict=channels_restrict,
-            rewrite_enabled=rewrite_enabled,
-            transcription_enabled=transcription_enabled,
-            transcription_threshold=transcription_threshold,
-            host_request=host_request,
-            multiple_numbers=multiple_numbers,
-            allowed_ips=allowed_ips,
             call_limit=call_limit,
             cost_limit=cost_limit,
             max_call_cost=max_call_cost,
+            channels_restrict=channels_restrict,
             max_channels=max_channels,
+            rewrite_enabled=rewrite_enabled,
             rewrite_prefix=rewrite_prefix,
             rewrite_cond=rewrite_cond,
             call_recording_enabled=call_recording_enabled,
+            transcription_enabled=transcription_enabled,
+            transcription_threshold=transcription_threshold,
             machine_detection_enabled=machine_detection_enabled,
             encrypted_media=encrypted_media,
             request_options=request_options,
@@ -717,78 +709,64 @@ class AsyncSipTrunksClient:
         self,
         id: int,
         *,
-        label: str,
-        password: str,
-        callerid: str,
-        ip_restrict: bool,
-        didinfo_enabled: bool,
-        call_restrict: bool,
-        channels_restrict: bool,
-        rewrite_enabled: bool,
-        transcription_enabled: bool,
-        transcription_threshold: int,
-        host_request: typing.Optional[SipTrunkCreateRequestHostRequest] = OMIT,
+        label: typing.Optional[str] = OMIT,
+        password: typing.Optional[str] = OMIT,
+        host_request: typing.Optional[SipTrunkUpdateRequestHostRequest] = OMIT,
+        callerid: typing.Optional[str] = OMIT,
         multiple_numbers: typing.Optional[bool] = OMIT,
-        allowed_ips: typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]] = OMIT,
+        ip_restrict: typing.Optional[bool] = OMIT,
+        allowed_ips: typing.Optional[typing.Sequence[SipTrunkUpdateRequestAllowedIpsItem]] = OMIT,
+        didinfo_enabled: typing.Optional[bool] = OMIT,
+        call_restrict: typing.Optional[bool] = OMIT,
         call_limit: typing.Optional[int] = OMIT,
         cost_limit: typing.Optional[bool] = OMIT,
         max_call_cost: typing.Optional[float] = OMIT,
+        channels_restrict: typing.Optional[bool] = OMIT,
         max_channels: typing.Optional[int] = OMIT,
+        rewrite_enabled: typing.Optional[bool] = OMIT,
         rewrite_prefix: typing.Optional[str] = OMIT,
         rewrite_cond: typing.Optional[str] = OMIT,
         call_recording_enabled: typing.Optional[bool] = OMIT,
+        transcription_enabled: typing.Optional[bool] = OMIT,
+        transcription_threshold: typing.Optional[int] = OMIT,
         machine_detection_enabled: typing.Optional[bool] = OMIT,
         encrypted_media: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SipTrunkResponse:
         """
-        Replaces the configuration of the SIP trunk identified by `id`. Omitted fields revert to their defaults.
+        Updates the SIP trunk identified by `id`. Only the provided fields are changed. On trial accounts, every update also applies the trial limits: a `call_limit` of at most 300 seconds (300 when omitted) and one concurrent call.
 
         Parameters
         ----------
         id : int
             The unique ID of the SIP trunk.
 
-        label : str
+        label : typing.Optional[str]
             User-defined name of the SIP trunk
 
-        password : str
+        password : typing.Optional[str]
             Password set for the SIP trunk. A strong password helps keep the trunk secure.
 
-        callerid : str
+        host_request : typing.Optional[SipTrunkUpdateRequestHostRequest]
+            For SIP trunks with IP authentication, the SIP endpoint public static IP address. Wavix authenticates all SIP traffic originating from this IP address. Ignored when the trunk already has a host request that is pending or approved. Not supported on trial accounts.
+
+        callerid : typing.Optional[str]
             Caller ID associated with the SIP trunk. Must be an active or verified number on the account.
 
-        ip_restrict : bool
-            Indicates whether SIP trunk registration is allowed from only specific public static IP addresses. When set to `true`, the `allowed_ips` parameter must be provided.
+        multiple_numbers : typing.Optional[bool]
+            Indicates whether any active or verified phone number on the account can be used as the Caller ID for the SIP trunk. Setting it to `true` clears the trunk's `callerid`; on a trunk with Caller ID passthrough (`passthrough`) enabled, `true` is ignored.
 
-        didinfo_enabled : bool
+        ip_restrict : typing.Optional[bool]
+            Indicates whether SIP trunk registration is allowed from only specific public static IP addresses. It can be `true` only when the trunk has at least one allowed IP address, either already stored or sent in `allowed_ips`.
+
+        allowed_ips : typing.Optional[typing.Sequence[SipTrunkUpdateRequestAllowedIpsItem]]
+            Public static IP addresses to add to the list allowed to register with the SIP trunk. Addresses already on the list are kept.
+
+        didinfo_enabled : typing.Optional[bool]
             Indicates whether inbound calls include dialed number information in the `To` header of SIP INVITE requests
 
-        call_restrict : bool
+        call_restrict : typing.Optional[bool]
             Indicates whether a maximum call duration limit is enforced for the SIP trunk
-
-        channels_restrict : bool
-            Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
-
-        rewrite_enabled : bool
-            Indicates whether a custom dial plan is activated for the SIP trunk
-
-        transcription_enabled : bool
-            Indicates whether automatic call transcription is enabled for the SIP trunk.
-            Available for `Flex Pro` customers only.
-
-        transcription_threshold : int
-            Transcriptions will be generated for calls that meet or exceed the specified minimal call duration threshold, in seconds.
-            Available for `Flex Pro` customers only.
-
-        host_request : typing.Optional[SipTrunkCreateRequestHostRequest]
-            For SIP trunks with IP authentication, includes the SIP endpoint public static IP address and the status of the authentication request. Wavix authenticates all SIP traffic originating from this IP address.
-
-        multiple_numbers : typing.Optional[bool]
-            Indicates whether any active or verified phone number on the account can be used as the Caller ID for the SIP trunk.
-
-        allowed_ips : typing.Optional[typing.Sequence[SipTrunkCreateRequestAllowedIpsItem]]
-            A list of public static IP addresses allowed to register with the SIP trunk
 
         call_limit : typing.Optional[int]
             Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`.
@@ -799,8 +777,14 @@ class AsyncSipTrunksClient:
         max_call_cost : typing.Optional[float]
             Maximum cost for an outbound call, in USD
 
+        channels_restrict : typing.Optional[bool]
+            Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk
+
         max_channels : typing.Optional[int]
             Maximum number of concurrent outbound calls for the SIP trunk. Must not exceed the outbound channel capacity set for the account. Ignored when `channels_restrict` is `false`.
+
+        rewrite_enabled : typing.Optional[bool]
+            Indicates whether a custom dial plan is activated for the SIP trunk
 
         rewrite_prefix : typing.Optional[str]
             Digits to automatically prepend to each dialed phone number
@@ -810,6 +794,14 @@ class AsyncSipTrunksClient:
 
         call_recording_enabled : typing.Optional[bool]
             Indicates whether outbound call recording is enabled for the SIP trunk
+
+        transcription_enabled : typing.Optional[bool]
+            Indicates whether automatic call transcription is enabled for the SIP trunk.
+            Available for `Flex Pro` customers only.
+
+        transcription_threshold : typing.Optional[int]
+            Transcriptions will be generated for calls that meet or exceed the specified minimal call duration threshold, in seconds.
+            Available for `Flex Pro` customers only.
 
         machine_detection_enabled : typing.Optional[bool]
             Indicates whether automatic voicemail detection is enabled for the SIP trunk.
@@ -840,16 +832,6 @@ class AsyncSipTrunksClient:
         async def main() -> None:
             await client.sip_trunks.update(
                 id=3107,
-                label="My trunk",
-                password="4r=h;EaCB85QNtr2",
-                callerid="13132847320",
-                ip_restrict=False,
-                didinfo_enabled=True,
-                call_restrict=True,
-                channels_restrict=False,
-                rewrite_enabled=True,
-                transcription_enabled=True,
-                transcription_threshold=10,
             )
 
 
@@ -859,24 +841,24 @@ class AsyncSipTrunksClient:
             id,
             label=label,
             password=password,
+            host_request=host_request,
             callerid=callerid,
+            multiple_numbers=multiple_numbers,
             ip_restrict=ip_restrict,
+            allowed_ips=allowed_ips,
             didinfo_enabled=didinfo_enabled,
             call_restrict=call_restrict,
-            channels_restrict=channels_restrict,
-            rewrite_enabled=rewrite_enabled,
-            transcription_enabled=transcription_enabled,
-            transcription_threshold=transcription_threshold,
-            host_request=host_request,
-            multiple_numbers=multiple_numbers,
-            allowed_ips=allowed_ips,
             call_limit=call_limit,
             cost_limit=cost_limit,
             max_call_cost=max_call_cost,
+            channels_restrict=channels_restrict,
             max_channels=max_channels,
+            rewrite_enabled=rewrite_enabled,
             rewrite_prefix=rewrite_prefix,
             rewrite_cond=rewrite_cond,
             call_recording_enabled=call_recording_enabled,
+            transcription_enabled=transcription_enabled,
+            transcription_threshold=transcription_threshold,
             machine_detection_enabled=machine_detection_enabled,
             encrypted_media=encrypted_media,
             request_options=request_options,

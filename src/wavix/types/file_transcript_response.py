@@ -14,11 +14,18 @@ class FileTranscriptResponse(UniversalBaseModel):
         FieldMetadata(alias="channel_1"),
         pydantic.Field(alias="channel_1", description="Transcription of speaker one."),
     ]
+    """
+    Transcription of speaker one.
+    """
+
     channel2: typing_extensions.Annotated[
         str,
         FieldMetadata(alias="channel_2"),
         pydantic.Field(alias="channel_2", description="Transcription of speaker two."),
     ]
+    """
+    Transcription of speaker two.
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

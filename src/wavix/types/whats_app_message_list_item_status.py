@@ -3,5 +3,5 @@
 import typing
 
 WhatsAppMessageListItemStatus = typing.Union[
-    typing.Literal["failed", "sent", "delivered", "undelivered", "expired", "rejected", "unknown"], typing.Any
+    typing.Literal["sent", "delivered", "undelivered", "expired", "rejected", "unknown"], typing.Any
 ]

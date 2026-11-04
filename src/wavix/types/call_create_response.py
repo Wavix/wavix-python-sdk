@@ -18,6 +18,10 @@ class CallCreateResponse(UniversalBaseModel):
         FieldMetadata(alias="uuid"),
         pydantic.Field(alias="uuid", description="Call ID. Deprecated — use `id` instead."),
     ] = None
+    """
+    Call ID. Deprecated — use `id` instead.
+    """
+
     id: typing.Optional[str] = pydantic.Field(default=None)
     """
     Call ID. Alias of `uuid`.
@@ -52,6 +56,10 @@ class CallCreateResponse(UniversalBaseModel):
     from_: typing_extensions.Annotated[
         typing.Optional[str], FieldMetadata(alias="from"), pydantic.Field(alias="from", description="Caller ID")
     ] = None
+    """
+    Caller ID
+    """
+
     to: typing.Optional[str] = pydantic.Field(default=None)
     """
     Destination number

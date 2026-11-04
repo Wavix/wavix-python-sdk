@@ -26,6 +26,10 @@ class CdrTranscriptionResponse(UniversalBaseModel):
     uuid_: typing_extensions.Annotated[
         str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="Transcription ID.")
     ]
+    """
+    Transcription ID.
+    """
+
     language: typing.Optional[TranscriptionLanguage] = None
     duration: int = pydantic.Field()
     """
