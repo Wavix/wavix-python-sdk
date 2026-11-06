@@ -36,6 +36,11 @@ class TranscriptTurn(UniversalBaseModel):
     Sentiment detected in the speaker's text for this turn, such as `neutral`, `positive`, or `negative`.
     """
 
+    topics: typing.Optional[typing.List[str]] = pydantic.Field(default=None)
+    """
+    Topics detected in the speaker's text for this turn. Empty when no topic was detected.
+    """
+
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
