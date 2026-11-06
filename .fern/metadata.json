@@ -5,9 +5,10 @@
   "generatorConfig": {
     "client_class_name": "Wavix"
   },
-  "originGitCommit": "e0d4d73c3ae45a88f9edafbfa9bf22d469aaf8c3",
-  "originGitCommitIsDirty": true,
-  "invokedBy": "manual",
-  "requestedVersion": "1.4.0",
-  "sdkVersion": "1.4.0"
+  "originGitCommit": "ce2702f805bcbb53ebf5f2ad4d8ab7e08d525873",
+  "originGitCommitIsDirty": false,
+  "invokedBy": "ci",
+  "requestedVersion": "1.5.0",
+  "ciProvider": "github",
+  "sdkVersion": "1.5.0"
 }
