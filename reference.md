@@ -1924,7 +1924,7 @@ applied to every listed number.
 <dl>
 <dd>
 
-**sms_relay_url:** `typing.Optional[str]` — Callback URL for inbound messages.
+**sms_relay_url:** `typing.Optional[str]` — Callback URL for inbound messages. Pass `null` to clear it.
     
 </dd>
 </dl>

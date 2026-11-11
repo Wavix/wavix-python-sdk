@@ -268,7 +268,7 @@ class RawNumbersClient:
             Inbound call routing destinations for the phone numbers.
 
         sms_relay_url : typing.Optional[str]
-            Callback URL for inbound messages.
+            Callback URL for inbound messages. Pass `null` to clear it.
 
         call_recording_enabled : typing.Optional[bool]
             Indicates whether call recording is enabled.
@@ -860,7 +860,7 @@ class AsyncRawNumbersClient:
             Inbound call routing destinations for the phone numbers.
 
         sms_relay_url : typing.Optional[str]
-            Callback URL for inbound messages.
+            Callback URL for inbound messages. Pass `null` to clear it.
 
         call_recording_enabled : typing.Optional[bool]
             Indicates whether call recording is enabled.
