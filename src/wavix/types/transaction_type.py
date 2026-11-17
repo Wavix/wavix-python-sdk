@@ -48,4 +48,5 @@ Transaction type:
   * 58  - Inbound SMS segment
   * 59  - Outbound MMS segment
   * 60  - Inbound MMS segment
+  * 66  - WhatsApp message
 """
