@@ -7,6 +7,7 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
+from .whats_app_inbound_message_content import WhatsAppInboundMessageContent
 from .whats_app_message_list_item_direction import WhatsAppMessageListItemDirection
 from .whats_app_message_list_item_status import WhatsAppMessageListItemStatus
 
@@ -37,6 +38,7 @@ class WhatsAppMessageListItem(UniversalBaseModel):
     
     - `sent` — The message isn't delivered yet.
     - `delivered` — The message was delivered to the recipient.
+    - `read` — The recipient opened the message. WhatsApp reports it only when the recipient has read receipts turned on.
     - `undelivered` — The message was sent but not delivered.
     - `expired` — The message expired before it was delivered.
     - `rejected` — The message was permanently rejected before or by the provider.
@@ -68,6 +70,16 @@ class WhatsAppMessageListItem(UniversalBaseModel):
     created_at: dt.datetime = pydantic.Field()
     """
     Date and time the message was created, in ISO 8601 format.
+    """
+
+    content: typing.Optional[WhatsAppInboundMessageContent] = pydantic.Field(default=None)
+    """
+    Content of an `inbound` message. `null` for `outbound` messages.
+    """
+
+    service_window_open_until: typing.Optional[dt.datetime] = pydantic.Field(default=None)
+    """
+    End of the 24-hour window in which you may reply to the customer without a template. It's `null` when the customer hasn't written to the sender in the retained history. A value in the past means the window is closed.
     """
 
     if IS_PYDANTIC_V2:

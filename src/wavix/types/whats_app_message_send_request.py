@@ -6,12 +6,13 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
+from .whats_app_send_content import WhatsAppSendContent
 from .whats_app_send_template import WhatsAppSendTemplate
 
 
 class WhatsAppMessageSendRequest(UniversalBaseModel):
     """
-    Attributes of a WhatsApp template message to send. Consumed by `whatsapp_messages_send`.
+    Attributes of a WhatsApp message to send. Send exactly one of `template` and `content`. Use `content` only while the 24-hour service window of the recipient is open. Consumed by `whatsapp_messages_send`.
     """
 
     from_: typing_extensions.Annotated[
@@ -36,7 +37,8 @@ class WhatsAppMessageSendRequest(UniversalBaseModel):
     Key that makes the send safe to retry, unique per account. Matching is exact, so case and accents are significant - `ORDER-1` and `order-1` are two different keys and both are sent. Printable ASCII only. Must not begin with `campaign:`, a prefix reserved for campaign messages. A request with a key in that namespace is rejected.
     """
 
-    template: WhatsAppSendTemplate
+    template: typing.Optional[WhatsAppSendTemplate] = None
+    content: typing.Optional[WhatsAppSendContent] = None
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

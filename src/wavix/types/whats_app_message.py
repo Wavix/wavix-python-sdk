@@ -48,6 +48,7 @@ class WhatsAppMessage(UniversalBaseModel):
     
     - `sent` — The message isn't delivered yet.
     - `delivered` — The message was delivered to the recipient.
+    - `read` — The recipient opened the message. WhatsApp reports it only when the recipient has read receipts turned on.
     - `undelivered` — The message was sent but not delivered.
     - `expired` — The message expired before it was delivered.
     - `rejected` — The message was permanently rejected before or by the provider.
@@ -57,6 +58,11 @@ class WhatsAppMessage(UniversalBaseModel):
     template: typing.Optional[WhatsAppMessageTemplate] = pydantic.Field(default=None)
     """
     Template used to send the message.
+    """
+
+    service_window_open_until: typing.Optional[dt.datetime] = pydantic.Field(default=None)
+    """
+    End of the 24-hour window in which you may reply to the recipient without a template. It's `null` when the recipient hasn't written to the sender in the retained history. A value in the past means the window is closed.
     """
 
     created_at: dt.datetime = pydantic.Field()

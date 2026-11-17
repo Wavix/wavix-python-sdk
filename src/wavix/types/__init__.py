@@ -207,28 +207,142 @@ if typing.TYPE_CHECKING:
     from .webhook_in_use_error_response import WebhookInUseErrorResponse
     from .whats_app_business_account import WhatsAppBusinessAccount
     from .whats_app_business_account_messaging_limit import WhatsAppBusinessAccountMessagingLimit
+    from .whats_app_contact_marketing_preference_event_data import WhatsAppContactMarketingPreferenceEventData
+    from .whats_app_contact_marketing_resumed_event import WhatsAppContactMarketingResumedEvent
+    from .whats_app_contact_marketing_stopped_event import WhatsAppContactMarketingStoppedEvent
+    from .whats_app_event import WhatsAppEvent
+    from .whats_app_event_list_response import WhatsAppEventListResponse
+    from .whats_app_event_type import WhatsAppEventType
+    from .whats_app_inbound_audio_content import WhatsAppInboundAudioContent
+    from .whats_app_inbound_button_reply import WhatsAppInboundButtonReply
+    from .whats_app_inbound_button_reply_content import WhatsAppInboundButtonReplyContent
+    from .whats_app_inbound_contact_card import WhatsAppInboundContactCard
+    from .whats_app_inbound_contacts_content import WhatsAppInboundContactsContent
+    from .whats_app_inbound_content import (
+        WhatsAppInboundContent,
+        WhatsAppInboundContent_Audio,
+        WhatsAppInboundContent_ButtonReply,
+        WhatsAppInboundContent_Contacts,
+        WhatsAppInboundContent_Document,
+        WhatsAppInboundContent_FlowResponse,
+        WhatsAppInboundContent_Image,
+        WhatsAppInboundContent_ListReply,
+        WhatsAppInboundContent_Location,
+        WhatsAppInboundContent_Reaction,
+        WhatsAppInboundContent_Sticker,
+        WhatsAppInboundContent_Text,
+        WhatsAppInboundContent_Video,
+    )
+    from .whats_app_inbound_context import WhatsAppInboundContext
+    from .whats_app_inbound_document_content import WhatsAppInboundDocumentContent
+    from .whats_app_inbound_flow_response_content import WhatsAppInboundFlowResponseContent
+    from .whats_app_inbound_image_content import WhatsAppInboundImageContent
+    from .whats_app_inbound_list_reply import WhatsAppInboundListReply
+    from .whats_app_inbound_list_reply_content import WhatsAppInboundListReplyContent
+    from .whats_app_inbound_location import WhatsAppInboundLocation
+    from .whats_app_inbound_location_content import WhatsAppInboundLocationContent
+    from .whats_app_inbound_media import WhatsAppInboundMedia
+    from .whats_app_inbound_message_content import WhatsAppInboundMessageContent
+    from .whats_app_inbound_message_content_type import WhatsAppInboundMessageContentType
+    from .whats_app_inbound_reaction import WhatsAppInboundReaction
+    from .whats_app_inbound_reaction_content import WhatsAppInboundReactionContent
+    from .whats_app_inbound_referral import WhatsAppInboundReferral
+    from .whats_app_inbound_referral_source_type import WhatsAppInboundReferralSourceType
+    from .whats_app_inbound_sticker_content import WhatsAppInboundStickerContent
+    from .whats_app_inbound_text_content import WhatsAppInboundTextContent
+    from .whats_app_inbound_video_content import WhatsAppInboundVideoContent
     from .whats_app_message import WhatsAppMessage
+    from .whats_app_message_delivered_event import WhatsAppMessageDeliveredEvent
+    from .whats_app_message_error import WhatsAppMessageError
+    from .whats_app_message_error_code import WhatsAppMessageErrorCode
+    from .whats_app_message_failed_event import WhatsAppMessageFailedEvent
+    from .whats_app_message_failed_event_data import WhatsAppMessageFailedEventData
+    from .whats_app_message_failed_event_data_status import WhatsAppMessageFailedEventDataStatus
     from .whats_app_message_get_response import WhatsAppMessageGetResponse
     from .whats_app_message_list_item import WhatsAppMessageListItem
     from .whats_app_message_list_item_direction import WhatsAppMessageListItemDirection
     from .whats_app_message_list_item_status import WhatsAppMessageListItemStatus
     from .whats_app_message_list_response import WhatsAppMessageListResponse
+    from .whats_app_message_read_event import WhatsAppMessageReadEvent
+    from .whats_app_message_received_event import WhatsAppMessageReceivedEvent
+    from .whats_app_message_received_event_data import WhatsAppMessageReceivedEventData
     from .whats_app_message_send_request import WhatsAppMessageSendRequest
     from .whats_app_message_send_response import WhatsAppMessageSendResponse
+    from .whats_app_message_sent_event import WhatsAppMessageSentEvent
     from .whats_app_message_status import WhatsAppMessageStatus
+    from .whats_app_message_status_event_data import WhatsAppMessageStatusEventData
     from .whats_app_message_template import WhatsAppMessageTemplate
+    from .whats_app_messages_group_event import (
+        WhatsAppMessagesGroupEvent,
+        WhatsAppMessagesGroupEvent_Test,
+        WhatsAppMessagesGroupEvent_WhatsappContactMarketingResumed,
+        WhatsAppMessagesGroupEvent_WhatsappContactMarketingStopped,
+        WhatsAppMessagesGroupEvent_WhatsappMessageDelivered,
+        WhatsAppMessagesGroupEvent_WhatsappMessageFailed,
+        WhatsAppMessagesGroupEvent_WhatsappMessageRead,
+        WhatsAppMessagesGroupEvent_WhatsappMessageReceived,
+        WhatsAppMessagesGroupEvent_WhatsappMessageSent,
+    )
     from .whats_app_problem import WhatsAppProblem
     from .whats_app_problem_error_class import WhatsAppProblemErrorClass
+    from .whats_app_send_audio_content import WhatsAppSendAudioContent
+    from .whats_app_send_buttons import WhatsAppSendButtons
+    from .whats_app_send_buttons_content import WhatsAppSendButtonsContent
+    from .whats_app_send_content import (
+        WhatsAppSendContent,
+        WhatsAppSendContent_Audio,
+        WhatsAppSendContent_Buttons,
+        WhatsAppSendContent_Document,
+        WhatsAppSendContent_Image,
+        WhatsAppSendContent_List,
+        WhatsAppSendContent_Text,
+        WhatsAppSendContent_Video,
+    )
+    from .whats_app_send_document_content import WhatsAppSendDocumentContent
+    from .whats_app_send_image_content import WhatsAppSendImageContent
+    from .whats_app_send_list import WhatsAppSendList
+    from .whats_app_send_list_content import WhatsAppSendListContent
+    from .whats_app_send_list_row import WhatsAppSendListRow
+    from .whats_app_send_list_section import WhatsAppSendListSection
+    from .whats_app_send_media import WhatsAppSendMedia
+    from .whats_app_send_reply_button import WhatsAppSendReplyButton
     from .whats_app_send_template import WhatsAppSendTemplate
     from .whats_app_send_template_button import WhatsAppSendTemplateButton
     from .whats_app_send_template_button_type import WhatsAppSendTemplateButtonType
     from .whats_app_send_template_header import WhatsAppSendTemplateHeader
     from .whats_app_send_template_header_type import WhatsAppSendTemplateHeaderType
+    from .whats_app_send_text_content import WhatsAppSendTextContent
+    from .whats_app_send_video_content import WhatsAppSendVideoContent
     from .whats_app_sender import WhatsAppSender
+    from .whats_app_sender_banned_event import WhatsAppSenderBannedEvent
+    from .whats_app_sender_connected_event import WhatsAppSenderConnectedEvent
+    from .whats_app_sender_disconnected_event import WhatsAppSenderDisconnectedEvent
+    from .whats_app_sender_event_data import WhatsAppSenderEventData
+    from .whats_app_sender_event_data_quality_rating import WhatsAppSenderEventDataQualityRating
+    from .whats_app_sender_event_data_status import WhatsAppSenderEventDataStatus
+    from .whats_app_sender_flagged_event import WhatsAppSenderFlaggedEvent
     from .whats_app_sender_list_response import WhatsAppSenderListResponse
+    from .whats_app_sender_previous_attributes import WhatsAppSenderPreviousAttributes
+    from .whats_app_sender_previous_attributes_quality_rating import WhatsAppSenderPreviousAttributesQualityRating
+    from .whats_app_sender_previous_attributes_status import WhatsAppSenderPreviousAttributesStatus
+    from .whats_app_sender_quality_changed_event import WhatsAppSenderQualityChangedEvent
     from .whats_app_sender_quality_rating import WhatsAppSenderQualityRating
+    from .whats_app_sender_restricted_event import WhatsAppSenderRestrictedEvent
     from .whats_app_sender_status import WhatsAppSenderStatus
+    from .whats_app_sender_updated_event import WhatsAppSenderUpdatedEvent
+    from .whats_app_senders_group_event import (
+        WhatsAppSendersGroupEvent,
+        WhatsAppSendersGroupEvent_Test,
+        WhatsAppSendersGroupEvent_WhatsappSenderBanned,
+        WhatsAppSendersGroupEvent_WhatsappSenderConnected,
+        WhatsAppSendersGroupEvent_WhatsappSenderDisconnected,
+        WhatsAppSendersGroupEvent_WhatsappSenderFlagged,
+        WhatsAppSendersGroupEvent_WhatsappSenderQualityChanged,
+        WhatsAppSendersGroupEvent_WhatsappSenderRestricted,
+        WhatsAppSendersGroupEvent_WhatsappSenderUpdated,
+    )
     from .whats_app_template import WhatsAppTemplate
+    from .whats_app_template_approved_event import WhatsAppTemplateApprovedEvent
     from .whats_app_template_body_component_request import WhatsAppTemplateBodyComponentRequest
     from .whats_app_template_body_component_request_example import WhatsAppTemplateBodyComponentRequestExample
     from .whats_app_template_button_request import (
@@ -240,6 +354,7 @@ if typing.TYPE_CHECKING:
     )
     from .whats_app_template_buttons_component_request import WhatsAppTemplateButtonsComponentRequest
     from .whats_app_template_category import WhatsAppTemplateCategory
+    from .whats_app_template_category_changed_event import WhatsAppTemplateCategoryChangedEvent
     from .whats_app_template_component_request import (
         WhatsAppTemplateComponentRequest,
         WhatsAppTemplateComponentRequest_Body,
@@ -250,6 +365,12 @@ if typing.TYPE_CHECKING:
     from .whats_app_template_copy_code_button_request import WhatsAppTemplateCopyCodeButtonRequest
     from .whats_app_template_create_request import WhatsAppTemplateCreateRequest
     from .whats_app_template_create_request_category import WhatsAppTemplateCreateRequestCategory
+    from .whats_app_template_disabled_event import WhatsAppTemplateDisabledEvent
+    from .whats_app_template_event_data import WhatsAppTemplateEventData
+    from .whats_app_template_event_data_category import WhatsAppTemplateEventDataCategory
+    from .whats_app_template_event_data_quality_rating import WhatsAppTemplateEventDataQualityRating
+    from .whats_app_template_event_data_status import WhatsAppTemplateEventDataStatus
+    from .whats_app_template_flagged_event import WhatsAppTemplateFlaggedEvent
     from .whats_app_template_footer_component_request import WhatsAppTemplateFooterComponentRequest
     from .whats_app_template_header_component_request import (
         WhatsAppTemplateHeaderComponentRequest,
@@ -269,9 +390,16 @@ if typing.TYPE_CHECKING:
     )
     from .whats_app_template_media_header_component_request_type import WhatsAppTemplateMediaHeaderComponentRequestType
     from .whats_app_template_page_response import WhatsAppTemplatePageResponse
+    from .whats_app_template_paused_event import WhatsAppTemplatePausedEvent
     from .whats_app_template_phone_number_button_request import WhatsAppTemplatePhoneNumberButtonRequest
+    from .whats_app_template_previous_attributes import WhatsAppTemplatePreviousAttributes
+    from .whats_app_template_previous_attributes_category import WhatsAppTemplatePreviousAttributesCategory
+    from .whats_app_template_previous_attributes_quality_rating import WhatsAppTemplatePreviousAttributesQualityRating
+    from .whats_app_template_previous_attributes_status import WhatsAppTemplatePreviousAttributesStatus
+    from .whats_app_template_quality_changed_event import WhatsAppTemplateQualityChangedEvent
     from .whats_app_template_quality_rating import WhatsAppTemplateQualityRating
     from .whats_app_template_quick_reply_button_request import WhatsAppTemplateQuickReplyButtonRequest
+    from .whats_app_template_rejected_event import WhatsAppTemplateRejectedEvent
     from .whats_app_template_response import WhatsAppTemplateResponse
     from .whats_app_template_response_component import WhatsAppTemplateResponseComponent
     from .whats_app_template_response_component_format import WhatsAppTemplateResponseComponentFormat
@@ -281,9 +409,33 @@ if typing.TYPE_CHECKING:
         WhatsAppTemplateTextHeaderComponentRequestExample,
     )
     from .whats_app_template_text_header_component_request_type import WhatsAppTemplateTextHeaderComponentRequestType
+    from .whats_app_template_updated_event import WhatsAppTemplateUpdatedEvent
     from .whats_app_template_url_button_request import WhatsAppTemplateUrlButtonRequest
+    from .whats_app_templates_group_event import (
+        WhatsAppTemplatesGroupEvent,
+        WhatsAppTemplatesGroupEvent_Test,
+        WhatsAppTemplatesGroupEvent_WhatsappTemplateApproved,
+        WhatsAppTemplatesGroupEvent_WhatsappTemplateCategoryChanged,
+        WhatsAppTemplatesGroupEvent_WhatsappTemplateDisabled,
+        WhatsAppTemplatesGroupEvent_WhatsappTemplateFlagged,
+        WhatsAppTemplatesGroupEvent_WhatsappTemplatePaused,
+        WhatsAppTemplatesGroupEvent_WhatsappTemplateQualityChanged,
+        WhatsAppTemplatesGroupEvent_WhatsappTemplateRejected,
+        WhatsAppTemplatesGroupEvent_WhatsappTemplateUpdated,
+    )
     from .whats_app_waba import WhatsAppWaba
     from .whats_app_waba_list_response import WhatsAppWabaListResponse
+    from .whats_app_webhook import WhatsAppWebhook
+    from .whats_app_webhook_create_request import WhatsAppWebhookCreateRequest
+    from .whats_app_webhook_group import WhatsAppWebhookGroup
+    from .whats_app_webhook_list_response import WhatsAppWebhookListResponse
+    from .whats_app_webhook_response import WhatsAppWebhookResponse
+    from .whats_app_webhook_test_event import WhatsAppWebhookTestEvent
+    from .whats_app_webhook_test_event_data import WhatsAppWebhookTestEventData
+    from .whats_app_webhook_test_response import WhatsAppWebhookTestResponse
+    from .whats_app_webhook_test_result import WhatsAppWebhookTestResult
+    from .whats_app_webhook_test_result_outcome import WhatsAppWebhookTestResultOutcome
+    from .whats_app_webhook_update_request import WhatsAppWebhookUpdateRequest
 _dynamic_imports: typing.Dict[str, str] = {
     "AccountErrorResponse": ".account_error_response",
     "AccountLimits": ".account_limits",
@@ -482,28 +634,134 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WebhookInUseErrorResponse": ".webhook_in_use_error_response",
     "WhatsAppBusinessAccount": ".whats_app_business_account",
     "WhatsAppBusinessAccountMessagingLimit": ".whats_app_business_account_messaging_limit",
+    "WhatsAppContactMarketingPreferenceEventData": ".whats_app_contact_marketing_preference_event_data",
+    "WhatsAppContactMarketingResumedEvent": ".whats_app_contact_marketing_resumed_event",
+    "WhatsAppContactMarketingStoppedEvent": ".whats_app_contact_marketing_stopped_event",
+    "WhatsAppEvent": ".whats_app_event",
+    "WhatsAppEventListResponse": ".whats_app_event_list_response",
+    "WhatsAppEventType": ".whats_app_event_type",
+    "WhatsAppInboundAudioContent": ".whats_app_inbound_audio_content",
+    "WhatsAppInboundButtonReply": ".whats_app_inbound_button_reply",
+    "WhatsAppInboundButtonReplyContent": ".whats_app_inbound_button_reply_content",
+    "WhatsAppInboundContactCard": ".whats_app_inbound_contact_card",
+    "WhatsAppInboundContactsContent": ".whats_app_inbound_contacts_content",
+    "WhatsAppInboundContent": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_Audio": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_ButtonReply": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_Contacts": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_Document": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_FlowResponse": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_Image": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_ListReply": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_Location": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_Reaction": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_Sticker": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_Text": ".whats_app_inbound_content",
+    "WhatsAppInboundContent_Video": ".whats_app_inbound_content",
+    "WhatsAppInboundContext": ".whats_app_inbound_context",
+    "WhatsAppInboundDocumentContent": ".whats_app_inbound_document_content",
+    "WhatsAppInboundFlowResponseContent": ".whats_app_inbound_flow_response_content",
+    "WhatsAppInboundImageContent": ".whats_app_inbound_image_content",
+    "WhatsAppInboundListReply": ".whats_app_inbound_list_reply",
+    "WhatsAppInboundListReplyContent": ".whats_app_inbound_list_reply_content",
+    "WhatsAppInboundLocation": ".whats_app_inbound_location",
+    "WhatsAppInboundLocationContent": ".whats_app_inbound_location_content",
+    "WhatsAppInboundMedia": ".whats_app_inbound_media",
+    "WhatsAppInboundMessageContent": ".whats_app_inbound_message_content",
+    "WhatsAppInboundMessageContentType": ".whats_app_inbound_message_content_type",
+    "WhatsAppInboundReaction": ".whats_app_inbound_reaction",
+    "WhatsAppInboundReactionContent": ".whats_app_inbound_reaction_content",
+    "WhatsAppInboundReferral": ".whats_app_inbound_referral",
+    "WhatsAppInboundReferralSourceType": ".whats_app_inbound_referral_source_type",
+    "WhatsAppInboundStickerContent": ".whats_app_inbound_sticker_content",
+    "WhatsAppInboundTextContent": ".whats_app_inbound_text_content",
+    "WhatsAppInboundVideoContent": ".whats_app_inbound_video_content",
     "WhatsAppMessage": ".whats_app_message",
+    "WhatsAppMessageDeliveredEvent": ".whats_app_message_delivered_event",
+    "WhatsAppMessageError": ".whats_app_message_error",
+    "WhatsAppMessageErrorCode": ".whats_app_message_error_code",
+    "WhatsAppMessageFailedEvent": ".whats_app_message_failed_event",
+    "WhatsAppMessageFailedEventData": ".whats_app_message_failed_event_data",
+    "WhatsAppMessageFailedEventDataStatus": ".whats_app_message_failed_event_data_status",
     "WhatsAppMessageGetResponse": ".whats_app_message_get_response",
     "WhatsAppMessageListItem": ".whats_app_message_list_item",
     "WhatsAppMessageListItemDirection": ".whats_app_message_list_item_direction",
     "WhatsAppMessageListItemStatus": ".whats_app_message_list_item_status",
     "WhatsAppMessageListResponse": ".whats_app_message_list_response",
+    "WhatsAppMessageReadEvent": ".whats_app_message_read_event",
+    "WhatsAppMessageReceivedEvent": ".whats_app_message_received_event",
+    "WhatsAppMessageReceivedEventData": ".whats_app_message_received_event_data",
     "WhatsAppMessageSendRequest": ".whats_app_message_send_request",
     "WhatsAppMessageSendResponse": ".whats_app_message_send_response",
+    "WhatsAppMessageSentEvent": ".whats_app_message_sent_event",
     "WhatsAppMessageStatus": ".whats_app_message_status",
+    "WhatsAppMessageStatusEventData": ".whats_app_message_status_event_data",
     "WhatsAppMessageTemplate": ".whats_app_message_template",
+    "WhatsAppMessagesGroupEvent": ".whats_app_messages_group_event",
+    "WhatsAppMessagesGroupEvent_Test": ".whats_app_messages_group_event",
+    "WhatsAppMessagesGroupEvent_WhatsappContactMarketingResumed": ".whats_app_messages_group_event",
+    "WhatsAppMessagesGroupEvent_WhatsappContactMarketingStopped": ".whats_app_messages_group_event",
+    "WhatsAppMessagesGroupEvent_WhatsappMessageDelivered": ".whats_app_messages_group_event",
+    "WhatsAppMessagesGroupEvent_WhatsappMessageFailed": ".whats_app_messages_group_event",
+    "WhatsAppMessagesGroupEvent_WhatsappMessageRead": ".whats_app_messages_group_event",
+    "WhatsAppMessagesGroupEvent_WhatsappMessageReceived": ".whats_app_messages_group_event",
+    "WhatsAppMessagesGroupEvent_WhatsappMessageSent": ".whats_app_messages_group_event",
     "WhatsAppProblem": ".whats_app_problem",
     "WhatsAppProblemErrorClass": ".whats_app_problem_error_class",
+    "WhatsAppSendAudioContent": ".whats_app_send_audio_content",
+    "WhatsAppSendButtons": ".whats_app_send_buttons",
+    "WhatsAppSendButtonsContent": ".whats_app_send_buttons_content",
+    "WhatsAppSendContent": ".whats_app_send_content",
+    "WhatsAppSendContent_Audio": ".whats_app_send_content",
+    "WhatsAppSendContent_Buttons": ".whats_app_send_content",
+    "WhatsAppSendContent_Document": ".whats_app_send_content",
+    "WhatsAppSendContent_Image": ".whats_app_send_content",
+    "WhatsAppSendContent_List": ".whats_app_send_content",
+    "WhatsAppSendContent_Text": ".whats_app_send_content",
+    "WhatsAppSendContent_Video": ".whats_app_send_content",
+    "WhatsAppSendDocumentContent": ".whats_app_send_document_content",
+    "WhatsAppSendImageContent": ".whats_app_send_image_content",
+    "WhatsAppSendList": ".whats_app_send_list",
+    "WhatsAppSendListContent": ".whats_app_send_list_content",
+    "WhatsAppSendListRow": ".whats_app_send_list_row",
+    "WhatsAppSendListSection": ".whats_app_send_list_section",
+    "WhatsAppSendMedia": ".whats_app_send_media",
+    "WhatsAppSendReplyButton": ".whats_app_send_reply_button",
     "WhatsAppSendTemplate": ".whats_app_send_template",
     "WhatsAppSendTemplateButton": ".whats_app_send_template_button",
     "WhatsAppSendTemplateButtonType": ".whats_app_send_template_button_type",
     "WhatsAppSendTemplateHeader": ".whats_app_send_template_header",
     "WhatsAppSendTemplateHeaderType": ".whats_app_send_template_header_type",
+    "WhatsAppSendTextContent": ".whats_app_send_text_content",
+    "WhatsAppSendVideoContent": ".whats_app_send_video_content",
     "WhatsAppSender": ".whats_app_sender",
+    "WhatsAppSenderBannedEvent": ".whats_app_sender_banned_event",
+    "WhatsAppSenderConnectedEvent": ".whats_app_sender_connected_event",
+    "WhatsAppSenderDisconnectedEvent": ".whats_app_sender_disconnected_event",
+    "WhatsAppSenderEventData": ".whats_app_sender_event_data",
+    "WhatsAppSenderEventDataQualityRating": ".whats_app_sender_event_data_quality_rating",
+    "WhatsAppSenderEventDataStatus": ".whats_app_sender_event_data_status",
+    "WhatsAppSenderFlaggedEvent": ".whats_app_sender_flagged_event",
     "WhatsAppSenderListResponse": ".whats_app_sender_list_response",
+    "WhatsAppSenderPreviousAttributes": ".whats_app_sender_previous_attributes",
+    "WhatsAppSenderPreviousAttributesQualityRating": ".whats_app_sender_previous_attributes_quality_rating",
+    "WhatsAppSenderPreviousAttributesStatus": ".whats_app_sender_previous_attributes_status",
+    "WhatsAppSenderQualityChangedEvent": ".whats_app_sender_quality_changed_event",
     "WhatsAppSenderQualityRating": ".whats_app_sender_quality_rating",
+    "WhatsAppSenderRestrictedEvent": ".whats_app_sender_restricted_event",
     "WhatsAppSenderStatus": ".whats_app_sender_status",
+    "WhatsAppSenderUpdatedEvent": ".whats_app_sender_updated_event",
+    "WhatsAppSendersGroupEvent": ".whats_app_senders_group_event",
+    "WhatsAppSendersGroupEvent_Test": ".whats_app_senders_group_event",
+    "WhatsAppSendersGroupEvent_WhatsappSenderBanned": ".whats_app_senders_group_event",
+    "WhatsAppSendersGroupEvent_WhatsappSenderConnected": ".whats_app_senders_group_event",
+    "WhatsAppSendersGroupEvent_WhatsappSenderDisconnected": ".whats_app_senders_group_event",
+    "WhatsAppSendersGroupEvent_WhatsappSenderFlagged": ".whats_app_senders_group_event",
+    "WhatsAppSendersGroupEvent_WhatsappSenderQualityChanged": ".whats_app_senders_group_event",
+    "WhatsAppSendersGroupEvent_WhatsappSenderRestricted": ".whats_app_senders_group_event",
+    "WhatsAppSendersGroupEvent_WhatsappSenderUpdated": ".whats_app_senders_group_event",
     "WhatsAppTemplate": ".whats_app_template",
+    "WhatsAppTemplateApprovedEvent": ".whats_app_template_approved_event",
     "WhatsAppTemplateBodyComponentRequest": ".whats_app_template_body_component_request",
     "WhatsAppTemplateBodyComponentRequestExample": ".whats_app_template_body_component_request_example",
     "WhatsAppTemplateButtonRequest": ".whats_app_template_button_request",
@@ -513,6 +771,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WhatsAppTemplateButtonRequest_Url": ".whats_app_template_button_request",
     "WhatsAppTemplateButtonsComponentRequest": ".whats_app_template_buttons_component_request",
     "WhatsAppTemplateCategory": ".whats_app_template_category",
+    "WhatsAppTemplateCategoryChangedEvent": ".whats_app_template_category_changed_event",
     "WhatsAppTemplateComponentRequest": ".whats_app_template_component_request",
     "WhatsAppTemplateComponentRequest_Body": ".whats_app_template_component_request",
     "WhatsAppTemplateComponentRequest_Buttons": ".whats_app_template_component_request",
@@ -521,6 +780,12 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WhatsAppTemplateCopyCodeButtonRequest": ".whats_app_template_copy_code_button_request",
     "WhatsAppTemplateCreateRequest": ".whats_app_template_create_request",
     "WhatsAppTemplateCreateRequestCategory": ".whats_app_template_create_request_category",
+    "WhatsAppTemplateDisabledEvent": ".whats_app_template_disabled_event",
+    "WhatsAppTemplateEventData": ".whats_app_template_event_data",
+    "WhatsAppTemplateEventDataCategory": ".whats_app_template_event_data_category",
+    "WhatsAppTemplateEventDataQualityRating": ".whats_app_template_event_data_quality_rating",
+    "WhatsAppTemplateEventDataStatus": ".whats_app_template_event_data_status",
+    "WhatsAppTemplateFlaggedEvent": ".whats_app_template_flagged_event",
     "WhatsAppTemplateFooterComponentRequest": ".whats_app_template_footer_component_request",
     "WhatsAppTemplateHeaderComponentRequest": ".whats_app_template_header_component_request",
     "WhatsAppTemplateHeaderComponentRequest_Document": ".whats_app_template_header_component_request",
@@ -534,9 +799,16 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WhatsAppTemplateMediaHeaderComponentRequestExample": ".whats_app_template_media_header_component_request_example",
     "WhatsAppTemplateMediaHeaderComponentRequestType": ".whats_app_template_media_header_component_request_type",
     "WhatsAppTemplatePageResponse": ".whats_app_template_page_response",
+    "WhatsAppTemplatePausedEvent": ".whats_app_template_paused_event",
     "WhatsAppTemplatePhoneNumberButtonRequest": ".whats_app_template_phone_number_button_request",
+    "WhatsAppTemplatePreviousAttributes": ".whats_app_template_previous_attributes",
+    "WhatsAppTemplatePreviousAttributesCategory": ".whats_app_template_previous_attributes_category",
+    "WhatsAppTemplatePreviousAttributesQualityRating": ".whats_app_template_previous_attributes_quality_rating",
+    "WhatsAppTemplatePreviousAttributesStatus": ".whats_app_template_previous_attributes_status",
+    "WhatsAppTemplateQualityChangedEvent": ".whats_app_template_quality_changed_event",
     "WhatsAppTemplateQualityRating": ".whats_app_template_quality_rating",
     "WhatsAppTemplateQuickReplyButtonRequest": ".whats_app_template_quick_reply_button_request",
+    "WhatsAppTemplateRejectedEvent": ".whats_app_template_rejected_event",
     "WhatsAppTemplateResponse": ".whats_app_template_response",
     "WhatsAppTemplateResponseComponent": ".whats_app_template_response_component",
     "WhatsAppTemplateResponseComponentFormat": ".whats_app_template_response_component_format",
@@ -544,9 +816,31 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WhatsAppTemplateTextHeaderComponentRequest": ".whats_app_template_text_header_component_request",
     "WhatsAppTemplateTextHeaderComponentRequestExample": ".whats_app_template_text_header_component_request_example",
     "WhatsAppTemplateTextHeaderComponentRequestType": ".whats_app_template_text_header_component_request_type",
+    "WhatsAppTemplateUpdatedEvent": ".whats_app_template_updated_event",
     "WhatsAppTemplateUrlButtonRequest": ".whats_app_template_url_button_request",
+    "WhatsAppTemplatesGroupEvent": ".whats_app_templates_group_event",
+    "WhatsAppTemplatesGroupEvent_Test": ".whats_app_templates_group_event",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateApproved": ".whats_app_templates_group_event",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateCategoryChanged": ".whats_app_templates_group_event",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateDisabled": ".whats_app_templates_group_event",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateFlagged": ".whats_app_templates_group_event",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplatePaused": ".whats_app_templates_group_event",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateQualityChanged": ".whats_app_templates_group_event",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateRejected": ".whats_app_templates_group_event",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateUpdated": ".whats_app_templates_group_event",
     "WhatsAppWaba": ".whats_app_waba",
     "WhatsAppWabaListResponse": ".whats_app_waba_list_response",
+    "WhatsAppWebhook": ".whats_app_webhook",
+    "WhatsAppWebhookCreateRequest": ".whats_app_webhook_create_request",
+    "WhatsAppWebhookGroup": ".whats_app_webhook_group",
+    "WhatsAppWebhookListResponse": ".whats_app_webhook_list_response",
+    "WhatsAppWebhookResponse": ".whats_app_webhook_response",
+    "WhatsAppWebhookTestEvent": ".whats_app_webhook_test_event",
+    "WhatsAppWebhookTestEventData": ".whats_app_webhook_test_event_data",
+    "WhatsAppWebhookTestResponse": ".whats_app_webhook_test_response",
+    "WhatsAppWebhookTestResult": ".whats_app_webhook_test_result",
+    "WhatsAppWebhookTestResultOutcome": ".whats_app_webhook_test_result_outcome",
+    "WhatsAppWebhookUpdateRequest": ".whats_app_webhook_update_request",
 }
 
 
@@ -769,28 +1063,134 @@ __all__ = [
     "WebhookInUseErrorResponse",
     "WhatsAppBusinessAccount",
     "WhatsAppBusinessAccountMessagingLimit",
+    "WhatsAppContactMarketingPreferenceEventData",
+    "WhatsAppContactMarketingResumedEvent",
+    "WhatsAppContactMarketingStoppedEvent",
+    "WhatsAppEvent",
+    "WhatsAppEventListResponse",
+    "WhatsAppEventType",
+    "WhatsAppInboundAudioContent",
+    "WhatsAppInboundButtonReply",
+    "WhatsAppInboundButtonReplyContent",
+    "WhatsAppInboundContactCard",
+    "WhatsAppInboundContactsContent",
+    "WhatsAppInboundContent",
+    "WhatsAppInboundContent_Audio",
+    "WhatsAppInboundContent_ButtonReply",
+    "WhatsAppInboundContent_Contacts",
+    "WhatsAppInboundContent_Document",
+    "WhatsAppInboundContent_FlowResponse",
+    "WhatsAppInboundContent_Image",
+    "WhatsAppInboundContent_ListReply",
+    "WhatsAppInboundContent_Location",
+    "WhatsAppInboundContent_Reaction",
+    "WhatsAppInboundContent_Sticker",
+    "WhatsAppInboundContent_Text",
+    "WhatsAppInboundContent_Video",
+    "WhatsAppInboundContext",
+    "WhatsAppInboundDocumentContent",
+    "WhatsAppInboundFlowResponseContent",
+    "WhatsAppInboundImageContent",
+    "WhatsAppInboundListReply",
+    "WhatsAppInboundListReplyContent",
+    "WhatsAppInboundLocation",
+    "WhatsAppInboundLocationContent",
+    "WhatsAppInboundMedia",
+    "WhatsAppInboundMessageContent",
+    "WhatsAppInboundMessageContentType",
+    "WhatsAppInboundReaction",
+    "WhatsAppInboundReactionContent",
+    "WhatsAppInboundReferral",
+    "WhatsAppInboundReferralSourceType",
+    "WhatsAppInboundStickerContent",
+    "WhatsAppInboundTextContent",
+    "WhatsAppInboundVideoContent",
     "WhatsAppMessage",
+    "WhatsAppMessageDeliveredEvent",
+    "WhatsAppMessageError",
+    "WhatsAppMessageErrorCode",
+    "WhatsAppMessageFailedEvent",
+    "WhatsAppMessageFailedEventData",
+    "WhatsAppMessageFailedEventDataStatus",
     "WhatsAppMessageGetResponse",
     "WhatsAppMessageListItem",
     "WhatsAppMessageListItemDirection",
     "WhatsAppMessageListItemStatus",
     "WhatsAppMessageListResponse",
+    "WhatsAppMessageReadEvent",
+    "WhatsAppMessageReceivedEvent",
+    "WhatsAppMessageReceivedEventData",
     "WhatsAppMessageSendRequest",
     "WhatsAppMessageSendResponse",
+    "WhatsAppMessageSentEvent",
     "WhatsAppMessageStatus",
+    "WhatsAppMessageStatusEventData",
     "WhatsAppMessageTemplate",
+    "WhatsAppMessagesGroupEvent",
+    "WhatsAppMessagesGroupEvent_Test",
+    "WhatsAppMessagesGroupEvent_WhatsappContactMarketingResumed",
+    "WhatsAppMessagesGroupEvent_WhatsappContactMarketingStopped",
+    "WhatsAppMessagesGroupEvent_WhatsappMessageDelivered",
+    "WhatsAppMessagesGroupEvent_WhatsappMessageFailed",
+    "WhatsAppMessagesGroupEvent_WhatsappMessageRead",
+    "WhatsAppMessagesGroupEvent_WhatsappMessageReceived",
+    "WhatsAppMessagesGroupEvent_WhatsappMessageSent",
     "WhatsAppProblem",
     "WhatsAppProblemErrorClass",
+    "WhatsAppSendAudioContent",
+    "WhatsAppSendButtons",
+    "WhatsAppSendButtonsContent",
+    "WhatsAppSendContent",
+    "WhatsAppSendContent_Audio",
+    "WhatsAppSendContent_Buttons",
+    "WhatsAppSendContent_Document",
+    "WhatsAppSendContent_Image",
+    "WhatsAppSendContent_List",
+    "WhatsAppSendContent_Text",
+    "WhatsAppSendContent_Video",
+    "WhatsAppSendDocumentContent",
+    "WhatsAppSendImageContent",
+    "WhatsAppSendList",
+    "WhatsAppSendListContent",
+    "WhatsAppSendListRow",
+    "WhatsAppSendListSection",
+    "WhatsAppSendMedia",
+    "WhatsAppSendReplyButton",
     "WhatsAppSendTemplate",
     "WhatsAppSendTemplateButton",
     "WhatsAppSendTemplateButtonType",
     "WhatsAppSendTemplateHeader",
     "WhatsAppSendTemplateHeaderType",
+    "WhatsAppSendTextContent",
+    "WhatsAppSendVideoContent",
     "WhatsAppSender",
+    "WhatsAppSenderBannedEvent",
+    "WhatsAppSenderConnectedEvent",
+    "WhatsAppSenderDisconnectedEvent",
+    "WhatsAppSenderEventData",
+    "WhatsAppSenderEventDataQualityRating",
+    "WhatsAppSenderEventDataStatus",
+    "WhatsAppSenderFlaggedEvent",
     "WhatsAppSenderListResponse",
+    "WhatsAppSenderPreviousAttributes",
+    "WhatsAppSenderPreviousAttributesQualityRating",
+    "WhatsAppSenderPreviousAttributesStatus",
+    "WhatsAppSenderQualityChangedEvent",
     "WhatsAppSenderQualityRating",
+    "WhatsAppSenderRestrictedEvent",
     "WhatsAppSenderStatus",
+    "WhatsAppSenderUpdatedEvent",
+    "WhatsAppSendersGroupEvent",
+    "WhatsAppSendersGroupEvent_Test",
+    "WhatsAppSendersGroupEvent_WhatsappSenderBanned",
+    "WhatsAppSendersGroupEvent_WhatsappSenderConnected",
+    "WhatsAppSendersGroupEvent_WhatsappSenderDisconnected",
+    "WhatsAppSendersGroupEvent_WhatsappSenderFlagged",
+    "WhatsAppSendersGroupEvent_WhatsappSenderQualityChanged",
+    "WhatsAppSendersGroupEvent_WhatsappSenderRestricted",
+    "WhatsAppSendersGroupEvent_WhatsappSenderUpdated",
     "WhatsAppTemplate",
+    "WhatsAppTemplateApprovedEvent",
     "WhatsAppTemplateBodyComponentRequest",
     "WhatsAppTemplateBodyComponentRequestExample",
     "WhatsAppTemplateButtonRequest",
@@ -800,6 +1200,7 @@ __all__ = [
     "WhatsAppTemplateButtonRequest_Url",
     "WhatsAppTemplateButtonsComponentRequest",
     "WhatsAppTemplateCategory",
+    "WhatsAppTemplateCategoryChangedEvent",
     "WhatsAppTemplateComponentRequest",
     "WhatsAppTemplateComponentRequest_Body",
     "WhatsAppTemplateComponentRequest_Buttons",
@@ -808,6 +1209,12 @@ __all__ = [
     "WhatsAppTemplateCopyCodeButtonRequest",
     "WhatsAppTemplateCreateRequest",
     "WhatsAppTemplateCreateRequestCategory",
+    "WhatsAppTemplateDisabledEvent",
+    "WhatsAppTemplateEventData",
+    "WhatsAppTemplateEventDataCategory",
+    "WhatsAppTemplateEventDataQualityRating",
+    "WhatsAppTemplateEventDataStatus",
+    "WhatsAppTemplateFlaggedEvent",
     "WhatsAppTemplateFooterComponentRequest",
     "WhatsAppTemplateHeaderComponentRequest",
     "WhatsAppTemplateHeaderComponentRequest_Document",
@@ -821,9 +1228,16 @@ __all__ = [
     "WhatsAppTemplateMediaHeaderComponentRequestExample",
     "WhatsAppTemplateMediaHeaderComponentRequestType",
     "WhatsAppTemplatePageResponse",
+    "WhatsAppTemplatePausedEvent",
     "WhatsAppTemplatePhoneNumberButtonRequest",
+    "WhatsAppTemplatePreviousAttributes",
+    "WhatsAppTemplatePreviousAttributesCategory",
+    "WhatsAppTemplatePreviousAttributesQualityRating",
+    "WhatsAppTemplatePreviousAttributesStatus",
+    "WhatsAppTemplateQualityChangedEvent",
     "WhatsAppTemplateQualityRating",
     "WhatsAppTemplateQuickReplyButtonRequest",
+    "WhatsAppTemplateRejectedEvent",
     "WhatsAppTemplateResponse",
     "WhatsAppTemplateResponseComponent",
     "WhatsAppTemplateResponseComponentFormat",
@@ -831,7 +1245,29 @@ __all__ = [
     "WhatsAppTemplateTextHeaderComponentRequest",
     "WhatsAppTemplateTextHeaderComponentRequestExample",
     "WhatsAppTemplateTextHeaderComponentRequestType",
+    "WhatsAppTemplateUpdatedEvent",
     "WhatsAppTemplateUrlButtonRequest",
+    "WhatsAppTemplatesGroupEvent",
+    "WhatsAppTemplatesGroupEvent_Test",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateApproved",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateCategoryChanged",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateDisabled",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateFlagged",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplatePaused",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateQualityChanged",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateRejected",
+    "WhatsAppTemplatesGroupEvent_WhatsappTemplateUpdated",
     "WhatsAppWaba",
     "WhatsAppWabaListResponse",
+    "WhatsAppWebhook",
+    "WhatsAppWebhookCreateRequest",
+    "WhatsAppWebhookGroup",
+    "WhatsAppWebhookListResponse",
+    "WhatsAppWebhookResponse",
+    "WhatsAppWebhookTestEvent",
+    "WhatsAppWebhookTestEventData",
+    "WhatsAppWebhookTestResponse",
+    "WhatsAppWebhookTestResult",
+    "WhatsAppWebhookTestResultOutcome",
+    "WhatsAppWebhookUpdateRequest",
 ]
