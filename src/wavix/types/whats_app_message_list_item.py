@@ -8,6 +8,7 @@ import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .whats_app_inbound_message_content import WhatsAppInboundMessageContent
+from .whats_app_message_error import WhatsAppMessageError
 from .whats_app_message_list_item_direction import WhatsAppMessageListItemDirection
 from .whats_app_message_list_item_status import WhatsAppMessageListItemStatus
 
@@ -80,6 +81,11 @@ class WhatsAppMessageListItem(UniversalBaseModel):
     service_window_open_until: typing.Optional[dt.datetime] = pydantic.Field(default=None)
     """
     End of the 24-hour window in which you may reply to the customer without a template. It's `null` when the customer hasn't written to the sender in the retained history. A value in the past means the window is closed.
+    """
+
+    error: typing.Optional[WhatsAppMessageError] = pydantic.Field(default=None)
+    """
+    Why an `outbound` message wasn't delivered. It's `null` unless `status` is `undelivered`, `expired`, or `rejected`.
     """
 
     if IS_PYDANTIC_V2:
