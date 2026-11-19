@@ -254,6 +254,7 @@ if typing.TYPE_CHECKING:
     from .whats_app_message import WhatsAppMessage
     from .whats_app_message_delivered_event import WhatsAppMessageDeliveredEvent
     from .whats_app_message_error import WhatsAppMessageError
+    from .whats_app_message_error_action import WhatsAppMessageErrorAction
     from .whats_app_message_error_code import WhatsAppMessageErrorCode
     from .whats_app_message_failed_event import WhatsAppMessageFailedEvent
     from .whats_app_message_failed_event_data import WhatsAppMessageFailedEventData
@@ -679,6 +680,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WhatsAppMessage": ".whats_app_message",
     "WhatsAppMessageDeliveredEvent": ".whats_app_message_delivered_event",
     "WhatsAppMessageError": ".whats_app_message_error",
+    "WhatsAppMessageErrorAction": ".whats_app_message_error_action",
     "WhatsAppMessageErrorCode": ".whats_app_message_error_code",
     "WhatsAppMessageFailedEvent": ".whats_app_message_failed_event",
     "WhatsAppMessageFailedEventData": ".whats_app_message_failed_event_data",
@@ -1108,6 +1110,7 @@ __all__ = [
     "WhatsAppMessage",
     "WhatsAppMessageDeliveredEvent",
     "WhatsAppMessageError",
+    "WhatsAppMessageErrorAction",
     "WhatsAppMessageErrorCode",
     "WhatsAppMessageFailedEvent",
     "WhatsAppMessageFailedEventData",

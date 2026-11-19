@@ -4,36 +4,73 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from .whats_app_message_error_action import WhatsAppMessageErrorAction
 from .whats_app_message_error_code import WhatsAppMessageErrorCode
 
 
 class WhatsAppMessageError(UniversalBaseModel):
     """
-    Why a message you sent wasn't delivered. Returned in `whatsapp.message.failed` events and by [Retrieve a WhatsApp message](https://docs.wavix.com/api-reference/whatsapp/retrieve-a-whatsapp-message). The code and explanation come from a fixed Wavix list and don't depend on the provider.
+    Why a message you sent wasn't delivered. Returned in `whatsapp.message.failed` events and when you retrieve or list WhatsApp messages. Wavix retries temporary failures itself, so you get an error only after Wavix stops retrying.
     """
 
     code: WhatsAppMessageErrorCode = pydantic.Field()
     """
-    Wavix error code, in the same format as the `error_code` of WhatsApp API errors. Wavix can add codes, so handle a code you don't recognize as `WAVIX_DELIVERY_FAILED`. Possible values:
+    Wavix error code, in the same format as the `error_code` of WhatsApp API errors. Wavix can add codes, so handle a code you don't recognize as `DELIVERY_FAILED`. Possible values:
     
-    - `WAVIX_RECIPIENT_NOT_ON_WHATSAPP` — The recipient's number isn't on WhatsApp or can't receive messages.
-    - `WAVIX_RECIPIENT_OPTED_OUT` — The recipient stopped marketing messages from your sender.
-    - `WAVIX_SERVICE_WINDOW_CLOSED` — The message isn't a template, and the recipient hasn't messaged your sender in the last 24 hours. Send a template instead.
-    - `WAVIX_TEMPLATE_NOT_APPROVED` — The template is still pending review or was rejected, so it can't be sent yet.
-    - `WAVIX_TEMPLATE_PAUSED_OR_DISABLED` — The template is paused or disabled, so it can't be sent.
-    - `WAVIX_INVALID_TEMPLATE_PARAMETERS` — The parameters don't match the template. Correct them and send the message again.
-    - `WAVIX_MARKETING_LIMIT_REACHED` — WhatsApp limits how many marketing messages a recipient gets, and the limit for this recipient is reached.
-    - `WAVIX_SENDER_LIMIT_REACHED` — Your sender reached its messaging limit and can't start new conversations until the 24-hour window resets.
-    - `WAVIX_SENDER_RATE_LIMITED` — WhatsApp slowed down your sender, for example because recipients reported or blocked its messages.
-    - `WAVIX_SENDER_UNAVAILABLE` — Your sender isn't registered, or it's banned or disconnected.
-    - `WAVIX_SERVICE_UNAVAILABLE` — The provider was unavailable and couldn't take the message. Sending it again later can help.
-    - `WAVIX_MESSAGE_EXPIRED` — WhatsApp didn't confirm delivery before the message expired.
-    - `WAVIX_DELIVERY_FAILED` — The message wasn't delivered, and the cause isn't one of the other codes.
+    - `RECIPIENT_NOT_ON_WHATSAPP` — The recipient's number isn't on WhatsApp or can't receive messages.
+    - `RECIPIENT_OPTED_OUT` — The recipient turned off marketing messages or blocked your sender or template.
+    - `SERVICE_WINDOW_CLOSED` — The message isn't a template, and the recipient hasn't messaged your sender in the last 24 hours. Send a template instead.
+    - `TEMPLATE_NOT_APPROVED` — The template is pending review, was rejected, or WhatsApp hasn't finished preparing it, so it can't be sent yet.
+    - `TEMPLATE_PAUSED_OR_DISABLED` — The template is paused or disabled, so it can't be sent.
+    - `INVALID_TEMPLATE_PARAMETERS` — The parameters don't match the template. Correct them and send the message again.
+    - `MARKETING_LIMIT_REACHED` — WhatsApp limits how many marketing messages a recipient gets, and the limit for this recipient is reached.
+    - `SENDER_LIMIT_REACHED` — Your sender reached its messaging limit and can't start new conversations until the 24-hour window resets.
+    - `SENDER_RATE_LIMITED` — WhatsApp slowed down your sender, for example because recipients reported or blocked its messages.
+    - `SENDER_UNAVAILABLE` — Your sender isn't registered, or it's banned or disconnected.
+    - `SERVICE_UNAVAILABLE` — The provider was unavailable and couldn't take the message. Sending it again later can help.
+    - `MESSAGE_EXPIRED` — The message expired before it was delivered.
+    - `DELIVERY_FAILED` — The message wasn't delivered, and the cause isn't one of the other codes.
     """
 
-    title: str = pydantic.Field()
+    subcode: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Explanation of `code` in plain language. It's the same for every message with this code and never contains the provider's own error text.
+    Finer cause within `code`, or `null` when Wavix has no finer cause. Wavix can add values, so handle a value you don't recognize by `code` alone. Possible values:
+    
+    - `NOT_REGISTERED` — With `RECIPIENT_NOT_ON_WHATSAPP`. The number isn't registered on WhatsApp.
+    - `APP_UPDATE_REQUIRED` — With `RECIPIENT_NOT_ON_WHATSAPP`. The recipient's WhatsApp app can't show the message. The recipient may need to update the app or accept the WhatsApp Terms of Service.
+    - `DEVICE_UNSUPPORTED` — With `RECIPIENT_NOT_ON_WHATSAPP`. The recipient's device doesn't support the message.
+    - `BLOCKED_BY_OPERATOR` — With `RECIPIENT_NOT_ON_WHATSAPP`. This number can't receive WhatsApp messages from businesses.
+    - `MARKETING_OPT_OUT` — With `RECIPIENT_OPTED_OUT`. The recipient turned off marketing messages in WhatsApp.
+    - `TEMPLATE_BLOCKED_BY_RECIPIENT` — With `RECIPIENT_OPTED_OUT`. The recipient blocked this template.
+    - `SENDER_BLOCKED_BY_RECIPIENT` — With `RECIPIENT_OPTED_OUT`. Messages from your sender to this recipient are blocked.
+    - `TEMPLATE_NOT_ELIGIBLE` — With `TEMPLATE_NOT_APPROVED`. WhatsApp can't send this template from your sender. Contact Wavix support.
+    - `PER_RECIPIENT_MARKETING_LIMIT` — With `MARKETING_LIMIT_REACHED`. The recipient got the maximum number of marketing messages from all businesses for now.
+    - `DAILY_PROMOTIONAL_LIMIT` — With `MARKETING_LIMIT_REACHED`. The recipient reached the daily limit on promotional messages.
+    - `UNIQUE_RECIPIENTS_LIMIT` — With `SENDER_LIMIT_REACHED`. Your sender reached the number of recipients it can message in 24 hours.
+    - `RECIPIENT_MESSAGE_LIMIT` — With `SENDER_LIMIT_REACHED`. Your sender reached the number of messages it can send to this recipient.
+    - `LOW_QUALITY_RATING` — With `SENDER_RATE_LIMITED`. The quality rating of your sender limits how many recipients it can reach.
+    - `SENDER_NOT_REGISTERED` — With `SENDER_UNAVAILABLE`. Your sender isn't registered on WhatsApp.
+    - `SENDER_RESTRICTED` — With `SENDER_UNAVAILABLE`. WhatsApp restricted what your sender can do.
+    - `SENDER_MISCONFIGURED` — With `SENDER_UNAVAILABLE`. Your sender's setup doesn't allow this message. Contact Wavix support.
+    - `TEMPLATE_INVALID` — With `DELIVERY_FAILED`. The template is invalid or doesn't match its approved version.
+    - `MEDIA_UNSUPPORTED` — With `DELIVERY_FAILED`. WhatsApp doesn't support the media file or its format.
+    - `MEDIA_INVALID` — With `DELIVERY_FAILED`. The media file couldn't be read or uploaded.
+    - `CONTENT_BLOCKED` — With `DELIVERY_FAILED`. WhatsApp blocked the content for a policy violation.
+    """
+
+    message: str = pydantic.Field()
+    """
+    Short explanation for people, from the most specific of `subcode` and `code`. The text can change, so base your logic on `code`, `subcode`, and `action` instead.
+    """
+
+    action: WhatsAppMessageErrorAction = pydantic.Field()
+    """
+    What to do about the message. Possible values:
+    
+    - `resend_later` — Send the message again later.
+    - `fix_and_resend` — Change the message, template, or media, then send it again.
+    - `do_not_resend` — Don't send the message again. It won't be delivered.
+    - `contact_support` — Contact Wavix support.
     """
 
     docs_url: str = pydantic.Field()
