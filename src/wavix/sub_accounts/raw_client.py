@@ -18,6 +18,7 @@ from ..errors.unauthorized_error import UnauthorizedError
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.sub_accounts_list_response import SubAccountsListResponse
 from ..types.sub_organization_response import SubOrganizationResponse
+from ..types.sub_organization_with_secret import SubOrganizationWithSecret
 from ..types.unauthorized_error_response import UnauthorizedErrorResponse
 from .types.list_sub_accounts_request_status import ListSubAccountsRequestStatus
 from .types.sub_accounts_create_request_default_destinations import SubAccountsCreateRequestDefaultDestinations
@@ -120,9 +121,9 @@ class RawSubAccountsClient:
         name: str,
         default_destinations: typing.Optional[SubAccountsCreateRequestDefaultDestinations] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[SubOrganizationResponse]:
+    ) -> HttpResponse[SubOrganizationWithSecret]:
         """
-        Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`.
+        Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`. Store the returned `api_key` securely. Later reads return `redacted_api_key`, and `api_key` on reads is deprecated.
 
         Parameters
         ----------
@@ -137,7 +138,7 @@ class RawSubAccountsClient:
 
         Returns
         -------
-        HttpResponse[SubOrganizationResponse]
+        HttpResponse[SubOrganizationWithSecret]
             Returns the created sub-account.
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -160,9 +161,9 @@ class RawSubAccountsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    SubOrganizationResponse,
+                    SubOrganizationWithSecret,
                     parse_obj_as(
-                        type_=SubOrganizationResponse,  # type: ignore
+                        type_=SubOrganizationWithSecret,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -525,9 +526,9 @@ class AsyncRawSubAccountsClient:
         name: str,
         default_destinations: typing.Optional[SubAccountsCreateRequestDefaultDestinations] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[SubOrganizationResponse]:
+    ) -> AsyncHttpResponse[SubOrganizationWithSecret]:
         """
-        Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`.
+        Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`. Store the returned `api_key` securely. Later reads return `redacted_api_key`, and `api_key` on reads is deprecated.
 
         Parameters
         ----------
@@ -542,7 +543,7 @@ class AsyncRawSubAccountsClient:
 
         Returns
         -------
-        AsyncHttpResponse[SubOrganizationResponse]
+        AsyncHttpResponse[SubOrganizationWithSecret]
             Returns the created sub-account.
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -565,9 +566,9 @@ class AsyncRawSubAccountsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    SubOrganizationResponse,
+                    SubOrganizationWithSecret,
                     parse_obj_as(
-                        type_=SubOrganizationResponse,  # type: ignore
+                        type_=SubOrganizationWithSecret,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

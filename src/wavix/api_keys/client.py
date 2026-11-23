@@ -87,7 +87,7 @@ class ApiKeysClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> ApiKeyWithSecret:
         """
-        Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`.
+        Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`. Store the returned `value` securely. Later reads return `redacted_value`, and `value` on reads is deprecated.
 
         Parameters
         ----------
@@ -454,7 +454,7 @@ class AsyncApiKeysClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> ApiKeyWithSecret:
         """
-        Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`.
+        Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`. Store the returned `value` securely. Later reads return `redacted_value`, and `value` on reads is deprecated.
 
         Parameters
         ----------

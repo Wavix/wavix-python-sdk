@@ -11,6 +11,7 @@ if typing.TYPE_CHECKING:
     from .allowed_i_ps import AllowedIPs
     from .allowed_i_ps_item import AllowedIPsItem
     from .api_key import ApiKey
+    from .api_key_base import ApiKeyBase
     from .api_key_calls_scope_permission import ApiKeyCallsScopePermission
     from .api_key_calls_scope_permission_allow import ApiKeyCallsScopePermissionAllow
     from .api_key_scope_permission import ApiKeyScopePermission
@@ -134,6 +135,9 @@ if typing.TYPE_CHECKING:
     from .sub_organization_response import SubOrganizationResponse
     from .sub_organization_response_default_destinations import SubOrganizationResponseDefaultDestinations
     from .sub_organization_response_status import SubOrganizationResponseStatus
+    from .sub_organization_with_secret import SubOrganizationWithSecret
+    from .sub_organization_with_secret_default_destinations import SubOrganizationWithSecretDefaultDestinations
+    from .sub_organization_with_secret_status import SubOrganizationWithSecretStatus
     from .submit_file_transcription_response import SubmitFileTranscriptionResponse
     from .success_response import SuccessResponse
     from .tcr_error_message import TcrErrorMessage
@@ -443,6 +447,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "AllowedIPs": ".allowed_i_ps",
     "AllowedIPsItem": ".allowed_i_ps_item",
     "ApiKey": ".api_key",
+    "ApiKeyBase": ".api_key_base",
     "ApiKeyCallsScopePermission": ".api_key_calls_scope_permission",
     "ApiKeyCallsScopePermissionAllow": ".api_key_calls_scope_permission_allow",
     "ApiKeyScopePermission": ".api_key_scope_permission",
@@ -564,6 +569,9 @@ _dynamic_imports: typing.Dict[str, str] = {
     "SubOrganizationResponse": ".sub_organization_response",
     "SubOrganizationResponseDefaultDestinations": ".sub_organization_response_default_destinations",
     "SubOrganizationResponseStatus": ".sub_organization_response_status",
+    "SubOrganizationWithSecret": ".sub_organization_with_secret",
+    "SubOrganizationWithSecretDefaultDestinations": ".sub_organization_with_secret_default_destinations",
+    "SubOrganizationWithSecretStatus": ".sub_organization_with_secret_status",
     "SubmitFileTranscriptionResponse": ".submit_file_transcription_response",
     "SuccessResponse": ".success_response",
     "TcrErrorMessage": ".tcr_error_message",
@@ -873,6 +881,7 @@ __all__ = [
     "AllowedIPs",
     "AllowedIPsItem",
     "ApiKey",
+    "ApiKeyBase",
     "ApiKeyCallsScopePermission",
     "ApiKeyCallsScopePermissionAllow",
     "ApiKeyScopePermission",
@@ -994,6 +1003,9 @@ __all__ = [
     "SubOrganizationResponse",
     "SubOrganizationResponseDefaultDestinations",
     "SubOrganizationResponseStatus",
+    "SubOrganizationWithSecret",
+    "SubOrganizationWithSecretDefaultDestinations",
+    "SubOrganizationWithSecretStatus",
     "SubmitFileTranscriptionResponse",
     "SuccessResponse",
     "TcrErrorMessage",

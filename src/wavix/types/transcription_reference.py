@@ -20,7 +20,7 @@ class TranscriptionReference(UniversalBaseModel):
 
     url: str = pydantic.Field()
     """
-    URL for retrieving the full call transcription.
+    URL for retrieving the full call transcription. Call it with your usual `Authorization` header.
     """
 
     if IS_PYDANTIC_V2:
