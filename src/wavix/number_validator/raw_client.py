@@ -136,12 +136,12 @@ class RawNumberValidatorClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[NumberValidatorCreateBulkResponse]:
         """
-        Validates a batch of phone numbers. When `async` is `true`, returns a `request_id` to poll for results instead of the validation details.
+        Validates a batch of phone numbers. When `async` is `true`, returns a `request_uuid` to poll for results instead of the validation details.
 
         Parameters
         ----------
         phone_numbers : typing.Sequence[str]
-            List of phone numbers to get detailed information about. Maximum 1000 numbers per request.
+            List of phone numbers to get detailed information about. Maximum 500 numbers per request, or 100000 when `async` is `true`.
 
         type : PhoneNumberValidationType
 
@@ -157,7 +157,7 @@ class RawNumberValidatorClient:
         Returns
         -------
         HttpResponse[NumberValidatorCreateBulkResponse]
-            Returns the validation results, or a `request_id` when validation is asynchronous.
+            Returns the validation results, or a `request_uuid` when validation is asynchronous.
         """
         _response = self._client_wrapper.httpx_client.request(
             "v1/validation",
@@ -361,12 +361,12 @@ class AsyncRawNumberValidatorClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[NumberValidatorCreateBulkResponse]:
         """
-        Validates a batch of phone numbers. When `async` is `true`, returns a `request_id` to poll for results instead of the validation details.
+        Validates a batch of phone numbers. When `async` is `true`, returns a `request_uuid` to poll for results instead of the validation details.
 
         Parameters
         ----------
         phone_numbers : typing.Sequence[str]
-            List of phone numbers to get detailed information about. Maximum 1000 numbers per request.
+            List of phone numbers to get detailed information about. Maximum 500 numbers per request, or 100000 when `async` is `true`.
 
         type : PhoneNumberValidationType
 
@@ -382,7 +382,7 @@ class AsyncRawNumberValidatorClient:
         Returns
         -------
         AsyncHttpResponse[NumberValidatorCreateBulkResponse]
-            Returns the validation results, or a `request_id` when validation is asynchronous.
+            Returns the validation results, or a `request_uuid` when validation is asynchronous.
         """
         _response = await self._client_wrapper.httpx_client.request(
             "v1/validation",

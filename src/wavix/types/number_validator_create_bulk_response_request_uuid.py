@@ -6,14 +6,14 @@ import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
-class NumberValidatorCreateBulkResponseRequestId(UniversalBaseModel):
+class NumberValidatorCreateBulkResponseRequestUuid(UniversalBaseModel):
     """
-    Returned when validation runs asynchronously; poll results using `request_id`.
+    Returned when validation runs asynchronously; poll results using `request_uuid`.
     """
 
-    request_id: typing.Optional[str] = pydantic.Field(default=None)
+    request_uuid: str = pydantic.Field()
     """
-    Request ID. Use to poll validation results when `async` is `true`.
+    ID of the validation request. Pass it as `request_id` to retrieve the results when `async` is `true`.
     """
 
     if IS_PYDANTIC_V2:

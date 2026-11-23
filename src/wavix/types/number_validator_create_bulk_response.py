@@ -2,9 +2,9 @@
 
 import typing
 
-from .number_validator_create_bulk_response_request_id import NumberValidatorCreateBulkResponseRequestId
+from .number_validator_create_bulk_response_request_uuid import NumberValidatorCreateBulkResponseRequestUuid
 from .phone_validation_batch_response import PhoneValidationBatchResponse
 
 NumberValidatorCreateBulkResponse = typing.Union[
-    PhoneValidationBatchResponse, NumberValidatorCreateBulkResponseRequestId
+    PhoneValidationBatchResponse, NumberValidatorCreateBulkResponseRequestUuid
 ]

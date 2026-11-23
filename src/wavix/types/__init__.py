@@ -89,7 +89,7 @@ if typing.TYPE_CHECKING:
     from .number_status_updated_webhook import NumberStatusUpdatedWebhook
     from .number_status_updated_webhook_status import NumberStatusUpdatedWebhookStatus
     from .number_validator_create_bulk_response import NumberValidatorCreateBulkResponse
-    from .number_validator_create_bulk_response_request_id import NumberValidatorCreateBulkResponseRequestId
+    from .number_validator_create_bulk_response_request_uuid import NumberValidatorCreateBulkResponseRequestUuid
     from .on_call_event_payload import OnCallEventPayload
     from .on_call_event_payload_type import OnCallEventPayloadType
     from .opt_out import OptOut
@@ -525,7 +525,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "NumberStatusUpdatedWebhook": ".number_status_updated_webhook",
     "NumberStatusUpdatedWebhookStatus": ".number_status_updated_webhook_status",
     "NumberValidatorCreateBulkResponse": ".number_validator_create_bulk_response",
-    "NumberValidatorCreateBulkResponseRequestId": ".number_validator_create_bulk_response_request_id",
+    "NumberValidatorCreateBulkResponseRequestUuid": ".number_validator_create_bulk_response_request_uuid",
     "OnCallEventPayload": ".on_call_event_payload",
     "OnCallEventPayloadType": ".on_call_event_payload_type",
     "OptOut": ".opt_out",
@@ -959,7 +959,7 @@ __all__ = [
     "NumberStatusUpdatedWebhook",
     "NumberStatusUpdatedWebhookStatus",
     "NumberValidatorCreateBulkResponse",
-    "NumberValidatorCreateBulkResponseRequestId",
+    "NumberValidatorCreateBulkResponseRequestUuid",
     "OnCallEventPayload",
     "OnCallEventPayloadType",
     "OptOut",

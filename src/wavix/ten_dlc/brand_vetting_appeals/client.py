@@ -69,9 +69,9 @@ class BrandVettingAppealsClient:
         *,
         appeal_categories: typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
+        evp_id: str,
+        vetting_id: str,
         explanation: typing.Optional[str] = OMIT,
-        evp_id: typing.Optional[str] = OMIT,
-        vetting_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SuccessResponse:
         """
@@ -88,14 +88,14 @@ class BrandVettingAppealsClient:
         evidence : typing.Sequence[str]
             List of evidence IDs associated with the appeal.
 
+        evp_id : str
+            Code of the external vetting provider whose vetting is appealed, as returned in the Brand's vettings.
+
+        vetting_id : str
+            ID of the external vetting to appeal, as returned in the Brand's vettings.
+
         explanation : typing.Optional[str]
             Appeal comment or justification.
-
-        evp_id : typing.Optional[str]
-            EVP ID.
-
-        vetting_id : typing.Optional[str]
-            Vetting ID.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -116,15 +116,17 @@ class BrandVettingAppealsClient:
             brand_id="B6AI7PA",
             appeal_categories=["VERIFY_TAX_ID"],
             evidence=["855dff49-c097-4645-3983-08dcb9856232"],
+            evp_id="AEGIS",
+            vetting_id="48c0ffaa-4e51-4d44-3982-08dcb9856232",
         )
         """
         _response = self._raw_client.create(
             brand_id,
             appeal_categories=appeal_categories,
             evidence=evidence,
-            explanation=explanation,
             evp_id=evp_id,
             vetting_id=vetting_id,
+            explanation=explanation,
             request_options=request_options,
         )
         return _response.data
@@ -192,9 +194,9 @@ class AsyncBrandVettingAppealsClient:
         *,
         appeal_categories: typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
+        evp_id: str,
+        vetting_id: str,
         explanation: typing.Optional[str] = OMIT,
-        evp_id: typing.Optional[str] = OMIT,
-        vetting_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SuccessResponse:
         """
@@ -211,14 +213,14 @@ class AsyncBrandVettingAppealsClient:
         evidence : typing.Sequence[str]
             List of evidence IDs associated with the appeal.
 
+        evp_id : str
+            Code of the external vetting provider whose vetting is appealed, as returned in the Brand's vettings.
+
+        vetting_id : str
+            ID of the external vetting to appeal, as returned in the Brand's vettings.
+
         explanation : typing.Optional[str]
             Appeal comment or justification.
-
-        evp_id : typing.Optional[str]
-            EVP ID.
-
-        vetting_id : typing.Optional[str]
-            Vetting ID.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -244,6 +246,8 @@ class AsyncBrandVettingAppealsClient:
                 brand_id="B6AI7PA",
                 appeal_categories=["VERIFY_TAX_ID"],
                 evidence=["855dff49-c097-4645-3983-08dcb9856232"],
+                evp_id="AEGIS",
+                vetting_id="48c0ffaa-4e51-4d44-3982-08dcb9856232",
             )
 
 
@@ -253,9 +257,9 @@ class AsyncBrandVettingAppealsClient:
             brand_id,
             appeal_categories=appeal_categories,
             evidence=evidence,
-            explanation=explanation,
             evp_id=evp_id,
             vetting_id=vetting_id,
+            explanation=explanation,
             request_options=request_options,
         )
         return _response.data
