@@ -85,7 +85,7 @@ client.api_keys.list(
 <dl>
 <dd>
 
-Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`.
+Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`. Store the returned `value` securely. Later reads return `redacted_value`, and `value` on reads is deprecated.
 </dd>
 </dl>
 </dd>
@@ -5081,7 +5081,7 @@ client.profile.update()
 </details>
 
 ## SubAccounts
-<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L40-L80">list</a>(...) -> SubAccountsListResponse</code></summary>
+<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L41-L81">list</a>(...) -> SubAccountsListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5168,7 +5168,7 @@ client.sub_accounts.list()
 </dl>
 </details>
 
-<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L82-L127">create</a>(...) -> SubOrganizationResponse</code></summary>
+<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L83-L128">create</a>(...) -> SubOrganizationWithSecret</code></summary>
 <dl>
 <dd>
 
@@ -5180,7 +5180,7 @@ client.sub_accounts.list()
 <dl>
 <dd>
 
-Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`.
+Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`. Store the returned `api_key` securely. Later reads return `redacted_api_key`, and `api_key` on reads is deprecated.
 </dd>
 </dl>
 </dd>
@@ -5254,7 +5254,7 @@ client.sub_accounts.create(
 </dl>
 </details>
 
-<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L129-L158">get</a>(...) -> SubOrganizationResponse</code></summary>
+<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L130-L159">get</a>(...) -> SubOrganizationResponse</code></summary>
 <dl>
 <dd>
 
@@ -5327,7 +5327,7 @@ client.sub_accounts.get(
 </dl>
 </details>
 
-<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L160-L215">update</a>(...) -> SubOrganizationResponse</code></summary>
+<details><summary><code>client.sub_accounts.<a href="src/wavix/sub_accounts/client.py#L161-L216">update</a>(...) -> SubOrganizationResponse</code></summary>
 <dl>
 <dd>
 

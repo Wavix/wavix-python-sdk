@@ -31,7 +31,12 @@ class SubOrganizationResponse(UniversalBaseModel):
 
     api_key: str = pydantic.Field()
     """
-    Sub-account API key.
+    Sub-account API key. Deprecated; use `redacted_api_key`, which shows only the last 4 characters.
+    """
+
+    redacted_api_key: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    Redacted sub-account API key, shown as `...` followed by the last 4 characters. Null when the sub-account has no active key.
     """
 
     master_organization: int = pydantic.Field()

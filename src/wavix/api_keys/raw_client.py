@@ -124,7 +124,7 @@ class RawApiKeysClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[ApiKeyWithSecret]:
         """
-        Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`.
+        Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`. Store the returned `value` securely. Later reads return `redacted_value`, and `value` on reads is deprecated.
 
         Parameters
         ----------
@@ -717,7 +717,7 @@ class AsyncRawApiKeysClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[ApiKeyWithSecret]:
         """
-        Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`.
+        Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`. Store the returned `value` securely. Later reads return `redacted_value`, and `value` on reads is deprecated.
 
         Parameters
         ----------

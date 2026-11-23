@@ -47,11 +47,6 @@ class NumberDocument(UniversalBaseModel):
     Status of the uploaded document. Can be either `approved`, `pending`, or `rejected`
     """
 
-    url: str = pydantic.Field()
-    """
-    A link to the uploaded document
-    """
-
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:

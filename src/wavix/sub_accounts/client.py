@@ -8,6 +8,7 @@ from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.sub_accounts_list_response import SubAccountsListResponse
 from ..types.sub_organization_response import SubOrganizationResponse
+from ..types.sub_organization_with_secret import SubOrganizationWithSecret
 from .raw_client import AsyncRawSubAccountsClient, RawSubAccountsClient
 from .types.list_sub_accounts_request_status import ListSubAccountsRequestStatus
 from .types.sub_accounts_create_request_default_destinations import SubAccountsCreateRequestDefaultDestinations
@@ -85,9 +86,9 @@ class SubAccountsClient:
         name: str,
         default_destinations: typing.Optional[SubAccountsCreateRequestDefaultDestinations] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> SubOrganizationResponse:
+    ) -> SubOrganizationWithSecret:
         """
-        Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`.
+        Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`. Store the returned `api_key` securely. Later reads return `redacted_api_key`, and `api_key` on reads is deprecated.
 
         Parameters
         ----------
@@ -102,7 +103,7 @@ class SubAccountsClient:
 
         Returns
         -------
-        SubOrganizationResponse
+        SubOrganizationWithSecret
             Returns the created sub-account.
 
         Examples
@@ -298,9 +299,9 @@ class AsyncSubAccountsClient:
         name: str,
         default_destinations: typing.Optional[SubAccountsCreateRequestDefaultDestinations] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> SubOrganizationResponse:
+    ) -> SubOrganizationWithSecret:
         """
-        Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`.
+        Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`. Store the returned `api_key` securely. Later reads return `redacted_api_key`, and `api_key` on reads is deprecated.
 
         Parameters
         ----------
@@ -315,7 +316,7 @@ class AsyncSubAccountsClient:
 
         Returns
         -------
-        SubOrganizationResponse
+        SubOrganizationWithSecret
             Returns the created sub-account.
 
         Examples
