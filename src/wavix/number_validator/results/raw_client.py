@@ -32,7 +32,7 @@ class RawResultsClient:
         Parameters
         ----------
         request_id : str
-            The `request_id` returned by the asynchronous bulk validation request.
+            The `request_uuid` returned by the asynchronous bulk validation request.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -124,7 +124,7 @@ class AsyncRawResultsClient:
         Parameters
         ----------
         request_id : str
-            The `request_id` returned by the asynchronous bulk validation request.
+            The `request_uuid` returned by the asynchronous bulk validation request.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.

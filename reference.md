@@ -4519,7 +4519,7 @@ client.number_validator.get(
 <dl>
 <dd>
 
-Validates a batch of phone numbers. When `async` is `true`, returns a `request_id` to poll for results instead of the validation details.
+Validates a batch of phone numbers. When `async` is `true`, returns a `request_uuid` to poll for results instead of the validation details.
 </dd>
 </dl>
 </dd>
@@ -4564,7 +4564,7 @@ client.number_validator.create_bulk(
 <dl>
 <dd>
 
-**phone_numbers:** `typing.List[str]` — List of phone numbers to get detailed information about. Maximum 1000 numbers per request.
+**phone_numbers:** `typing.List[str]` — List of phone numbers to get detailed information about. Maximum 500 numbers per request, or 100000 when `async` is `true`.
     
 </dd>
 </dl>
@@ -6737,7 +6737,7 @@ client.number_validator.results.get(
 <dl>
 <dd>
 
-**request_id:** `str` — The `request_id` returned by the asynchronous bulk validation request.
+**request_id:** `str` — The `request_uuid` returned by the asynchronous bulk validation request.
     
 </dd>
 </dl>
@@ -9667,7 +9667,7 @@ client.ten_dlc.brand_vetting_appeals.list(
 </dl>
 </details>
 
-<details><summary><code>client.ten_dlc.brand_vetting_appeals.<a href="src/wavix/ten_dlc/brand_vetting_appeals/client.py#L66-L130">create</a>(...) -> SuccessResponse</code></summary>
+<details><summary><code>client.ten_dlc.brand_vetting_appeals.<a href="src/wavix/ten_dlc/brand_vetting_appeals/client.py#L66-L132">create</a>(...) -> SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -9710,6 +9710,8 @@ client.ten_dlc.brand_vetting_appeals.create(
     evidence=[
         "855dff49-c097-4645-3983-08dcb9856232"
     ],
+    evp_id="AEGIS",
+    vetting_id="48c0ffaa-4e51-4d44-3982-08dcb9856232",
 )
 
 ```
@@ -9750,23 +9752,23 @@ client.ten_dlc.brand_vetting_appeals.create(
 <dl>
 <dd>
 
+**evp_id:** `str` — Code of the external vetting provider whose vetting is appealed, as returned in the Brand's vettings.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**vetting_id:** `str` — ID of the external vetting to appeal, as returned in the Brand's vettings.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **explanation:** `typing.Optional[str]` — Appeal comment or justification.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**evp_id:** `typing.Optional[str]` — EVP ID.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**vetting_id:** `typing.Optional[str]` — Vetting ID.
     
 </dd>
 </dl>

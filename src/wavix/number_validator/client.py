@@ -85,12 +85,12 @@ class NumberValidatorClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> NumberValidatorCreateBulkResponse:
         """
-        Validates a batch of phone numbers. When `async` is `true`, returns a `request_id` to poll for results instead of the validation details.
+        Validates a batch of phone numbers. When `async` is `true`, returns a `request_uuid` to poll for results instead of the validation details.
 
         Parameters
         ----------
         phone_numbers : typing.Sequence[str]
-            List of phone numbers to get detailed information about. Maximum 1000 numbers per request.
+            List of phone numbers to get detailed information about. Maximum 500 numbers per request, or 100000 when `async` is `true`.
 
         type : PhoneNumberValidationType
 
@@ -106,7 +106,7 @@ class NumberValidatorClient:
         Returns
         -------
         NumberValidatorCreateBulkResponse
-            Returns the validation results, or a `request_id` when validation is asynchronous.
+            Returns the validation results, or a `request_uuid` when validation is asynchronous.
 
         Examples
         --------
@@ -210,12 +210,12 @@ class AsyncNumberValidatorClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> NumberValidatorCreateBulkResponse:
         """
-        Validates a batch of phone numbers. When `async` is `true`, returns a `request_id` to poll for results instead of the validation details.
+        Validates a batch of phone numbers. When `async` is `true`, returns a `request_uuid` to poll for results instead of the validation details.
 
         Parameters
         ----------
         phone_numbers : typing.Sequence[str]
-            List of phone numbers to get detailed information about. Maximum 1000 numbers per request.
+            List of phone numbers to get detailed information about. Maximum 500 numbers per request, or 100000 when `async` is `true`.
 
         type : PhoneNumberValidationType
 
@@ -231,7 +231,7 @@ class AsyncNumberValidatorClient:
         Returns
         -------
         NumberValidatorCreateBulkResponse
-            Returns the validation results, or a `request_id` when validation is asynchronous.
+            Returns the validation results, or a `request_uuid` when validation is asynchronous.
 
         Examples
         --------

@@ -124,9 +124,9 @@ class RawBrandVettingAppealsClient:
         *,
         appeal_categories: typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
+        evp_id: str,
+        vetting_id: str,
         explanation: typing.Optional[str] = OMIT,
-        evp_id: typing.Optional[str] = OMIT,
-        vetting_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[SuccessResponse]:
         """
@@ -143,14 +143,14 @@ class RawBrandVettingAppealsClient:
         evidence : typing.Sequence[str]
             List of evidence IDs associated with the appeal.
 
+        evp_id : str
+            Code of the external vetting provider whose vetting is appealed, as returned in the Brand's vettings.
+
+        vetting_id : str
+            ID of the external vetting to appeal, as returned in the Brand's vettings.
+
         explanation : typing.Optional[str]
             Appeal comment or justification.
-
-        evp_id : typing.Optional[str]
-            EVP ID.
-
-        vetting_id : typing.Optional[str]
-            Vetting ID.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -348,9 +348,9 @@ class AsyncRawBrandVettingAppealsClient:
         *,
         appeal_categories: typing.Sequence[TenDlcBrandVettingAppealCreateRequestAppealCategoriesItem],
         evidence: typing.Sequence[str],
+        evp_id: str,
+        vetting_id: str,
         explanation: typing.Optional[str] = OMIT,
-        evp_id: typing.Optional[str] = OMIT,
-        vetting_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[SuccessResponse]:
         """
@@ -367,14 +367,14 @@ class AsyncRawBrandVettingAppealsClient:
         evidence : typing.Sequence[str]
             List of evidence IDs associated with the appeal.
 
+        evp_id : str
+            Code of the external vetting provider whose vetting is appealed, as returned in the Brand's vettings.
+
+        vetting_id : str
+            ID of the external vetting to appeal, as returned in the Brand's vettings.
+
         explanation : typing.Optional[str]
             Appeal comment or justification.
-
-        evp_id : typing.Optional[str]
-            EVP ID.
-
-        vetting_id : typing.Optional[str]
-            Vetting ID.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
