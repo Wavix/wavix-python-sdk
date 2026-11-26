@@ -11,7 +11,12 @@ from .document_type_info import DocumentTypeInfo
 class CartResponse(UniversalBaseModel):
     dids: typing.List[AvailableNumber] = pydantic.Field()
     """
-    List of phone numbers in the cart.
+    Phone numbers in the cart that are available for purchase.
+    """
+
+    unavailable_dids: typing.Optional[typing.List[str]] = pydantic.Field(default=None)
+    """
+    Phone numbers in the cart that are no longer available for purchase. Retrieving the cart doesn't remove them. Empty when every number is available.
     """
 
     doc_types: typing.List[DocumentTypeInfo] = pydantic.Field()
