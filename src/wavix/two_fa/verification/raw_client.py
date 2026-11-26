@@ -158,7 +158,7 @@ class RawVerificationClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[TwoFactorVerificationResendResponse]:
         """
-        Resends the OTP for the verification identified by `session_id` over the specified channel. Previously sent codes are invalidated.
+        Resends the OTP for the verification identified by `session_id` over the specified channel. Previously sent codes are invalidated. Each code sent is charged to the account balance.
 
         Parameters
         ----------
@@ -588,7 +588,7 @@ class AsyncRawVerificationClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[TwoFactorVerificationResendResponse]:
         """
-        Resends the OTP for the verification identified by `session_id` over the specified channel. Previously sent codes are invalidated.
+        Resends the OTP for the verification identified by `session_id` over the specified channel. Previously sent codes are invalidated. Each code sent is charged to the account balance.
 
         Parameters
         ----------

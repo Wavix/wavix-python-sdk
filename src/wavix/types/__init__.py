@@ -265,6 +265,7 @@ if typing.TYPE_CHECKING:
     from .whats_app_message_failed_event_data_status import WhatsAppMessageFailedEventDataStatus
     from .whats_app_message_get_response import WhatsAppMessageGetResponse
     from .whats_app_message_list_item import WhatsAppMessageListItem
+    from .whats_app_message_list_item_category import WhatsAppMessageListItemCategory
     from .whats_app_message_list_item_direction import WhatsAppMessageListItemDirection
     from .whats_app_message_list_item_status import WhatsAppMessageListItemStatus
     from .whats_app_message_list_response import WhatsAppMessageListResponse
@@ -695,6 +696,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WhatsAppMessageFailedEventDataStatus": ".whats_app_message_failed_event_data_status",
     "WhatsAppMessageGetResponse": ".whats_app_message_get_response",
     "WhatsAppMessageListItem": ".whats_app_message_list_item",
+    "WhatsAppMessageListItemCategory": ".whats_app_message_list_item_category",
     "WhatsAppMessageListItemDirection": ".whats_app_message_list_item_direction",
     "WhatsAppMessageListItemStatus": ".whats_app_message_list_item_status",
     "WhatsAppMessageListResponse": ".whats_app_message_list_response",
@@ -1129,6 +1131,7 @@ __all__ = [
     "WhatsAppMessageFailedEventDataStatus",
     "WhatsAppMessageGetResponse",
     "WhatsAppMessageListItem",
+    "WhatsAppMessageListItemCategory",
     "WhatsAppMessageListItemDirection",
     "WhatsAppMessageListItemStatus",
     "WhatsAppMessageListResponse",

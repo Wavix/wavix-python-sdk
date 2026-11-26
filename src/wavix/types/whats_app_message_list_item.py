@@ -9,6 +9,7 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .whats_app_inbound_message_content import WhatsAppInboundMessageContent
 from .whats_app_message_error import WhatsAppMessageError
+from .whats_app_message_list_item_category import WhatsAppMessageListItemCategory
 from .whats_app_message_list_item_direction import WhatsAppMessageListItemDirection
 from .whats_app_message_list_item_status import WhatsAppMessageListItemStatus
 
@@ -86,6 +87,21 @@ class WhatsAppMessageListItem(UniversalBaseModel):
     error: typing.Optional[WhatsAppMessageError] = pydantic.Field(default=None)
     """
     Why an `outbound` message wasn't delivered. It's `null` unless `status` is `undelivered`, `expired`, or `rejected`.
+    """
+
+    charge: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    Amount charged for the message in USD, such as `0.0950`. `0.0000` means the message wasn't charged. `null` means no amount is recorded, for example while the message isn't delivered yet. Returned for outbound messages, and only to users who can view prices.
+    """
+
+    category: typing.Optional[WhatsAppMessageListItemCategory] = pydantic.Field(default=None)
+    """
+    WhatsApp conversation category the message is billed in, or `null` if it isn't known. Returned for outbound messages, and only to users who can view prices. Possible values:
+    
+    - `marketing` — Promotions, offers, and other marketing content.
+    - `utility` — Transactional updates about an order or an account.
+    - `authentication` — One-time passcodes for verifying a user.
+    - `service` — Replies sent within a customer service window.
     """
 
     if IS_PYDANTIC_V2:
